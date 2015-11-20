@@ -24,6 +24,10 @@
  * @property integer $publish
  * @property integer $cat_id
  * @property string $value
+ * @property string $creation_date
+ * @property string $creation_id
+ * @property string $modified_date
+ * @property string $modified_id
  *
  * The followings are the available model relations:
  * @property OmmuSupportContactCategory $cat
@@ -59,11 +63,11 @@ class SupportContacts extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cat_id, value', 'required'),
-			array('publish, cat_id', 'numerical', 'integerOnly'=>true),
+			array('publish, cat_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('value', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, publish, cat_id, value', 'safe', 'on'=>'search'),
+			array('id, publish, cat_id, value, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +93,10 @@ class SupportContacts extends CActiveRecord
 			'publish' => Phrase::trans(23095,1),
 			'cat_id' => Phrase::trans(23066,1),
 			'value' => Phrase::trans(23098,1),
+			'creation_date' => 'Creation',
+			'creation_id' => 'Creation',
+			'modified_date' => 'Modified',
+			'modified_id' => 'Modified',
 		);
 	}
 
@@ -116,6 +124,13 @@ class SupportContacts extends CActiveRecord
 		}
 		$criteria->compare('t.cat_id',$this->cat_id);
 		$criteria->compare('t.value',$this->value,true);
+		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
+		$criteria->compare('t.creation_id',$this->creation_id);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
+		$criteria->compare('t.modified_id',$this->modified_id);
+		
 		if(!isset($_GET['SupportContacts_sort'])) {
 			$criteria->order = 'id DESC';
 		}
@@ -150,6 +165,10 @@ class SupportContacts extends CActiveRecord
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'cat_id';
 			$this->defaultColumns[] = 'value';
+			$this->defaultColumns[] = 'creation_date';
+			$this->defaultColumns[] = 'creation_id';
+			$this->defaultColumns[] = 'modified_date';
+			$this->defaultColumns[] = 'modified_id';
 		}
 
 		return $this->defaultColumns;
@@ -198,7 +217,9 @@ class SupportContacts extends CActiveRecord
 				if($this->publish == 2 && $this->value == '') {
 					$this->addError('value', Phrase::trans($this->cat->name, 2).' '.Phrase::trans(314,0));
 				}
-			}			
+				$this->modified_id = Yii::app()->user->id;
+			} else
+				$this->creation_id = Yii::app()->user->id;	
 		}
 		return true;
 	}
