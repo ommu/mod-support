@@ -33,6 +33,8 @@
  * @property string $smtp_username
  * @property string $smtp_password
  * @property integer $smtp_ssl
+ * @property string $modified_date
+ * @property string $modified_id
  */
 class SupportMailSetting extends CActiveRecord
 {
@@ -65,12 +67,12 @@ class SupportMailSetting extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('mail_contact, mail_name, mail_from, mail_count', 'required'),
-			array('id, mail_count, mail_queueing, mail_smtp, smtp_authentication, smtp_ssl', 'numerical', 'integerOnly'=>true),
+			array('id, mail_count, mail_queueing, mail_smtp, smtp_authentication, smtp_ssl, modified_id', 'numerical', 'integerOnly'=>true),
 			array('mail_contact, mail_name, mail_from, smtp_address, smtp_username, smtp_password', 'length', 'max'=>32),
 			array('smtp_port', 'length', 'max'=>16),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, mail_contact, mail_name, mail_from, mail_count, mail_queueing, mail_smtp, smtp_address, smtp_port, smtp_authentication, smtp_username, smtp_password, smtp_ssl', 'safe', 'on'=>'search'),
+			array('id, mail_contact, mail_name, mail_from, mail_count, mail_queueing, mail_smtp, smtp_address, smtp_port, smtp_authentication, smtp_username, smtp_password, smtp_ssl, modified_date, modified_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -104,6 +106,8 @@ class SupportMailSetting extends CActiveRecord
 			'smtp_username' => Phrase::trans(23030,1),
 			'smtp_password' => Phrase::trans(23031,1),
 			'smtp_ssl' => Phrase::trans(23026,1),
+			'modified_date' => 'Modified Date',
+			'modified_id' => 'Modified ID',
 		);
 	}
 	
@@ -131,6 +135,9 @@ class SupportMailSetting extends CActiveRecord
 		$criteria->compare('t.smtp_username',$this->smtp_username,true);
 		$criteria->compare('t.smtp_password',$this->smtp_password,true);
 		$criteria->compare('t.smtp_ssl',$this->smtp_ssl);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
+		$criteria->compare('t.modified_id',$this->modified_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -168,6 +175,8 @@ class SupportMailSetting extends CActiveRecord
 			$this->defaultColumns[] = 'smtp_username';
 			$this->defaultColumns[] = 'smtp_password';
 			$this->defaultColumns[] = 'smtp_ssl';
+			$this->defaultColumns[] = 'modified_date';
+			$this->defaultColumns[] = 'modified_id';
 		}
 
 		return $this->defaultColumns;
@@ -194,6 +203,8 @@ class SupportMailSetting extends CActiveRecord
 			$this->defaultColumns[] = 'smtp_username';
 			$this->defaultColumns[] = 'smtp_password';
 			$this->defaultColumns[] = 'smtp_ssl';
+			$this->defaultColumns[] = 'modified_date';
+			$this->defaultColumns[] = 'modified_id';
 
 		}
 		parent::afterConstruct();
@@ -219,7 +230,9 @@ class SupportMailSetting extends CActiveRecord
 						$this->addError('smtp_password', Phrase::trans(23035,1));
 					}
 				}
-			}		
+			}
+			
+			$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
 	}
