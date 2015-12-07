@@ -1,12 +1,13 @@
 <?php
 /**
+ * Support Contacts (support-contacts)
  * @var $this ContactsController
  * @var $model SupportContacts
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
- * @copyright Copyright (c) 2014 Ommu Platform (ommu.co)
- * @link http://company.ommu.co
+ * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
+ * @link https://github.com/oMMu/Ommu-Support
  * @contact (+62)856-299-4114
  *
  */
