@@ -34,7 +34,7 @@ EOP;
 	<?php //begin.Address ?>
 	<div class="address">
 		<strong><?php echo $model->office_name != '' ? $model->office_name : OmmuSettings::getInfo('site_title');?></strong><br/>
-		<?php echo $model->office_place.'.<br/>'.$model->office_village.', '.$model->office_district.',<br/>'.OmmuZoneCity::getInfo($model->office_city, 'city').', '.OmmuZoneCountry::getInfo($model->office_country, 'country').',<br/>'.$model->office_zipcode?>
+		<?php echo $model->office_place.'.<br/>'.$model->office_village.', '.$model->office_district.',<br/>'.$model->view_relation->city.', '.$model->view_relation->province.', '.$model->view_relation->country.',<br/>'.$model->office_zipcode?>
 	</div>
 	
 	<?php //begin.Contact ?>

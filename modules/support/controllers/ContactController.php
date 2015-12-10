@@ -120,7 +120,7 @@ class ContactController extends Controller
 		Utility::applyCurrentTheme($this->module);
 		
 		$model = OmmuMeta::model()->findByPk(1, array(
-			'select' => 'office_name, office_place, office_village, office_district, office_city, office_country, office_zipcode, office_phone, office_fax, office_hotline, office_email'
+			'select' => 'id, office_name, office_place, office_village, office_district, office_city, office_province, office_country, office_zipcode, office_phone, office_fax, office_hotline, office_email'
 		));
 		$contact = SupportContacts::model()->findAll(array(
 			'condition' => 'publish = :publish',
@@ -215,8 +215,11 @@ class ContactController extends Controller
 				'lat'=>$point[0],
 				'lng'=>$point[1],
 				'name'=>$val->office_name != '' ? $val->office_name : $setting->site_title,
-				'address'=>$val->office_place.'. '.$val->office_village.', '.$val->office_district.', '.OmmuZoneCity::getInfo($val->office_city, 'city').', '.OmmuZoneCountry::getInfo($val->office_country, 'country').', '.$val->office_zipcode,
+				'address'=>$val->office_place.'. '.$val->office_village.', '.$val->office_district.', '.$val->view_relation->city.', '.$val->view_relation->province.', '.$val->view_relation->country.', '.$val->office_zipcode,
 			);
+			
+			
+			
 		}
 		
 		echo CJSON::encode($return);
