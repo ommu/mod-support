@@ -215,7 +215,7 @@ class ContactController extends Controller
 				'lat'=>$point[0],
 				'lng'=>$point[1],
 				'name'=>$val->office_name != '' ? $val->office_name : $setting->site_title,
-				'address'=>$val->office_place.'. '.$val->office_village.', '.$val->office_district.', '.$val->view_relation->city.', '.$val->view_relation->province.', '.$val->view_relation->country.', '.$val->office_zipcode,
+				'address'=>$val->office_place.'. '.$val->office_village.', '.$val->office_district.', '.$val->view_meta->city.', '.$val->view_meta->province.', '.$val->view_meta->country.', '.$val->office_zipcode,
 			);
 			
 			
