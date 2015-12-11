@@ -212,7 +212,7 @@ class SupportContacts extends CActiveRecord
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
-		if(parent::beforeValidate()) {		
+		if(parent::beforeValidate()) {
 			if(!$this->isNewRecord) {
 				if($this->publish == 2 && $this->value == '') {
 					$this->addError('value', Phrase::trans($this->cat->name, 2).' '.Phrase::trans(314,0));
