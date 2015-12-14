@@ -37,6 +37,10 @@ class SupportContactCategory extends CActiveRecord
 {
 	public $defaultColumns = array();
 	public $title;
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -70,7 +74,7 @@ class SupportContactCategory extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('cat_id, publish, orders, icons, name, creation_date, creation_id, modified_date, modified_id,
-				title', 'safe', 'on'=>'search'),
+				title, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -83,6 +87,8 @@ class SupportContactCategory extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view_cat' => array(self::BELONGS_TO, 'ViewSupportContactCategory', 'cat_id'),
+			'creation_relation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified_relation' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'contact' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
 		);
 	}
@@ -103,6 +109,8 @@ class SupportContactCategory extends CActiveRecord
 			'modified_date' => 'Modified',
 			'modified_id' => 'Modified',
 			'title' => Phrase::trans(23066,1),
+			'creation_search' => 'Creation',
+			'modified_search' => 'Modified',
 		);
 	}
 	
@@ -144,8 +152,18 @@ class SupportContactCategory extends CActiveRecord
 				'alias'=>'view_cat',
 				'select'=>'category_name'
 			),
+			'creation_relation' => array(
+				'alias'=>'creation_relation',
+				'select'=>'displayname',
+			),
+			'modified_relation' => array(
+				'alias'=>'modified_relation',
+				'select'=>'displayname',
+			),
 		);
 		$criteria->compare('view_cat.category_name',strtolower($this->title), true);
+		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 		
 		
 		if(isset($_GET['SupportContactCategory_sort']))

@@ -35,6 +35,10 @@
 class SupportContacts extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -67,7 +71,8 @@ class SupportContacts extends CActiveRecord
 			array('value', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, publish, cat_id, value, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('id, publish, cat_id, value, creation_date, creation_id, modified_date, modified_id, 
+				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,6 +85,8 @@ class SupportContacts extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'cat' => array(self::BELONGS_TO, 'SupportContactCategory', 'cat_id'),
+			'creation_relation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified_relation' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -97,6 +104,8 @@ class SupportContacts extends CActiveRecord
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified',
 			'modified_id' => 'Modified',
+			'creation_search' => 'Creation',
+			'modified_search' => 'Modified',
 		);
 	}
 
@@ -134,6 +143,20 @@ class SupportContacts extends CActiveRecord
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'creation_relation' => array(
+				'alias'=>'creation_relation',
+				'select'=>'displayname',
+			),
+			'modified_relation' => array(
+				'alias'=>'modified_relation',
+				'select'=>'displayname',
+			),
+		);
+		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 		
 		if(!isset($_GET['SupportContacts_sort'])) {
 			$criteria->order = 'id DESC';
