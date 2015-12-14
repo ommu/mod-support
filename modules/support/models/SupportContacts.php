@@ -122,7 +122,11 @@ class SupportContacts extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1,2));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		$criteria->compare('t.cat_id',$this->cat_id);
+
+		if(isset($_GET['category']))
+			$criteria->compare('t.cat_id',$_GET['category']);
+		else
+			$criteria->compare('t.cat_id',$this->cat_id);
 		$criteria->compare('t.value',$this->value,true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
@@ -183,10 +187,14 @@ class SupportContacts extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'cat_id',
-				'value' => 'Phrase::trans($data->cat->name, 2)',
-			);
+			if(!isset($_GET['category'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'cat_id',
+					'value' => 'Phrase::trans($data->cat->name, 2)',
+					'filter'=> SupportContactCategory::getCategory(),
+					'type' => 'raw',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'name' => 'value',
 				'value' => '$data->value',

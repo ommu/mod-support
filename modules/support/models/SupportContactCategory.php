@@ -69,7 +69,8 @@ class SupportContactCategory extends CActiveRecord
 			array('title, icons', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('cat_id, publish, orders, icons, name, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('cat_id, publish, orders, icons, name, creation_date, creation_id, modified_date, modified_id,
+				title', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,7 +82,8 @@ class SupportContactCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			//'ommuSupportContacts' => array(self::HAS_MANY, 'OmmuSupportContacts', 'cat_id'),
+			'view_cat' => array(self::BELONGS_TO, 'ViewSupportContactCategory', 'cat_id'),
+			'contact' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
 		);
 	}
 
@@ -136,9 +138,18 @@ class SupportContactCategory extends CActiveRecord
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		$criteria->compare('t.modified_id',$this->modified_id);
 		
-		if(!isset($_GET['SupportContactCategory_sort'])) {
+		// Custom Search
+		$criteria->with = array(
+			'view_cat' => array(
+				'alias'=>'view_cat',
+				'select'=>'category_name'
+			),
+		);
+		$criteria->compare('view_cat.category_name',strtolower($this->title), true);
+		
+		
+		if(isset($_GET['SupportContactCategory_sort']))
 			$criteria->order = 'cat_id DESC';
-		}
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -190,7 +201,7 @@ class SupportContactCategory extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			$this->defaultColumns[] = array(
-				'name' => 'name',
+				'name' => 'title',
 				'value' => 'Phrase::trans($data->name, 2)',
 			);
 			$this->defaultColumns[] = 'icons';
