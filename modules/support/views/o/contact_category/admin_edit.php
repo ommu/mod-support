@@ -19,4 +19,4 @@
 	);
 ?>
 
-<?php echo $this->renderPartial('/contact_category/_form_dialog', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('/o/contact_category/_form_dialog', array('model'=>$model)); ?>

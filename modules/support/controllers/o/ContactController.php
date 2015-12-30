@@ -1,8 +1,8 @@
 <?php
 /**
- * ContactcategoryController
- * @var $this ContactcategoryController
- * @var $model SupportContactCategory
+ * ContactController
+ * @var $this ContactController
+ * @var $model SupportMails
  * @var $form CActiveForm
  * version: 0.0.1
  * Reference start
@@ -15,6 +15,7 @@
  *	RunAction
  *	Delete
  *	Publish
+ *	Setting
  *
  *	LoadModel
  *	performAjaxValidation
@@ -27,7 +28,7 @@
  *----------------------------------------------------------------------------------------------------------
  */
 
-class ContactcategoryController extends Controller
+class ContactController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -84,7 +85,7 @@ class ContactcategoryController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','edit'),
+				'actions'=>array('manage','edit','setting'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -116,10 +117,10 @@ class ContactcategoryController extends Controller
 	 */
 	public function actionManage() 
 	{
-		$model=new SupportContactCategory('search');
+		$model=new SupportContacts('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['SupportContactCategory'])) {
-			$model->attributes=$_GET['SupportContactCategory'];
+		if(isset($_GET['SupportContacts'])) {
+			$model->attributes=$_GET['SupportContacts'];
 		}
 
 		$columnTemp = array();
@@ -135,7 +136,7 @@ class ContactcategoryController extends Controller
 		$this->pageTitle = Phrase::trans(23061,1);
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('/contact_category/admin_manage',array(
+		$this->render('admin_manage',array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
@@ -147,13 +148,13 @@ class ContactcategoryController extends Controller
 	 */
 	public function actionAdd() 
 	{
-		$model=new SupportContactCategory;
+		$model=new SupportContacts;
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
-		if(isset($_POST['SupportContactCategory'])) {
-			$model->attributes=$_POST['SupportContactCategory'];
+		if(isset($_POST['SupportContacts'])) {
+			$model->attributes=$_POST['SupportContacts'];
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -175,8 +176,8 @@ class ContactcategoryController extends Controller
 						echo CJSON::encode(array(
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-contact-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23085,1).'</strong></div>',
+							'id' => 'partial-support-contacts',
+							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23072,1).'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -199,8 +200,9 @@ class ContactcategoryController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
-		if(isset($_POST['SupportContactCategory'])) {
-			$model->attributes=$_POST['SupportContactCategory'];
+		if(isset($_POST['SupportContacts'])) {
+			$model->attributes=$_POST['SupportContacts'];
+			$model->scenario = 'default';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -211,8 +213,8 @@ class ContactcategoryController extends Controller
 						echo CJSON::encode(array(
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-contact-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23067,1).'</strong></div>',
+							'id' => 'partial-support-contacts',
+							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23073,1).'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -226,10 +228,10 @@ class ContactcategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 500;
 			
-			$this->pageTitle = Phrase::trans(23070,1);
+			$this->pageTitle = Phrase::trans(23074,1);
 			$this->pageDescription = '';
 			$this->pageMeta = '';
-			$this->render('/contact_category/admin_edit',array(
+			$this->render('admin_edit',array(
 				'model'=>$model,
 			));
 		}
@@ -250,19 +252,19 @@ class ContactcategoryController extends Controller
 			$criteria->addInCondition('id', $id);
 
 			if($actions == 'publish') {
-				SupportContactCategory::model()->updateAll(array(
+				SupportContacts::model()->updateAll(array(
 					'published' => 1,
 				),$criteria);
 			} elseif($actions == 'unpublish') {
-				SupportContactCategory::model()->updateAll(array(
+				SupportContacts::model()->updateAll(array(
 					'published' => 0,
 				),$criteria);
 			} elseif($actions == 'trash') {
-				SupportContactCategory::model()->updateAll(array(
+				SupportContacts::model()->updateAll(array(
 					'published' => 2,
 				),$criteria);
 			} elseif($actions == 'delete') {
-				SupportContactCategory::model()->deleteAll($criteria);
+				SupportContacts::model()->deleteAll($criteria);
 			}
 		}
 
@@ -271,7 +273,7 @@ class ContactcategoryController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
-	
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -287,8 +289,8 @@ class ContactcategoryController extends Controller
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
-					'id' => 'partial-support-contact-category',
-					'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23069,1).'</strong></div>',
+					'id' => 'partial-support-contacts',
+					'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23076,1).'</strong></div>',
 				));
 			}
 
@@ -297,10 +299,10 @@ class ContactcategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Phrase::trans(23068,1);
+			$this->pageTitle = Phrase::trans(23075,1);
 			$this->pageDescription = '';
 			$this->pageMeta = '';
-			$this->render('/contact_category/admin_delete');
+			$this->render('admin_delete');
 		}
 	}
 
@@ -330,8 +332,8 @@ class ContactcategoryController extends Controller
 					echo CJSON::encode(array(
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
-						'id' => 'partial-support-contact-category',
-						'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23067,1).'</strong></div>',
+						'id' => 'partial-support-contacts',
+						'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23073,1).'</strong></div>',
 					));
 				}
 			}
@@ -344,8 +346,63 @@ class ContactcategoryController extends Controller
 			$this->pageTitle = $title;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
-			$this->render('/contact_category/admin_publish',array(
+			$this->render('admin_publish',array(
 				'title'=>$title,
+				'model'=>$model,
+			));
+		}
+	}
+
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionSetting() 
+	{
+		$model = OmmuMeta::model()->findByPk(1);
+
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['OmmuMeta'])) {
+			$model->attributes=$_POST['OmmuMeta'];
+			$model->scenario = 'contact';
+
+			$jsonError = CActiveForm::validate($model);
+			if(strlen($jsonError) > 2) {
+				$errors = $model->getErrors();
+				$summary['msg'] = "<div class='errorSummary'><strong>".Phrase::trans(163,0)."</strong>";
+				$summary['msg'] .= "<ul>";
+				foreach($errors as $key => $value) {
+					$summary['msg'] .= "<li>{$value[0]}</li>";
+				}
+				$summary['msg'] .= "</ul></div>";
+
+				$message = json_decode($jsonError, true);
+				$merge = array_merge_recursive($summary, $message);
+				$encode = json_encode($merge);
+				echo $encode;
+
+			} else {
+				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+					if($model->save()) {
+						echo CJSON::encode(array(
+							'type' => 0,
+							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23077,1).'</strong></div>',
+						));
+					} else {
+						print_r($model->getErrors());
+					}
+				}
+			}
+			Yii::app()->end();
+
+		} else {
+			$this->pageTitle = Phrase::trans(23063,1);
+			$this->pageDescription = '';
+			$this->pageMeta = '';
+			$this->render('admin_setting',array(
 				'model'=>$model,
 			));
 		}
@@ -358,7 +415,7 @@ class ContactcategoryController extends Controller
 	 */
 	public function loadModel($id) 
 	{
-		$model = SupportContactCategory::model()->findByPk($id);
+		$model = SupportContacts::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404, Phrase::trans(193,0));
 		return $model;
@@ -370,9 +427,10 @@ class ContactcategoryController extends Controller
 	 */
 	protected function performAjaxValidation($model) 
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='support-contact-category-form') {
+		if(isset($_POST['ajax']) && $_POST['ajax']==='support-contacts-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
+
 }

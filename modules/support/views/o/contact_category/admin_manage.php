@@ -74,7 +74,7 @@
 	<?php //begin.Form ?>
 	<div class="form" name="post-on">
 		<h3><?php echo Phrase::trans(23062,1)?></h3>
-		<?php echo $this->renderPartial('/contact_category/_form', array('model'=>$model)); ?>
+		<?php echo $this->renderPartial('/o/contact_category/_form', array('model'=>$model)); ?>
 	</div>
 	<?php //end.Form ?>
 
