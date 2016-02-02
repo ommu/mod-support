@@ -158,18 +158,8 @@ class ContactController extends Controller
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
-				$errors = $model->getErrors();
-				$summary['msg'] = "<div class='errorSummary'><strong>".Phrase::trans(163,0)."</strong>";
-				$summary['msg'] .= "<ul>";
-				foreach($errors as $key => $value) {
-					$summary['msg'] .= "<li>{$value[0]}</li>";
-				}
-				$summary['msg'] .= "</ul></div>";
-
-				$message = json_decode($jsonError, true);
-				$merge = array_merge_recursive($summary, $message);
-				$encode = json_encode($merge);
-				echo $encode;
+				echo $jsonError;
+				
 			} else {
 				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 					if($model->save()) {
@@ -185,6 +175,18 @@ class ContactController extends Controller
 				}
 			}
 			Yii::app()->end();
+			
+		} else {
+			$this->dialogDetail = true;
+			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+			$this->dialogWidth = 600;
+			
+			$this->pageTitle = 'Create Contact';
+			$this->pageDescription = '';
+			$this->pageMeta = '';
+			$this->render('admin_add',array(
+				'model'=>$model,
+			));			
 		}
 	}
 
@@ -207,6 +209,7 @@ class ContactController extends Controller
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
+				
 			} else {
 				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 					if($model->save()) {
@@ -226,7 +229,7 @@ class ContactController extends Controller
 		} else {
 			$this->dialogDetail = true;
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 500;
+			$this->dialogWidth = 600;
 			
 			$this->pageTitle = Phrase::trans(23074,1);
 			$this->pageDescription = '';
@@ -235,7 +238,6 @@ class ContactController extends Controller
 				'model'=>$model,
 			));
 		}
-
 	}
 
 	/**
