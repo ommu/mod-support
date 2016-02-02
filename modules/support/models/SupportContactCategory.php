@@ -37,6 +37,7 @@ class SupportContactCategory extends CActiveRecord
 {
 	public $defaultColumns = array();
 	public $title;
+	public $old_icon;
 	
 	// Variable Search
 	public $creation_search;
@@ -71,6 +72,8 @@ class SupportContactCategory extends CActiveRecord
 			array('title', 'required'),
 			array('publish, orders, name, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('title, icons', 'length', 'max'=>32),
+			array('icons,
+				old_icon', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('cat_id, publish, orders, icons, name, creation_date, creation_id, modified_date, modified_id,
@@ -109,6 +112,7 @@ class SupportContactCategory extends CActiveRecord
 			'modified_date' => 'Modified Date',
 			'modified_id' => 'Modified',
 			'title' => Phrase::trans(23066,1),
+			'old_icon' => 'Old Icon',
 			'creation_search' => 'Creation',
 			'modified_search' => 'Modified',
 		);
@@ -166,8 +170,8 @@ class SupportContactCategory extends CActiveRecord
 		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 		
 		
-		if(isset($_GET['SupportContactCategory_sort']))
-			$criteria->order = 'cat_id DESC';
+		if(!isset($_GET['SupportContactCategory_sort']))
+			$criteria->order = 't.cat_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -222,7 +226,41 @@ class SupportContactCategory extends CActiveRecord
 				'name' => 'title',
 				'value' => 'Phrase::trans($data->name, 2)',
 			);
-			$this->defaultColumns[] = 'icons';
+			$this->defaultColumns[] = array(
+				'name' => 'icons',
+				'value' => '$data->icons != "" ? CHtml::link($data->icons, Yii::app()->request->baseUrl.\'/public/support/\'.$data->icons, array(\'target\' => \'_blank\')) : "-"',
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation_relation->displayname',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_date',
+				'value' => 'Utility::dateFormat($data->creation_date)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'creation_date',
+					'language' => 'ja',
+					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'creation_date_filter',
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'publish',
 				'value' => '$data->publish == 2 ? "-" : Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->cat_id)), $data->publish, 1) ',
@@ -265,13 +303,35 @@ class SupportContactCategory extends CActiveRecord
 			return false;
 		}
 	}
+
+	/**
+	 * before validate attributes
+	 */
+	protected function beforeValidate() {
+		if(parent::beforeValidate()) {
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;		
+			else
+				$this->modified_id = Yii::app()->user->id;
+			
+			$media = CUploadedFile::getInstance($this, 'icons');
+			if($media->name != '') {
+				$extension = pathinfo($media->name, PATHINFO_EXTENSION);
+				if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
+					$this->addError('icons', 'The file "'.$media->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
+			}
+		}
+		return true;
+	}
 	
 	/**
 	 * before save attributes
 	 */
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
+			$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
 			$action = strtolower(Yii::app()->controller->action->id);
+			
 			if($this->isNewRecord) {
 				$currentAction = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id);
 				$title=new OmmuSystemPhrase;
@@ -280,7 +340,6 @@ class SupportContactCategory extends CActiveRecord
 				if($title->save()) {
 					$this->name = $title->phrase_id;
 				}
-				$this->creation_id = Yii::app()->user->id;	
 			
 			} else {
 				if($action == 'edit') {
@@ -288,9 +347,38 @@ class SupportContactCategory extends CActiveRecord
 					$title->en = $this->title;
 					$title->save();
 				}
-				$this->modified_id = Yii::app()->user->id;
-			}			
+			}
+				
+			//upload proposal
+			if(in_array($action, array('add','edit'))) {
+				$support_path = "public/support";
+				$this->icons = CUploadedFile::getInstance($this, 'icons');
+				if($this->icons instanceOf CUploadedFile) {
+					$fileName = Utility::getUrlTitle($this->title).'_'.time().'.'.strtolower($this->icons->extensionName);
+					if($this->icons->saveAs($support_path.'/'.$fileName)) {						
+						if(!$this->isNewRecord && $this->old_icon != '' && file_exists($support_path.'/'.$this->old_icon))
+							rename($support_path.'/'.$this->old_icon, 'public/support/verwijderen/'.$this->cat_id.'_'.$this->old_icon);
+						$this->icons = $fileName;
+					}
+				}
+				
+				if(!$this->isNewRecord && $this->icons == '') {
+					$this->icons = $this->old_icon;
+				}
+			}
 		}
 		return true;
+	}
+
+	/**
+	 * After delete attributes
+	 */
+	protected function afterDelete() {
+		parent::afterDelete();
+		//delete support image
+		$support_path = "public/support";
+		if($this->icons != '' && file_exists($support_path.'/'.$this->icons)) {
+			rename($support_path.'/'.$this->icons, 'public/support/verwijderen/'.$this->cat_id.'_'.$this->icons);
+		}
 	}
 }

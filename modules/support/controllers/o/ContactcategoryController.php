@@ -154,37 +154,23 @@ class ContactcategoryController extends Controller
 
 		if(isset($_POST['SupportContactCategory'])) {
 			$model->attributes=$_POST['SupportContactCategory'];
-
-			$jsonError = CActiveForm::validate($model);
-			if(strlen($jsonError) > 2) {
-				$errors = $model->getErrors();
-				$summary['msg'] = "<div class='errorSummary'><strong>".Phrase::trans(163,0)."</strong>";
-				$summary['msg'] .= "<ul>";
-				foreach($errors as $key => $value) {
-					$summary['msg'] .= "<li>{$value[0]}</li>";
-				}
-				$summary['msg'] .= "</ul></div>";
-
-				$message = json_decode($jsonError, true);
-				$merge = array_merge_recursive($summary, $message);
-				$encode = json_encode($merge);
-				echo $encode;
-			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
-					if($model->save()) {
-						echo CJSON::encode(array(
-							'type' => 5,
-							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-contact-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23085,1).'</strong></div>',
-						));
-					} else {
-						print_r($model->getErrors());
-					}
-				}
+			
+			if($model->save()) {
+				Yii::app()->user->setFlash('success', Phrase::trans(23085,1));
+				$this->redirect(array('manage'));
 			}
-			Yii::app()->end();
 		}
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+		
+		$this->pageTitle = 'Create Contact Category';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/contact_category/admin_add',array(
+			'model'=>$model,
+		));	
 	}
 
 	/**
@@ -201,39 +187,23 @@ class ContactcategoryController extends Controller
 
 		if(isset($_POST['SupportContactCategory'])) {
 			$model->attributes=$_POST['SupportContactCategory'];
-
-			$jsonError = CActiveForm::validate($model);
-			if(strlen($jsonError) > 2) {
-				echo $jsonError;
-			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
-					if($model->save()) {
-						echo CJSON::encode(array(
-							'type' => 5,
-							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-contact-category',
-							'msg' => '<div class="errorSummary success"><strong>'.Phrase::trans(23067,1).'</strong></div>',
-						));
-					} else {
-						print_r($model->getErrors());
-					}
-				}
-			}
-			Yii::app()->end();
-
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 500;
 			
-			$this->pageTitle = Phrase::trans(23070,1);
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('/o/contact_category/admin_edit',array(
-				'model'=>$model,
-			));
+			if($model->save()) {
+				Yii::app()->user->setFlash('success', Phrase::trans(23085,1));
+				$this->redirect(array('manage'));
+			}
 		}
-
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+		
+		$this->pageTitle = Phrase::trans(23070,1);
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/contact_category/admin_edit',array(
+			'model'=>$model,
+		));
 	}
 
 	/**

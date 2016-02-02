@@ -17,7 +17,7 @@
 	);
 ?>
 
-<div class="quick-action celarfix" id="partial-support-contact-category">
+<div id="partial-support-contact-category">
 	<?php //begin.Messages ?>
 	<div id="ajax-message">
 	<?php
@@ -30,7 +30,6 @@
 	<?php //begin.Messages ?>
 
 	<div class="boxed">
-		<h3><?php echo Phrase::trans(23064,1)?></h3>
 		<?php //begin.Grid Item ?>
 		<?php 
 			$columnData   = $columns;
@@ -70,12 +69,5 @@
 		?>
 		<?php //end.Grid Item ?>
 	</div>
-
-	<?php //begin.Form ?>
-	<div class="form" name="post-on">
-		<h3><?php echo Phrase::trans(23062,1)?></h3>
-		<?php echo $this->renderPartial('/o/contact_category/_form', array('model'=>$model)); ?>
-	</div>
-	<?php //end.Form ?>
 
 </div>

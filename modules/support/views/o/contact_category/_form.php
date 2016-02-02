@@ -14,51 +14,66 @@
 ?>
 
 <?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
-	'action' => Yii::app()->controller->createUrl('add'),
 	'id'=>'support-contact-category-form',
 	'enableAjaxValidation'=>true,
-	//'htmlOptions' => array('enctype' => 'multipart/form-data')
+	'htmlOptions' => array(
+		'enctype' => 'multipart/form-data',
+		'on_post' => 'on_post',
+	),
 )); ?>
-
-	<?php //begin.Messages ?>
-	<div id="ajax-message">
-		<?php echo $form->errorSummary($model); ?>
-	</div>
-	<?php //begin.Messages ?>
+<div class="dialog-content">
 
 	<fieldset>
 
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'title'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'title',array('maxlength'=>32)); ?>
+				<?php 
+				$model->title = Phrase::trans($model->name, 2);
+				echo $form->textField($model,'title',array('maxlength'=>32,'class'=>'span-7')); ?>
 				<?php echo $form->error($model,'title'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
+
+		<?php if(!$model->isNewRecord) {
+			$model->old_icon = $model->icons;
+			echo $form->hiddenField($model,'old_icon');
+			if($model->icons != '') {
+				$file = Yii::app()->request->baseUrl.'/public/support/'.$model->icons;
+				$media = '<img src="'.Utility::getTimThumb($file, 100, 200, 3).'" alt="'.$model->title.'">';
+				echo '<div class="clearfix">';
+				echo $form->labelEx($model,'old_icon');
+				echo '<div class="desc">'.$media.'</div>';
+				echo '</div>';
+			}
+		} ?>
 
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'icons'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'icons',array('maxlength'=>32)); ?>
+				<?php echo $form->fileField($model,'icons'); ?>
 				<?php echo $form->error($model,'icons'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
 
-
-		<div class="clearfix">
+		<?php if($model->publish != 2) {?>
+		<div class="clearfix publish">
 			<?php echo $form->labelEx($model,'publish'); ?>
 			<div class="desc">
 				<?php echo $form->checkBox($model,'publish'); ?>
+				<?php echo $form->labelEx($model,'publish'); ?>
 				<?php echo $form->error($model,'publish'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
-
-		<div class="submit clearfix">
-			<label>&nbsp;</label>
-			<div class="desc">
-				<?php echo CHtml::submitButton($model->isNewRecord ? Phrase::trans(1,0) : Phrase::trans(2,0), array('onclick' => 'setEnableSave()')); ?>
-			</div>
-		</div>
-
+		<?php }?>
 	</fieldset>
+</div>
+<div class="dialog-submit">
+	<?php echo CHtml::submitButton($model->isNewRecord ? Phrase::trans(1,0) : Phrase::trans(2,0) ,array('onclick' => 'setEnableSave()')); ?>
+	<?php echo CHtml::button(Phrase::trans(4,0), array('id'=>'closed')); ?>
+</div>
+
 <?php $this->endWidget(); ?>
