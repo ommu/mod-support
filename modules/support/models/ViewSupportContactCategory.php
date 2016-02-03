@@ -114,7 +114,7 @@ class ViewSupportContactCategory extends CActiveRecord
 		$criteria->compare('t.category_name',strtolower($this->category_name),true);
 
 		if(!isset($_GET['ViewSupportContactCategory_sort']))
-			$criteria->order = 'cat_id DESC';
+			$criteria->order = 't.cat_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

@@ -153,6 +153,9 @@ class SupportMailSetting extends CActiveRecord
 			),
 		);
 		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
+			
+		if(!isset($_GET['SupportMailSetting_sort']))
+			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

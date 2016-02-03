@@ -154,7 +154,7 @@ class SupportMails extends CActiveRecord
 		$criteria->compare('reply_relation.displayname',strtolower($this->reply_search), true);
 			
 		if(!isset($_GET['SupportMails_sort']))
-			$criteria->order = 'mail_id DESC';
+			$criteria->order = 't.mail_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
