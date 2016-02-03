@@ -169,7 +169,6 @@ class SupportContactCategory extends CActiveRecord
 		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 		
-		
 		if(!isset($_GET['SupportContactCategory_sort']))
 			$criteria->order = 't.cat_id DESC';
 
