@@ -14,3 +14,45 @@ db_table_name	:
  - ommu_support_newsletter
  
 db_sql_filename	: 
+
+content_menu	:
+# controller o/contact
+	# urlTitle: Manage Contact
+	#	urlRules: {support, o/contact, manage,setting, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: manage, attr: -, icon: -}
+		
+	# urlTitle: Contact Categories
+	#	urlRules: {support, o/contact, manage,setting, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contactcategory/manage, attr: -, icon: -}
+		
+	# urlTitle: Address Settings
+	#	urlRules: {support, o/contact, manage,setting, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: setting, attr: -, icon: -}
+		
+	- urlTitle: Add Contact
+		urlRules: {support, o/contact, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+		
+# controller o/contactcategory
+
+	# urlTitle: Manage Contact
+	#	urlRules: {support, o/contactcategory, manage, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contact/manage, attr: -, icon: -}
+		
+	# urlTitle: Contact Categories
+	#	urlRules: {support, o/contactcategory, manage, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: manage, attr: -, icon: -}
+		
+	# urlTitle: Address Settings
+	#	urlRules: {support, o/contactcategory, manage, siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contact/setting, attr: -, icon: -}
+		
+	- urlTitle: Add Contact Category
+		urlRules: {support, o/contactcategory, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+		
+# controller o/widget
+
+	- urlTitle: Add Widget
+		urlRules: {report, o/widget, manage, siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
