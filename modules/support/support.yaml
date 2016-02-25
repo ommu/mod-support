@@ -15,6 +15,23 @@ db_table_name	:
  
 db_sql_filename	: 
 
+plugin_menu		:
+	- urlTitle: Contact Us
+		urlRules: {siteType: 0,1, userLevel: 1,2}
+		urlPath: {url: o/mail/manage, attr: -, icon: -}
+		
+	# urlTitle: Manage Contact
+	#	urlRules: {siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contact/manage, attr: -, icon: -}
+		
+	# urlTitle: Contact Categories
+	#	urlRules: {siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contactcategory/manage, attr: -, icon: -}
+		
+	# urlTitle: Address Settings
+	#	urlRules: {siteType: 0,1, userLevel: 1,2}
+	#	urlPath: {url: o/contact/setting, attr: -, icon: -}
+
 content_menu	:
 # controller o/contact
 	# urlTitle: Manage Contact
