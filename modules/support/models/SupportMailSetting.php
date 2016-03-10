@@ -262,7 +262,7 @@ class SupportMailSetting extends CActiveRecord
     /**
 	 * Sent Email
 	 */
-	public static function sendEmail($to_email, $to_name, $subject, $message, $type) {
+	public static function sendEmail($to_email, $to_name, $subject, $message, $type, $cc=null, $attachment=null) {
 		Yii::import('application.extensions.phpmailer.JPhpMailer');
 		$model = self::model()->findByPk(1,array(
 			'select' => 'mail_contact, mail_name, mail_from, mail_smtp, smtp_address, smtp_port, smtp_username, smtp_password, smtp_ssl',
@@ -279,9 +279,8 @@ class SupportMailSetting extends CActiveRecord
 			$mail->SMTPAuth		= true;						// Enable SMTP authentication
 			$mail->Username		= $model->smtp_username;	// SES SMTP  username
 			$mail->Password		= $model->smtp_password;	// SES SMTP password
-			if($model->smtp_ssl != 0) {
+			if($model->smtp_ssl != 0)
 				$mail->SMTPSecure	= $model->smtp_ssl == 1 ? "tls" : "ssl";	// Enable encryption, 'ssl' also accepted
-			}
 
 		} else {
 			//live server 
@@ -301,6 +300,15 @@ class SupportMailSetting extends CActiveRecord
 			$mail->AddReplyTo($model->mail_from, $model->mail_name);
 			$mail->AddAddress($to_email, $to_name);
 		}
+		// cc
+		if ($cc != null && count($cc) > 0) {
+			foreach ($cc as $email => $name)
+				$mail->AddAddress($email, $name);
+		}
+		// attachment
+		if ($attachment != null)
+			$mail->addAttachment($attachment);
+		
 		$mail->Subject = $subject;
 		$mail->MsgHTML($message);
 
