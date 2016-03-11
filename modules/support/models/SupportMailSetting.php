@@ -233,30 +233,20 @@ class SupportMailSetting extends CActiveRecord
 	}
 
 	/**
-	 * before validate attributes
+	 * User get information
 	 */
-	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
-			if($this->mail_smtp == '1') {
-				if($this->smtp_address == '') {
-					$this->addError('smtp_address', Phrase::trans(23032,1));
-				}
-				if($this->smtp_port == '') {
-					$this->addError('smtp_port', Phrase::trans(23033,1));
-				}
-				if($this->smtp_authentication == '1') {
-					if($this->smtp_username == '') {
-						$this->addError('smtp_username', Phrase::trans(23034,1));
-					}
-					if($this->smtp_password == '') {
-						$this->addError('smtp_password', Phrase::trans(23035,1));
-					}
-				}
-			}
-
-			$this->modified_id = Yii::app()->user->id;
+	public static function getInfo($id, $column=null)
+	{
+		if($column != null) {
+			$model = self::model()->findByPk($id,array(
+				'select' => $column
+			));
+			return $model->$column;
+			
+		} else {
+			$model = self::model()->findByPk($id);
+			return $model;			
 		}
-		return true;
 	}
 
     /**
@@ -320,5 +310,32 @@ class SupportMailSetting extends CActiveRecord
 			//echo 'no send';
 		}
     }
+
+	/**
+	 * before validate attributes
+	 */
+	protected function beforeValidate() {
+		if(parent::beforeValidate()) {
+			if($this->mail_smtp == '1') {
+				if($this->smtp_address == '') {
+					$this->addError('smtp_address', Phrase::trans(23032,1));
+				}
+				if($this->smtp_port == '') {
+					$this->addError('smtp_port', Phrase::trans(23033,1));
+				}
+				if($this->smtp_authentication == '1') {
+					if($this->smtp_username == '') {
+						$this->addError('smtp_username', Phrase::trans(23034,1));
+					}
+					if($this->smtp_password == '') {
+						$this->addError('smtp_password', Phrase::trans(23035,1));
+					}
+				}
+			}
+
+			$this->modified_id = Yii::app()->user->id;
+		}
+		return true;
+	}
 
 }
