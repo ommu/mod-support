@@ -109,7 +109,7 @@ EOP;
 				<div class="submit clearfix">
 					<label>&nbsp;</label>
 					<div class="desc">
-						<?php echo CHtml::submitButton($model->isNewRecord ? Phrase::trans(328,0) : Phrase::trans(328,0), array('onclick' => 'setEnableSave()')); ?>
+						<?php echo CHtml::submitButton(Yii::t('phrase', 'Send Message'), array('onclick' => 'setEnableSave()')); ?>
 					</div>
 				</div>
 
