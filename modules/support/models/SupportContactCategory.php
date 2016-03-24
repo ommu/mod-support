@@ -345,24 +345,20 @@ class SupportContactCategory extends CActiveRecord
 	 */
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
-			$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
 			$action = strtolower(Yii::app()->controller->action->id);
 			
 			if($this->isNewRecord) {
-				$currentAction = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id);
+				$location = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id);
 				$title=new OmmuSystemPhrase;
-				$title->location = $currentAction;
+				$title->location = $location.'_title';
 				$title->en = $this->title;
-				if($title->save()) {
+				if($title->save())
 					$this->name = $title->phrase_id;
-				}
 			
 			} else {
-				if($action == 'edit') {
-					$title = OmmuSystemPhrase::model()->findByPk($this->name);
-					$title->en = $this->title;
-					$title->save();
-				}
+				$title = OmmuSystemPhrase::model()->findByPk($this->name);
+				$title->en = $this->title;
+				$title->save();
 			}
 				
 			//upload proposal

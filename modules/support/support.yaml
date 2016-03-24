@@ -71,5 +71,5 @@ content_menu	:
 # controller o/widget
 
 	- urlTitle: Add Widget
-		urlRules: {report, o/widget, manage, siteType: 0,1, userLevel: 1,2}
+		urlRules: {support, o/widget, manage, siteType: 0,1, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
