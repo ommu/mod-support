@@ -326,7 +326,7 @@ class SupportContactCategory extends CActiveRecord
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord)
-				$this->creation_id = Yii::app()->user->id;		
+				$this->creation_id = Yii::app()->user->id;
 			else
 				$this->modified_id = Yii::app()->user->id;
 			
