@@ -49,11 +49,11 @@ EOP;
 	<?php //end.Maps Location ?>
 
 	<?php //begin.Contact Form ?>
-	<h3 class="title-line"><span><?php echo Phrase::trans(23037,1);?></span></h3>
-	<?php echo Phrase::trans(23091,1);?>
+	<h3 class="title-line"><span><?php echo Yii::t('phrase', 'Hallo');?></span></h3>
+	<?php echo Yii::t('phrase', 'Contact our team for any sales, support or general questions, or just say Hi!');?>
 
 	<?php if(Yii::app()->user->hasFlash('success') || isset($_GET['name'])) {
-		echo '<div class="notifier success"><strong>'.Phrase::trans(23037,1).', '.$_GET['name'].'</strong><br/>'.Phrase::trans(23092,1).'</div>';
+		echo '<div class="notifier success"><strong>'.Yii::t('phrase', 'Hallo').', '.$_GET['name'].'</strong><br/>'.Yii::t('phrase', 'Your message was sent. Thank you!').'</div>';
 
 	} else { ?>
 		<div class="form">

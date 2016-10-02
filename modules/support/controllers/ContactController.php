@@ -97,7 +97,7 @@ class ContactController extends Controller
 			),
 		));
 		
-		$this->pageTitle = Phrase::trans(23038,1);
+		$this->pageTitle = Yii::t('phrase', 'Contact Us');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('front_index',array(
@@ -141,8 +141,8 @@ class ContactController extends Controller
 		}
 		
 		$this->pageTitleShow = true;		
-		$this->pageTitle = isset($_GET['email']) ? 'Kontak Kami Berhasil Dikirim' : 'Kontak Kami';
-		$this->pageDescription = isset($_GET['email']) ? (isset($_GET['name']) ? Phrase::trans(23123,1, array($_GET['name'], $_GET['email'])) : Phrase::trans(23122,1, array($_GET['email']))) : '';
+		$this->pageTitle = isset($_GET['email']) ? Yii::t('phrase', 'Kontak Kami Berhasil Dikirim') : Yii::t('phrase', 'Kontak Kami');
+		$this->pageDescription = isset($_GET['email']) ? (isset($_GET['name']) ? Yii::t('phrase', 'Hi <strong>$1 ($2)</strong>, terimakasih telah menghubungi support kami.'), array($_GET['name'], $_GET['email'])) : Yii::t('phrase', 'Hi <strong>$1</strong>, terimakasih telah menghubungi support kami.'), array($_GET['email']))) : '';
 		$this->pageMeta = '';
 		$this->render('front_feedback',array(
 			'model'=>$model,
@@ -194,7 +194,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('index');
 		$this->dialogWidth = 400;
 		
-		$this->pageTitle = Phrase::trans(23075,1);
+		$this->pageTitle = Yii::t('phrase', 'Delete Contact');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('front_success');
