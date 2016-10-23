@@ -105,7 +105,7 @@ class SupportContacts extends CActiveRecord
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
-			'modified_search' => Yii::t('attribute', 'Modified',
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 	}
 

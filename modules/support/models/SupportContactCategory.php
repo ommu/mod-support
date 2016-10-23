@@ -364,6 +364,13 @@ class SupportContactCategory extends CActiveRecord
 			//upload proposal
 			if(in_array($action, array('add','edit'))) {
 				$support_path = "public/support";
+				if(!file_exists($support_path)) {
+					mkdir($support_path, 0755, true);
+
+					// Add File in User Folder (index.php)
+					$newFile = $support_path.'/index.php';
+					$FileHandle = fopen($newFile, 'w');
+				}
 				$this->icons = CUploadedFile::getInstance($this, 'icons');
 				if($this->icons instanceOf CUploadedFile) {
 					$fileName = Utility::getUrlTitle($this->title).'_'.time().'.'.strtolower($this->icons->extensionName);
