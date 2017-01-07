@@ -215,7 +215,7 @@ class SupportContactCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'title',
-				'value' => 'Phrase::trans($data->name, 2)',
+				'value' => 'Phrase::trans($data->name)',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
@@ -304,7 +304,7 @@ class SupportContactCategory extends CActiveRecord
 		$items = array();
 		if($model != null) {
 			foreach($model as $key => $val) {
-				$items[$val->cat_id] = Phrase::trans($val->name, 2);
+				$items[$val->cat_id] = Phrase::trans($val->name);
 			}
 			return $items;
 		} else {
