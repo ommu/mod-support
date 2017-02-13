@@ -241,7 +241,7 @@ class SupportMails extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date, true)',
+				'value' => 'Utility::dateFormat($data->creation_date)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
