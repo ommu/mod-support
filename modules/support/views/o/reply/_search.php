@@ -31,8 +31,8 @@
 		</li>
 
 		<li>
-			<?php echo $model->getAttributeLabel('mail_id'); ?><br/>
-			<?php echo $form->textField($model,'mail_id',array('size'=>11,'maxlength'=>11)); ?>
+			<?php echo $model->getAttributeLabel('feedback_id'); ?><br/>
+			<?php echo $form->textField($model,'feedback_id',array('size'=>11,'maxlength'=>11)); ?>
 		</li>
 
 		<li>

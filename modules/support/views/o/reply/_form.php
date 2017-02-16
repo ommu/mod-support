@@ -21,120 +21,69 @@
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')
 )); ?>
 
-<?php //begin.Messages ?>
-<div id="ajax-message">
-	<?php echo $form->errorSummary($model); ?>
-</div>
-<?php //begin.Messages ?>
-
-<fieldset>
-
-	<div class="clearfix publish">
-		<?php echo $form->labelEx($model,'publish'); ?>
-		<div class="desc">
-			<?php echo $form->checkBox($model,'publish'); ?>
-			<?php echo $form->labelEx($model,'publish'); ?>
-			<?php echo $form->error($model,'publish'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'mail_id'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'mail_id',array('size'=>11,'maxlength'=>11)); ?>
-			<?php echo $form->error($model,'mail_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'reply_message'); ?>
-		<div class="desc">
-			<?php echo $form->textArea($model,'reply_message',array('rows'=>6, 'cols'=>50)); ?>
-			<?php echo $form->error($model,'reply_message'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'creation_date'); ?>
-		<div class="desc">
-			<?php
-			$model->creation_date = !$model->isNewRecord ? (!in_array($model->creation_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->creation_date)) : '') : '';
-			//echo $form->textField($model,'creation_date');
-			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
-				'model'=>$model,
-				'attribute'=>'creation_date',
-				//'mode'=>'datetime',
-				'options'=>array(
-					'dateFormat' => 'dd-mm-yy',
-				),
-				'htmlOptions'=>array(
-					'class' => 'span-4',
-				 ),
-			)); ?>
-			<?php echo $form->error($model,'creation_date'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'creation_id'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'creation_id',array('size'=>11,'maxlength'=>11)); ?>
-			<?php echo $form->error($model,'creation_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'modified_date'); ?>
-		<div class="desc">
-			<?php
-			$model->modified_date = !$model->isNewRecord ? (!in_array($model->modified_date, array('0000-00-00','1970-01-01')) ? date('d-m-Y', strtotime($model->modified_date)) : '') : '';
-			//echo $form->textField($model,'modified_date');
-			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
-				'model'=>$model,
-				'attribute'=>'modified_date',
-				//'mode'=>'datetime',
-				'options'=>array(
-					'dateFormat' => 'dd-mm-yy',
-				),
-				'htmlOptions'=>array(
-					'class' => 'span-4',
-				 ),
-			)); ?>
-			<?php echo $form->error($model,'modified_date'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'modified_id'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'modified_id',array('size'=>11,'maxlength'=>11)); ?>
-			<?php echo $form->error($model,'modified_id'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="submit clearfix">
-		<label>&nbsp;</label>
-		<div class="desc">
-			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save'), array('onclick' => 'setEnableSave()')); ?>
-		</div>
-	</div>
-
-</fieldset>
-<?php /*
 <div class="dialog-content">
+	<fieldset>
+
+		<?php //begin.Messages ?>
+		<div id="ajax-message">
+			<?php echo $form->errorSummary($model); ?>
+		</div>
+		<?php //begin.Messages ?>
+
+		<div class="clearfix info">
+			<label><?php echo $model->getAttributeLabel('message')?></label>
+			<div class="desc">
+				<?php 
+				$subject = $model->isNewRecord ? $feedback->subject : $model->feedback->subject;
+				echo Yii::t('phrase', 'Subject: ').$subject;?><br/>
+				<?php echo $model->isNewRecord ? $feedback->message : $model->feedback->message;?><br/>
+				<span class="small-px"><strong><?php echo $model->isNewRecord ? $feedback->displayname : $model->feedback->displayname;?></strong><br/><?php echo $model->isNewRecord ? $feedback->email : $model->feedback->email;?><br/>Date: <?php echo $model->isNewRecord ? $feedback->creation_date : $model->feedback->creation_date;?></span>
+			</div>
+		</div>
+
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'reply_message'); ?>
+			<div class="desc">
+				<?php 
+				//echo $form->textArea($model,'reply_message',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller'));
+				$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+					'model'=>$model,
+					'attribute'=>reply_message,
+					// Redactor options
+					'options'=>array(
+						//'lang'=>'fi',
+						'buttons'=>array(
+							'html', 'formatting', '|', 
+							'bold', 'italic', 'deleted', '|',
+							'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
+							'link', '|',
+						),
+					),
+					'plugins' => array(
+						'fontcolor' => array('js' => array('fontcolor.js')),
+						'table' => array('js' => array('table.js')),
+						'fullscreen' => array('js' => array('fullscreen.js')),
+					),
+				)); ?>
+				<?php echo $form->error($model,'reply_message'); ?>
+			</div>
+		</div>
+
+		<div class="clearfix publish">
+			<?php echo $form->labelEx($model,'publish'); ?>
+			<div class="desc">
+				<?php echo $form->checkBox($model,'publish'); ?>
+				<?php echo $form->labelEx($model,'publish'); ?>
+				<?php echo $form->error($model,'publish'); ?>
+			</div>
+		</div>
+
+	</fieldset>
 </div>
 <div class="dialog-submit">
 	<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') ,array('onclick' => 'setEnableSave()')); ?>
 	<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 </div>
-*/?>
 <?php $this->endWidget(); ?>
 
 

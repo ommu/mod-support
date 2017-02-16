@@ -25,7 +25,7 @@
  * The followings are the available columns in table 'ommu_support_feedback_reply':
  * @property string $reply_id
  * @property integer $publish
- * @property string $mail_id
+ * @property string $feedback_id
  * @property string $reply_message
  * @property string $creation_date
  * @property string $creation_id
@@ -38,6 +38,11 @@
 class SupportFeedbackReply extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $feedback_search;
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -66,13 +71,14 @@ class SupportFeedbackReply extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('mail_id, reply_message, creation_date, creation_id, modified_id', 'required'),
+			array('feedback_id, reply_message', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
-			array('mail_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('modified_date', 'safe'),
+			array('feedback_id, creation_id, modified_id', 'length', 'max'=>11),
+			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('reply_id, publish, mail_id, reply_message, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('reply_id, publish, feedback_id, reply_message, creation_date, creation_id, modified_date, modified_id,
+				feedback_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,7 +90,9 @@ class SupportFeedbackReply extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'mail_relation' => array(self::BELONGS_TO, 'OmmuSupportFeedbacks', 'mail_id'),
+			'feedback' => array(self::BELONGS_TO, 'SupportFeedbacks', 'feedback_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -96,12 +104,15 @@ class SupportFeedbackReply extends CActiveRecord
 		return array(
 			'reply_id' => Yii::t('attribute', 'Reply'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'mail_id' => Yii::t('attribute', 'Mail'),
+			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'reply_message' => Yii::t('attribute', 'Reply Message'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'feedback_search' => Yii::t('attribute', 'Feedback'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 		/*
 			'Reply' => 'Reply',
@@ -133,6 +144,22 @@ class SupportFeedbackReply extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'feedback' => array(
+				'alias'=>'feedback',
+				'select'=>'subject',
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname',
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname',
+			),
+		);
 
 		$criteria->compare('t.reply_id',strtolower($this->reply_id),true);
 		if(isset($_GET['type']) && $_GET['type'] == 'publish')
@@ -145,10 +172,10 @@ class SupportFeedbackReply extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		if(isset($_GET['mail']))
-			$criteria->compare('t.mail_id',$_GET['mail']);
+		if(isset($_GET['feedback']))
+			$criteria->compare('t.feedback_id',$_GET['feedback']);
 		else
-			$criteria->compare('t.mail_id',$this->mail_id);
+			$criteria->compare('t.feedback_id',$this->feedback_id);
 		$criteria->compare('t.reply_message',strtolower($this->reply_message),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
@@ -162,6 +189,10 @@ class SupportFeedbackReply extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		$criteria->compare('feedback.subject',strtolower($this->feedback_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['SupportFeedbackReply_sort']))
 			$criteria->order = 't.reply_id DESC';
@@ -194,7 +225,7 @@ class SupportFeedbackReply extends CActiveRecord
 		} else {
 			//$this->defaultColumns[] = 'reply_id';
 			$this->defaultColumns[] = 'publish';
-			$this->defaultColumns[] = 'mail_id';
+			$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'reply_message';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
@@ -222,22 +253,19 @@ class SupportFeedbackReply extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->reply_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
-			$this->defaultColumns[] = 'mail_id';
-			$this->defaultColumns[] = 'reply_message';
+			$this->defaultColumns[] = array(
+				'name' => 'feedback_search',
+				'value' => '$data->feedback->subject',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'reply_message',
+				'value' => '$data->reply_message',
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -264,34 +292,20 @@ class SupportFeedbackReply extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->reply_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
@@ -316,69 +330,14 @@ class SupportFeedbackReply extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			if($this->isNewRecord)
+				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : ($this->feedback->user_id != 0 ? $this->feedback->user_id : 0);
+			else
+				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-			//$this->modified_date = date('Y-m-d', strtotime($this->modified_date));
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }
