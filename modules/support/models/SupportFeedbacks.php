@@ -20,7 +20,7 @@
  * This is the model class for table "ommu_support_feedbacks".
  *
  * The followings are the available columns in table 'ommu_support_feedbacks':
- * @property string $mail_id
+ * @property string $feedback_id
  * @property string $user_id
  * @property string $reply_id
  * @property string $email
@@ -81,7 +81,7 @@ class SupportFeedbacks extends CActiveRecord
 			array('user_id, displayname, phone, message_reply, creation_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('mail_id, reply_id, user_id, email, displayname, phone, subject, message, message_reply, creation_date, modified_date, modified_id, replied_date,
+			array('feedback_id, reply_id, user_id, email, displayname, phone, subject, message, message_reply, creation_date, modified_date, modified_id, replied_date,
 				user_search, reply_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -97,6 +97,7 @@ class SupportFeedbacks extends CActiveRecord
 			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 			'user_reply' => array(self::BELONGS_TO, 'Users', 'reply_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'feedback_id'),
 		);
 	}
 
@@ -106,7 +107,7 @@ class SupportFeedbacks extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'mail_id' => Yii::t('attribute', 'Mail'),
+			'feedback_id' => Yii::t('attribute', 'Mail'),
 			'user_id' => Yii::t('attribute', 'User'),
 			'reply_id' => Yii::t('attribute', 'Reply'),
 			'email' => Yii::t('attribute', 'Email Address'),
@@ -149,7 +150,7 @@ class SupportFeedbacks extends CActiveRecord
 			),
 		);
 
-		$criteria->compare('t.mail_id',$this->mail_id);
+		$criteria->compare('t.feedback_id',$this->feedback_id);
 		$criteria->compare('t.user_id',$this->user_id);
 		$criteria->compare('t.reply_id',$this->reply_id);
 		$criteria->compare('t.email',$this->email,true);
@@ -171,7 +172,7 @@ class SupportFeedbacks extends CActiveRecord
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 			
 		if(!isset($_GET['SupportFeedbacks_sort']))
-			$criteria->order = 't.mail_id DESC';
+			$criteria->order = 't.feedback_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -199,7 +200,7 @@ class SupportFeedbacks extends CActiveRecord
 				$this->defaultColumns[] = $val;
 			}
 		}else {
-			//$this->defaultColumns[] = 'mail_id';
+			//$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
 			$this->defaultColumns[] = 'reply_id';
 			$this->defaultColumns[] = 'email';

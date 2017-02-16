@@ -79,7 +79,7 @@
 						'options' => array(
 							'class' => 'reply'
 						),
-						'url' => 'Yii::app()->controller->createUrl("reply",array("id"=>$data->primaryKey))'),
+						'url' => 'Yii::app()->controller->createUrl("o/reply/add",array("feedback"=>$data->primaryKey,"hook"=>"feedback"))'),
 					'view' => array(
 						'label' => 'view',
 						'options' => array(

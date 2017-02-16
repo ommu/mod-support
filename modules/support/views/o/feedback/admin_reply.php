@@ -14,7 +14,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Feedbacks'=>array('manage'),
-		$model->mail_id=>array('view','id'=>$model->mail_id),
+		$model->feedback_id=>array('view','id'=>$model->feedback_id),
 		'Update',
 	);
 ?>
@@ -48,7 +48,7 @@
 					echo $form->error($model,'message_reply');
 				} else {?>
 				<?php echo $model->message_reply;?><br/>
-				<span class="small-px">Date: <?php echo $model->reply_date;?></span>
+				<span class="small-px">Date: <?php echo $model->replied_date;?></span>
 				<?php }?>
 			</div>
 		</div>
