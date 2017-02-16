@@ -159,10 +159,15 @@ class ReplyController extends Controller
 			} else {
 				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 					if($model->save()) {
-						unset($_GET['enablesave']);	
+						if(isset($_GET['hook']) && $_GET['hook'] == 'feedback')
+							$dialogGroundUrl = Yii::app()->controller->createUrl('o/feedback/manage');
+						else {
+							unset($_GET['enablesave']);	
+							$dialogGroundUrl = Yii::app()->controller->createUrl('manage', $_GET);
+						}
 						echo CJSON::encode(array(
 							'type' => 5,
-							'get' => Yii::app()->controller->createUrl('manage', $_GET),
+							'get' => $dialogGroundUrl,
 							'id' => 'partial-support-feedback-reply',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackReply success created.').'</strong></div>',
 						));
@@ -173,9 +178,9 @@ class ReplyController extends Controller
 			}
 			Yii::app()->end();
 		}
-		if(isset($_GET['hook']) && $_GET['hook'] == 'feedback') {
+		if(isset($_GET['hook']) && $_GET['hook'] == 'feedback')
 			$dialogGroundUrl = Yii::app()->controller->createUrl('o/feedback/manage');
-		} else 
+		else 
 			$dialogGroundUrl = Yii::app()->controller->createUrl('manage', $_GET);
 		
 		$this->dialogDetail = true;

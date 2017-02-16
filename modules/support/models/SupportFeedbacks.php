@@ -38,6 +38,7 @@ class SupportFeedbacks extends CActiveRecord
 	// Variable Search
 	public $user_search;
 	public $modified_search;
+	public $reply_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -77,7 +78,7 @@ class SupportFeedbacks extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('feedback_id, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id,
-				user_search, modified_search', 'safe', 'on'=>'search'),
+				user_search, modified_search, reply_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +90,7 @@ class SupportFeedbacks extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'view' => array(self::BELONGS_TO, 'ViewSupportFeedbacks', 'feedback_id'),
 			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'feedback_id'),
@@ -111,6 +113,9 @@ class SupportFeedbacks extends CActiveRecord
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
+			'user_search' => Yii::t('attribute', 'User'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
+			'reply_search' => Yii::t('attribute', 'Reply'),
 		);
 	}
 	
@@ -149,6 +154,7 @@ class SupportFeedbacks extends CActiveRecord
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		$criteria->compare('t.modified_id',$this->modified_id);
+		$criteria->compare('t.reply_search',$this->reply_search);
 		
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
@@ -245,10 +251,9 @@ class SupportFeedbacks extends CActiveRecord
 					),
 				), true),
 			);
-			/*
 			$this->defaultColumns[] = array(
-				'name' => 'reply_id',
-				'value' => '$data->reply_id != 0 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'name' => 'reply_search',
+				'value' => '$data->view->feedbacks != 0 ? CHtml::link($data->view->feedbacks, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -258,10 +263,15 @@ class SupportFeedbacks extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
-			*/
 
 		}
 		parent::afterConstruct();
+	}
+	
+	protected function afterFind() {
+		$this->reply_search = $this->view->feedbacks != 0 ? 1 : 0;
+		
+		parent::afterFind();		
 	}
 
 	/**
@@ -277,7 +287,7 @@ class SupportFeedbacks extends CActiveRecord
 			}	
 		}
 		return true;
-	}	
+	}
 	
 	/**
 	 * After save attributes

@@ -253,10 +253,12 @@ class SupportFeedbackReply extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'feedback_search',
-				'value' => '$data->feedback->subject',
-			);
+			if(!isset($_GET['feedback'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'feedback_search',
+					'value' => '$data->feedback->subject',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'name' => 'reply_message',
 				'value' => '$data->reply_message',
