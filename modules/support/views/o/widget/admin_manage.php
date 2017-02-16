@@ -3,7 +3,7 @@
  * Support Widgets (support-widget)
  * @var $this WidgetController
  * @var $model SupportWidget
- * version: 0.2.0
+ * version: 0.2.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)

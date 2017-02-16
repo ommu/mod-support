@@ -3,7 +3,7 @@
  * Support Contacts (support-contacts)
  * @var $this ContactsController
  * @var $model SupportContacts
- * version: 0.2.0
+ * version: 0.2.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
