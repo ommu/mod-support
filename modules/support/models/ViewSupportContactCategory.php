@@ -1,6 +1,8 @@
 <?php
 /**
  * ViewSupportContactCategory
+ * version: 0.2.0
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2015 Ommu Platform (ommu.co)
  * @link https://github.com/ommu/Support

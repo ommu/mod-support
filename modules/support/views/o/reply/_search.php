@@ -4,12 +4,12 @@
  * @var $this ReplyController
  * @var $model SupportFeedbackReply
  * @var $form CActiveForm
- * version: 0.0.1
+ * version: 0.2.0
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2017 Ommu Platform (ommu.co)
  * @created date 16 February 2017, 16:00 WIB
- * @link http://company.ommu.co
+ * @link https://github.com/ommu/Support
  * @contect (+62)856-299-4114
  *
  */

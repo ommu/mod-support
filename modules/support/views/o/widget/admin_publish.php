@@ -4,6 +4,7 @@
  * @var $this WidgetController
  * @var $model SupportWidget
  * @var $form CActiveForm
+ * version: 0.2.0
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)

@@ -4,7 +4,7 @@
  * @var $this ContactsController
  * @var $model SupportContacts
  * @var $form CActiveForm
- * @var $form CActiveForm
+ * version: 0.2.0
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)

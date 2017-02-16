@@ -4,6 +4,7 @@
  * @var $this FeedbackController
  * @var $model SupportFeedbacks
  * @var $form CActiveForm
+ * version: 0.2.0
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
