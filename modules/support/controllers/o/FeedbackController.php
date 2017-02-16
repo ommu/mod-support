@@ -11,7 +11,6 @@
  *	Index
  *	Manage
  *	Edit
- *	Reply
  *	Delete
  *	Setting
  *
@@ -81,7 +80,7 @@ class FeedbackController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','edit','reply','delete'),
+				'actions'=>array('manage','edit','delete'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -182,54 +181,6 @@ class FeedbackController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
-			'model'=>$model,
-		));
-	}
-	
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionReply($id) 
-	{
-		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
-
-		if(isset($_POST['SupportFeedbacks'])) {
-			$model->attributes=$_POST['SupportFeedbacks'];
-			$model->scenario = 'formReply';
-
-			$jsonError = CActiveForm::validate($model);
-			if(strlen($jsonError) > 2) {
-				echo $jsonError;
-			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
-					if($model->save()) {
-						echo CJSON::encode(array (
-							'type' => 5,
-							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-feedbacks',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success reply.').'</strong></div>',
-						));
-					} else {
-						print_r($model->getErrors());
-					}
-				}
-			}
-			Yii::app()->end();
-		}
-		
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 600;
-		
-		$this->pageTitle = Yii::t('phrase', 'Reply Feedback Support: {subject}', array('{subject}'=>$model->subject));
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_reply',array(
 			'model'=>$model,
 		));
 	}

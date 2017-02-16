@@ -22,17 +22,14 @@
  * The followings are the available columns in table 'ommu_support_feedbacks':
  * @property string $feedback_id
  * @property string $user_id
- * @property string $reply_id
  * @property string $email
  * @property string $displayname
  * @property string $phone
  * @property string $subject
  * @property string $message
- * @property string $message_reply
  * @property string $creation_date
  * @property string $modified_date
  * @property string $modified_id
- * @property string $replied_date
  */
 class SupportFeedbacks extends CActiveRecord
 {
@@ -40,7 +37,6 @@ class SupportFeedbacks extends CActiveRecord
 	
 	// Variable Search
 	public $user_search;
-	public $reply_search;
 	public $modified_search;
 
 	/**
@@ -70,19 +66,18 @@ class SupportFeedbacks extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('email, displayname, subject, message', 'required'),
-			array('message_reply', 'required', 'on'=>'formReply'),
 			//array('displayname, phone', 'required', 'on'=>'contactus'),
 			array('modified_id', 'numerical', 'integerOnly'=>true),
-			array('user_id, reply_id', 'length', 'max'=>11),
+			array('user_id', 'length', 'max'=>11),
 			array('phone', 'length', 'max'=>15),
 			array('email, displayname', 'length', 'max'=>32),
 			array('subject', 'length', 'max'=>64),
 			array('email', 'email'),
-			array('user_id, displayname, phone, message_reply, creation_date', 'safe'),
+			array('user_id, displayname, phone, creation_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('feedback_id, reply_id, user_id, email, displayname, phone, subject, message, message_reply, creation_date, modified_date, modified_id, replied_date,
-				user_search, reply_search, modified_search', 'safe', 'on'=>'search'),
+			array('feedback_id, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id,
+				user_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,7 +90,6 @@ class SupportFeedbacks extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
-			'user_reply' => array(self::BELONGS_TO, 'Users', 'reply_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'feedback_id'),
 		);
@@ -107,19 +101,16 @@ class SupportFeedbacks extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'feedback_id' => Yii::t('attribute', 'Mail'),
+			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'user_id' => Yii::t('attribute', 'User'),
-			'reply_id' => Yii::t('attribute', 'Reply'),
 			'email' => Yii::t('attribute', 'Email Address'),
 			'displayname' => Yii::t('attribute', 'Name'),
 			'phone' => Yii::t('attribute', 'Phone'),
 			'subject' => Yii::t('attribute', 'Subject'),
 			'message' => Yii::t('attribute', 'Message'),
-			'message_reply' => Yii::t('attribute', 'Reply Message'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
-			'replied_date' => Yii::t('attribute', 'Replied Date'),
 		);
 	}
 	
@@ -140,10 +131,6 @@ class SupportFeedbacks extends CActiveRecord
 				'alias'=>'user',
 				'select'=>'displayname',
 			),
-			'user_reply' => array(
-				'alias'=>'user_reply',
-				'select'=>'displayname',
-			),
 			'modified' => array(
 				'alias'=>'modified',
 				'select'=>'displayname',
@@ -152,23 +139,18 @@ class SupportFeedbacks extends CActiveRecord
 
 		$criteria->compare('t.feedback_id',$this->feedback_id);
 		$criteria->compare('t.user_id',$this->user_id);
-		$criteria->compare('t.reply_id',$this->reply_id);
 		$criteria->compare('t.email',$this->email,true);
 		$criteria->compare('t.displayname',$this->displayname,true);
 		$criteria->compare('t.phone',$this->phone,true);
 		$criteria->compare('t.subject',$this->subject,true);
 		$criteria->compare('t.message',$this->message,true);
-		$criteria->compare('t.message_reply',$this->message,true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		$criteria->compare('t.modified_id',$this->modified_id);
-		if($this->replied_date != null && !in_array($this->replied_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.replied_date)',date('Y-m-d', strtotime($this->replied_date)));
 		
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
-		$criteria->compare('user_reply.displayname',strtolower($this->reply_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 			
 		if(!isset($_GET['SupportFeedbacks_sort']))
@@ -202,17 +184,14 @@ class SupportFeedbacks extends CActiveRecord
 		}else {
 			//$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
-			$this->defaultColumns[] = 'reply_id';
 			$this->defaultColumns[] = 'email';
 			$this->defaultColumns[] = 'displayname';
 			$this->defaultColumns[] = 'phone';
 			$this->defaultColumns[] = 'subject';
 			$this->defaultColumns[] = 'message';
-			$this->defaultColumns[] = 'message_reply';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
-			$this->defaultColumns[] = 'replied_date';
 		}
 
 		return $this->defaultColumns;
@@ -266,6 +245,7 @@ class SupportFeedbacks extends CActiveRecord
 					),
 				), true),
 			);
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'reply_id',
 				'value' => '$data->reply_id != 0 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
@@ -278,6 +258,7 @@ class SupportFeedbacks extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
+			*/
 
 		}
 		parent::afterConstruct();
@@ -291,8 +272,6 @@ class SupportFeedbacks extends CActiveRecord
 		
 		if(parent::beforeValidate()) {
 			if(!$this->isNewRecord) {
-				if($action == 'reply')
-					$this->reply_id = Yii::app()->user->id;
 				if($action == 'edit')
 					$this->modified_id = Yii::app()->user->id;
 			}	
@@ -325,7 +304,8 @@ class SupportFeedbacks extends CActiveRecord
 			$feedback_ireplace = str_ireplace($feedback_search, $feedback_replace, $feedback_message);
 			SupportMailSetting::sendEmail(null, null, $feedback_title, $feedback_ireplace);
 			
-		} else {
+		} //else {
+		/*
 			if($action == 'reply') {
 				$reply_search = array(
 					'{$displayname}','{$email}','{$creation_date}','{$subject}','{$message}','{$reply}',
@@ -342,6 +322,7 @@ class SupportFeedbacks extends CActiveRecord
 				SupportMailSetting::sendEmail($this->email, $this->displayname, $reply_title, $reply_ireplace);
 			}
 		}
+		*/
 	}
 
 }

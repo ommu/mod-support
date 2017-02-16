@@ -22,12 +22,7 @@
 			<?php echo $model->getAttributeLabel('feedback_id'); ?><br/>
 			<?php echo $form->textField($model,'feedback_id',array('size'=>11,'maxlength'=>11)); ?>
 		</li>
-
-		<li>
-			<?php echo $model->getAttributeLabel('reply_id'); ?><br/>
-			<?php echo $form->textField($model,'reply_id'); ?>
-		</li>
-
+		
 		<li>
 			<?php echo $model->getAttributeLabel('user_id'); ?><br/>
 			<?php echo $form->textField($model,'user_id',array('size'=>11,'maxlength'=>11)); ?>
