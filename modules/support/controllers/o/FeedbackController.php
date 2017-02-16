@@ -1,8 +1,8 @@
 <?php
 /**
- * MailController
- * @var $this MailController
- * @var $model SupportMails
+ * FeedbackController
+ * @var $this FeedbackController
+ * @var $model SupportFeedbacks
  * @var $form CActiveForm
  * version: 0.0.1
  * Reference start
@@ -20,13 +20,13 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Support
+ * @link https://github.com/ommu/Support
  * @contect (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
 
-class MailController extends Controller
+class FeedbackController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -113,10 +113,10 @@ class MailController extends Controller
 	 */
 	public function actionManage() 
 	{
-		$model=new SupportMails('search');
+		$model=new SupportFeedbacks('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['SupportMails'])) {
-			$model->attributes=$_GET['SupportMails'];
+		if(isset($_GET['SupportFeedbacks'])) {
+			$model->attributes=$_GET['SupportFeedbacks'];
 		}
 
 		$columnTemp = array();
@@ -129,7 +129,7 @@ class MailController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'View Email Support');
+		$this->pageTitle = Yii::t('phrase', 'View Feedback Support');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -150,8 +150,8 @@ class MailController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
-		if(isset($_POST['SupportMails'])) {
-			$model->attributes=$_POST['SupportMails'];
+		if(isset($_POST['SupportFeedbacks'])) {
+			$model->attributes=$_POST['SupportFeedbacks'];
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -163,8 +163,8 @@ class MailController extends Controller
 						echo CJSON::encode(array (
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-mails',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Email support success updated.').'</strong></div>',
+							'id' => 'partial-support-feedbacks',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -178,7 +178,7 @@ class MailController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 		
-		$this->pageTitle = Yii::t('phrase', 'Edit Email Support: {subject}', array('{subject}'=>$model->subject));
+		$this->pageTitle = Yii::t('phrase', 'Edit Feedback Support: {subject}', array('{subject}'=>$model->subject));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -198,8 +198,8 @@ class MailController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
 
-		if(isset($_POST['SupportMails'])) {
-			$model->attributes=$_POST['SupportMails'];
+		if(isset($_POST['SupportFeedbacks'])) {
+			$model->attributes=$_POST['SupportFeedbacks'];
 			$model->scenario = 'formReply';
 
 			$jsonError = CActiveForm::validate($model);
@@ -211,8 +211,8 @@ class MailController extends Controller
 						echo CJSON::encode(array (
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
-							'id' => 'partial-support-mails',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Email support success reply.').'</strong></div>',
+							'id' => 'partial-support-feedbacks',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success reply.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -226,7 +226,7 @@ class MailController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 		
-		$this->pageTitle = Yii::t('phrase', 'Reply Email Support: {subject}', array('{subject}'=>$model->subject));
+		$this->pageTitle = Yii::t('phrase', 'Reply Feedback Support: {subject}', array('{subject}'=>$model->subject));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_reply',array(
@@ -249,8 +249,8 @@ class MailController extends Controller
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
-					'id' => 'partial-support-mails',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Email support success deleted.').'</strong></div>',
+					'id' => 'partial-support-feedbacks',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success deleted.').'</strong></div>',
 				));
 			}
 
@@ -259,67 +259,13 @@ class MailController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Delete Email Support');
+			$this->pageTitle = Yii::t('phrase', 'Delete Feedback Support');
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
 		}
 	}
-
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionSetting() 
-	{
-		$model = SupportMailSetting::model()->findByPk(1);
-
-		// Uncomment the following line if AJAX validation is needed
-		$this->performAjaxValidation($model);
-
-		if(isset($_POST['SupportMailSetting'])) {
-			$model->attributes=$_POST['SupportMailSetting'];
-
-			$jsonError = CActiveForm::validate($model);
-			if(strlen($jsonError) > 2) {
-				$errors = $model->getErrors();
-				$summary['msg'] = "<div class='errorSummary'><strong>".Yii::t('phrase', 'Please fix the following input errors:')."</strong>";
-				$summary['msg'] .= "<ul>";
-				foreach($errors as $key => $val) {
-					$summary['msg'] .= "<li>{$val[0]}</li>";
-				}
-				$summary['msg'] .= "</ul></div>";
-
-				$message = json_decode($jsonError, true);
-				$merge = array_merge_recursive($summary, $message);
-				$encode = json_encode($merge);
-				echo $encode;
-			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
-					if($model->save()) {
-						echo CJSON::encode(array(
-							'type' => 0,
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Mail Setting success updated.').'</strong></div>',
-						));
-					} else {
-						print_r($model->getErrors());
-					}
-				}
-			}
-			Yii::app()->end();
-
-		} else {
-			$this->pageTitle = Yii::t('phrase', 'Mail Settings');
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_setting',array(
-				'model'=>$model,
-			));
-		}
-
-	}
-
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -327,7 +273,7 @@ class MailController extends Controller
 	 */
 	public function loadModel($id) 
 	{
-		$model = SupportMails::model()->findByPk($id);
+		$model = SupportFeedbacks::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
 		return $model;
@@ -339,7 +285,7 @@ class MailController extends Controller
 	 */
 	protected function performAjaxValidation($model) 
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='support-mails-form') {
+		if(isset($_POST['ajax']) && $_POST['ajax']==='support-feedbacks-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}

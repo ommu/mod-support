@@ -16,9 +16,9 @@ db_table_name	:
 db_sql_filename	: 
 
 plugin_menu		:
-	- urlTitle: Contact Us
+	- urlTitle: Feedbacks
 		urlRules: {siteType: 0,1, userLevel: 1,2}
-		urlPath: {url: o/mail/manage, attr: -, icon: -}
+		urlPath: {url: o/feedback/manage, attr: -, icon: -}
 		
 	# urlTitle: Manage Contact
 	#	urlRules: {siteType: 0,1, userLevel: 1,2}

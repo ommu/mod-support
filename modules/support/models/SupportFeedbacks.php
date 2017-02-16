@@ -1,9 +1,9 @@
 <?php
 /**
- * SupportMails
+ * SupportFeedbacks
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Support
+ * @link https://github.com/ommu/Support
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -17,9 +17,9 @@
  *
  * --------------------------------------------------------------------------------------
  *
- * This is the model class for table "ommu_support_mails".
+ * This is the model class for table "ommu_support_feedbacks".
  *
- * The followings are the available columns in table 'ommu_support_mails':
+ * The followings are the available columns in table 'ommu_support_feedbacks':
  * @property string $mail_id
  * @property string $user_id
  * @property string $reply_id
@@ -34,7 +34,7 @@
  * @property string $modified_id
  * @property string $replied_date
  */
-class SupportMails extends CActiveRecord
+class SupportFeedbacks extends CActiveRecord
 {
 	public $defaultColumns = array();
 	
@@ -46,7 +46,7 @@ class SupportMails extends CActiveRecord
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @param string $className active record class name.
-	 * @return SupportMails the static model class
+	 * @return SupportFeedbacks the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -58,7 +58,7 @@ class SupportMails extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'ommu_support_mails';
+		return 'ommu_support_feedbacks';
 	}
 
 	/**
@@ -170,7 +170,7 @@ class SupportMails extends CActiveRecord
 		$criteria->compare('user_reply.displayname',strtolower($this->reply_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 			
-		if(!isset($_GET['SupportMails_sort']))
+		if(!isset($_GET['SupportFeedbacks_sort']))
 			$criteria->order = 't.mail_id DESC';
 
 		return new CActiveDataProvider($this, array(
