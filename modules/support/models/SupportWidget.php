@@ -89,9 +89,9 @@ class SupportWidget extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'cat_TO' => array(self::BELONGS_TO, 'SupportContactCategory', 'cat_id'),
-			'creation_TO' => array(self::BELONGS_TO, 'Users', 'creation_id'),
-			'modified_TO' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'cat' => array(self::BELONGS_TO, 'SupportContactCategory', 'cat_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -163,17 +163,17 @@ class SupportWidget extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
-			'creation_TO' => array(
-				'alias'=>'creation_TO',
+			'creation' => array(
+				'alias'=>'creation',
 				'select'=>'displayname',
 			),
-			'modified_TO' => array(
-				'alias'=>'modified_TO',
+			'modified' => array(
+				'alias'=>'modified',
 				'select'=>'displayname',
 			),
 		);
-		$criteria->compare('creation_TO.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified_TO.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['SupportWidget_sort']))
 			$criteria->order = 't.widget_id DESC';
@@ -237,7 +237,7 @@ class SupportWidget extends CActiveRecord
 			if(!isset($_GET['category'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'cat_id',
-					'value' => 'Phrase::trans($data->cat_TO->name)',
+					'value' => 'Phrase::trans($data->cat->name)',
 					'filter'=> SupportContactCategory::getCategory(),
 					'type' => 'raw',
 				);
@@ -249,7 +249,7 @@ class SupportWidget extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
-				'value' => '$data->creation_TO->displayname',
+				'value' => '$data->creation->displayname',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',

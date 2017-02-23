@@ -31,7 +31,7 @@
 	<fieldset>
 
 		<?php 
-		if($model->cat_TO->publish != 2) {
+		if($model->cat->publish != 2) {
 			$category = SupportContactCategory::getCategory(1, 'widget');
 			if($category != null) {?>
 			<div class="clearfix">
