@@ -18,7 +18,7 @@
 	
 	$cs = Yii::app()->getClientScript();
 	$cs->registerScriptFile('http://maps.googleapis.com/maps/api/js?sensor=false', CClientScript::POS_END);
-	$cs->registerScriptFile(Yii::app()->request->baseUrl.'/externals/support/plugin/custom.js', CClientScript::POS_END);
+	$cs->registerScriptFile($this->module->assetsUrl.'/plugin/custom.js', CClientScript::POS_END);
 $js = <<<EOP
 	initialize();
 EOP;

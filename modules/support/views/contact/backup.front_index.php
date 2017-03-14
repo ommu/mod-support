@@ -18,11 +18,11 @@
 	$point = explode(',', $maps->value);
 	$latitude = $point[0];
 	$longitude = $point[1];
-	$icons = Yii::app()->request->baseUrl.'/externals/support/images/map_marker.png';
+	$icons = $this->module->assetsUrl.'/images/map_marker.png';
 
 	$cs = Yii::app()->getClientScript();
-	$cs->registerCssFile(Yii::app()->request->baseUrl.'/externals/support/front_contact.css');
-	$cs->registerScriptFile(Yii::app()->request->baseUrl.'/externals/support/plugin/jquery.googlemaps1.01.js', CClientScript::POS_END);
+	$cs->registerCssFile($this->module->assetsUrl.'/front_contact.css');
+	$cs->registerScriptFile($this->module->assetsUrl.'/plugin/jquery.googlemaps1.01.js', CClientScript::POS_END);
 $js=<<<EOP
 	//Map Settings
 	$('#map-canvas').googleMaps({
