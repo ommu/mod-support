@@ -256,7 +256,7 @@ class SupportFeedbackReply extends CActiveRecord
 			if(!isset($_GET['feedback'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'feedback_search',
-					'value' => '$data->feedback->subject',
+					'value' => '$data->feedback->subject ? $data->feedback->subject : \'-\'',
 				);
 			}
 			$this->defaultColumns[] = array(

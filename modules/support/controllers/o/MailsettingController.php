@@ -174,7 +174,7 @@ class MailsettingController extends Controller
 	 */
 	protected function performAjaxValidation($model) 
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='support-feedbacks-form') {
+		if(isset($_POST['ajax']) && $_POST['ajax']==='support-mail-setting-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
