@@ -24,8 +24,9 @@
  *
  * The followings are the available columns in table '_view_support_feedbacks':
  * @property string $feedback_id
- * @property string $feedbacks
- * @property string $feedback_all
+ * @property string $reply_condition
+ * @property string $replies
+ * @property string $reply_all
  */
 class ViewSupportFeedbacks extends CActiveRecord
 {
@@ -66,12 +67,13 @@ class ViewSupportFeedbacks extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
+			array('reply_condition', 'numerical', 'integerOnly'=>true),
 			array('feedback_id', 'length', 'max'=>11),
-			array('feedbacks', 'length', 'max'=>23),
-			array('feedback_all', 'length', 'max'=>21),
+			array('replies', 'length', 'max'=>23),
+			array('reply_all', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('feedback_id, feedbacks, feedback_all', 'safe', 'on'=>'search'),
+			array('feedback_id, reply_condition, replies, reply_all', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,8 +95,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 	{
 		return array(
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
-			'feedbacks' => Yii::t('attribute', 'Feedbacks'),
-			'feedback_all' => Yii::t('attribute', 'Feedback All'),
+			'reply_condition' => Yii::t('attribute', 'Reply'),
+			'replies' => Yii::t('attribute', 'Replies'),
+			'reply_all' => Yii::t('attribute', 'Reply All'),
 		);
 		/*
 			'Feedback' => 'Feedback',
@@ -123,8 +126,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.feedback_id',strtolower($this->feedback_id),true);
-		$criteria->compare('t.feedbacks',strtolower($this->feedbacks),true);
-		$criteria->compare('t.feedback_all',strtolower($this->feedback_all),true);
+		$criteria->compare('t.reply_condition',strtolower($this->reply_condition),true);
+		$criteria->compare('t.replies',strtolower($this->replies),true);
+		$criteria->compare('t.reply_all',strtolower($this->reply_all),true);
 
 		if(!isset($_GET['ViewSupportFeedbacks_sort']))
 			$criteria->order = 't.feedback_id DESC';
@@ -156,8 +160,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 			}
 		} else {
 			$this->defaultColumns[] = 'feedback_id';
-			$this->defaultColumns[] = 'feedbacks';
-			$this->defaultColumns[] = 'feedback_all';
+			$this->defaultColumns[] = 'reply_condition';
+			$this->defaultColumns[] = 'replies';
+			$this->defaultColumns[] = 'reply_all';
 		}
 
 		return $this->defaultColumns;
@@ -173,8 +178,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			//$this->defaultColumns[] = 'feedback_id';
-			$this->defaultColumns[] = 'feedbacks';
-			$this->defaultColumns[] = 'feedback_all';
+			$this->defaultColumns[] = 'reply_condition';
+			$this->defaultColumns[] = 'replies';
+			$this->defaultColumns[] = 'reply_all';
 		}
 		parent::afterConstruct();
 	}
