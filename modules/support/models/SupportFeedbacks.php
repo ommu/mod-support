@@ -40,6 +40,7 @@ class SupportFeedbacks extends CActiveRecord
 	// Variable Search
 	public $user_search;
 	public $modified_search;
+	public $view_search;
 	public $reply_search;
 
 	/**
@@ -80,7 +81,7 @@ class SupportFeedbacks extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('feedback_id, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id,
-				user_search, modified_search, reply_search', 'safe', 'on'=>'search'),
+				user_search, modified_search, view_search, reply_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -117,6 +118,7 @@ class SupportFeedbacks extends CActiveRecord
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'user_search' => Yii::t('attribute', 'User'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
+			'view_search' => Yii::t('attribute', 'View'),
 			'reply_search' => Yii::t('attribute', 'Reply'),
 		);
 	}
@@ -162,6 +164,7 @@ class SupportFeedbacks extends CActiveRecord
 		
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('view.view_condition',$this->view_search);
 		$criteria->compare('view.reply_condition',$this->reply_search);
 			
 		if(!isset($_GET['SupportFeedbacks_sort']))
@@ -255,6 +258,18 @@ class SupportFeedbacks extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'view_search',
+				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl("o/views/manage",array(\'feedback\'=>$data->feedback_id))) : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yes'),
+					0=>Yii::t('phrase', 'No'),
+				),
+				'type' => 'raw',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'reply_search',

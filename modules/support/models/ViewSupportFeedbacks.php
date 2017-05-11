@@ -27,6 +27,9 @@
  * @property string $reply_condition
  * @property string $replies
  * @property string $reply_all
+ * @property string $view_condition
+ * @property string $views
+ * @property string $users
  */
 class ViewSupportFeedbacks extends CActiveRecord
 {
@@ -67,13 +70,13 @@ class ViewSupportFeedbacks extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('reply_condition', 'numerical', 'integerOnly'=>true),
+			array('reply_condition, view_condition', 'numerical', 'integerOnly'=>true),
 			array('feedback_id', 'length', 'max'=>11),
-			array('replies', 'length', 'max'=>23),
+			array('replies, views, users', 'length', 'max'=>23),
 			array('reply_all', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('feedback_id, reply_condition, replies, reply_all', 'safe', 'on'=>'search'),
+			array('feedback_id, reply_condition, replies, reply_all, view_condition, views, users', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -98,6 +101,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 			'reply_condition' => Yii::t('attribute', 'Reply'),
 			'replies' => Yii::t('attribute', 'Replies'),
 			'reply_all' => Yii::t('attribute', 'Reply All'),
+			'view_condition' => Yii::t('attribute', 'View'),
+			'views' => Yii::t('attribute', 'Views'),
+			'users' => Yii::t('attribute', 'Users'),
 		);
 		/*
 			'Feedback' => 'Feedback',
@@ -129,6 +135,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 		$criteria->compare('t.reply_condition',strtolower($this->reply_condition),true);
 		$criteria->compare('t.replies',strtolower($this->replies),true);
 		$criteria->compare('t.reply_all',strtolower($this->reply_all),true);
+		$criteria->compare('t.view_condition',strtolower($this->view_condition),true);
+		$criteria->compare('t.views',strtolower($this->views),true);
+		$criteria->compare('t.users',strtolower($this->users),true);
 
 		if(!isset($_GET['ViewSupportFeedbacks_sort']))
 			$criteria->order = 't.feedback_id DESC';
@@ -163,6 +172,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 			$this->defaultColumns[] = 'reply_condition';
 			$this->defaultColumns[] = 'replies';
 			$this->defaultColumns[] = 'reply_all';
+			$this->defaultColumns[] = 'view_condition';
+			$this->defaultColumns[] = 'views';
+			$this->defaultColumns[] = 'users';
 		}
 
 		return $this->defaultColumns;
@@ -181,6 +193,9 @@ class ViewSupportFeedbacks extends CActiveRecord
 			$this->defaultColumns[] = 'reply_condition';
 			$this->defaultColumns[] = 'replies';
 			$this->defaultColumns[] = 'reply_all';
+			$this->defaultColumns[] = 'view_condition';
+			$this->defaultColumns[] = 'views';
+			$this->defaultColumns[] = 'users';
 		}
 		parent::afterConstruct();
 	}
