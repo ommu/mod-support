@@ -26,6 +26,7 @@
  * @property string $view_id
  * @property string $feedback_id
  * @property string $user_id
+ * @property integer $views
  * @property string $creation_date
  *
  * The followings are the available model relations:
@@ -34,6 +35,10 @@
 class SupportFeedbackView extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $feedback_search;
+	public $user_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -62,11 +67,13 @@ class SupportFeedbackView extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('feedback_id, user_id, creation_date', 'required'),
-			array('feedback_id, user_id', 'length', 'max'=>11),
+			array('feedback_id, user_id', 'required'),
+			array('views', 'numerical', 'integerOnly'=>true),
+			array('feedback_id, user_id, views', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('view_id, feedback_id, user_id, creation_date', 'safe', 'on'=>'search'),
+			array('view_id, feedback_id, user_id, views, creation_date,
+				feedback_search, user_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,7 +85,8 @@ class SupportFeedbackView extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'feedback' => array(self::BELONGS_TO, 'OmmuSupportFeedbacks', 'feedback_id'),
+			'feedback' => array(self::BELONGS_TO, 'SupportFeedbacks', 'feedback_id'),
+			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
 		);
 	}
 
@@ -91,7 +99,10 @@ class SupportFeedbackView extends CActiveRecord
 			'view_id' => Yii::t('attribute', 'View'),
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'user_id' => Yii::t('attribute', 'User'),
+			'views' => Yii::t('attribute', 'Views'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
+			'feedback_search' => Yii::t('attribute', 'Feedback'),
+			'user_search' => Yii::t('attribute', 'User'),
 		);
 		/*
 			'View' => 'View',
@@ -119,6 +130,18 @@ class SupportFeedbackView extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
+		
+		// Custom Search
+		$criteria->with = array(
+			'feedback' => array(
+				'alias'=>'feedback',
+				'select'=>'subject',
+			),
+			'user' => array(
+				'alias'=>'user',
+				'select'=>'displayname',
+			),
+		);
 
 		$criteria->compare('t.view_id',strtolower($this->view_id),true);
 		if(isset($_GET['feedback']))
@@ -129,8 +152,12 @@ class SupportFeedbackView extends CActiveRecord
 			$criteria->compare('t.user_id',$_GET['user']);
 		else
 			$criteria->compare('t.user_id',$this->user_id);
+		$criteria->compare('t.views',$this->views);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
+		
+		$criteria->compare('feedback.subject',strtolower($this->feedback_search), true);
+		$criteria->compare('user.displayname',strtolower($this->user_search), true);
 
 		if(!isset($_GET['SupportFeedbackView_sort']))
 			$criteria->order = 't.view_id DESC';
@@ -164,6 +191,7 @@ class SupportFeedbackView extends CActiveRecord
 			//$this->defaultColumns[] = 'view_id';
 			$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
+			$this->defaultColumns[] = 'views';
 			$this->defaultColumns[] = 'creation_date';
 		}
 
@@ -175,20 +203,27 @@ class SupportFeedbackView extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
-			/*
-			$this->defaultColumns[] = array(
-				'class' => 'CCheckBoxColumn',
-				'name' => 'id',
-				'selectableRows' => 2,
-				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
-			);
-			*/
 			$this->defaultColumns[] = array(
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = 'feedback_id';
-			$this->defaultColumns[] = 'user_id';
+			if(!isset($_GET['feedback'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'feedback_search',
+					'value' => '$data->feedback->subject ? $data->feedback->subject : \'-\'',
+				);
+			}
+			$this->defaultColumns[] = array(
+				'name' => 'user_search',
+				'value' => '$data->user->displayname',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'views',
+				'value' => '$data->views ? $data->views : \'0\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -237,70 +272,35 @@ class SupportFeedbackView extends CActiveRecord
 	}
 
 	/**
+	 * User get information
+	 */
+	public static function insertView($feedback_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->select = 't.view_id, t.feedback_id, t.user_id, t.views';
+		$criteria->compare('t.feedback_id', $feedback_id);
+		$criteria->compare('t.user_id', Yii::app()->user->id);
+		$findView = self::model()->find($criteria);
+		
+		if($findView != null)
+			self::model()->updateByPk($findView->view_id, array('views'=>$findView->views + 1));
+		
+		else {
+			$view=new SupportFeedbackView;
+			$view->feedback_id = $feedback_id;
+			$view->save();
+		}
+	}
+
+	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			if($this->isNewRecord)
+				$this->user_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }
