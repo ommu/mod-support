@@ -20,6 +20,9 @@ plugin_menu		:
 	- urlTitle: Views
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/views/manage, attr: -, icon: -}
+	- urlTitle: Support Manual
+		urlRules: {siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/setting/manual, attr: -, icon: -}
 
 content_menu	:		
 # controller o/reply
