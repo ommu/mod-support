@@ -30,7 +30,7 @@
  * @property string $creation_date
  *
  * The followings are the available model relations:
- * @property OmmuSupportFeedbacks $feedback
+ * @property SupportFeedbacks $feedback
  */
 class SupportFeedbackView extends CActiveRecord
 {

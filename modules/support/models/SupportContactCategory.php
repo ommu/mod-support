@@ -32,7 +32,7 @@
  * @property string $modified_id
  *
  * The followings are the available model relations:
- * @property OmmuSupportContacts[] $ommuSupportContacts
+ * @property SupportContacts[] $SupportContacts
  */
 class SupportContactCategory extends CActiveRecord
 {

@@ -33,7 +33,7 @@
  * @property string $modified_id
  *
  * The followings are the available model relations:
- * @property OmmuSupportFeedbacks $mail
+ * @property SupportFeedbacks $mail
  */
 class SupportFeedbackReply extends CActiveRecord
 {
