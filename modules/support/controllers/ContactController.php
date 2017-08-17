@@ -88,7 +88,7 @@ class ContactController extends Controller
 	public function actionIndex() 
 	{
 		$model = OmmuMeta::model()->findByPk(1, array(
-			'select' => 'id, office_name, office_place, office_village, office_district, office_city, office_province, office_country, office_zipcode, office_phone, office_fax, office_hotline, office_email'
+			'select' => 'id, office_name, office_place, office_village, office_district, office_city_id, office_province_id, office_country_id, office_zipcode, office_phone, office_fax, office_hotline, office_email'
 		));
 		$contact = SupportContacts::model()->findAll(array(
 			'condition' => 'publish = :publish',
