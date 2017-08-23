@@ -204,27 +204,27 @@ class ContactcategoryController extends Controller
 			'model'=>$model,
 		));
 	}
-	
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	 public function actionView($id) 
-	 {
-		 $model=$this->loadModel($id);
-		 
-		 $this->dialogDetail = true;
-		 $this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		 $this->dialogWidth = 600;
- 
-		 $this->pageTitle = Yii::t('phrase', 'View Contact Category');
-		 $this->pageDescription = '';
-		 $this->pageMeta = '';
-		 $this->render('/o/contact_category/admin_view',array(
-			 'model'=>$model,
-		 ));
-	 }
- 
+	public function actionView($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = Yii::t('phrase', 'View Contact Category');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/contact_category/admin_view',array(
+			'model'=>$model,
+		));
+	}
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed

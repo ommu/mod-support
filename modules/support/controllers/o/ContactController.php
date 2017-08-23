@@ -241,21 +241,21 @@ class ContactController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	 public function actionView($id) 
-	 {
-		 $model=$this->loadModel($id);
-		 
-		 $this->dialogDetail = true;
-		 $this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		 $this->dialogWidth = 600;
- 
-		 $this->pageTitle = Yii::t('phrase', 'View Contact');
-		 $this->pageDescription = '';
-		 $this->pageMeta = '';
-		 $this->render('admin_view',array(
-			 'model'=>$model,
-		 ));
-	 }
+	public function actionView($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = Yii::t('phrase', 'View Contact');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_view',array(
+			'model'=>$model,
+		));
+	}
  
 	/**
 	 * Displays a particular model.

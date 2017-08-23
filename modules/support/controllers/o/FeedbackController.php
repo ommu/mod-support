@@ -11,6 +11,7 @@
  *	Index
  *	Manage
  *	Edit
+ *	View
  *	Delete
  *	Setting
  *
@@ -80,7 +81,7 @@ class FeedbackController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','edit','delete'),
+				'actions'=>array('manage','edit','view','delete'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -128,7 +129,7 @@ class FeedbackController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'View Feedback Support');
+		$this->pageTitle = Yii::t('phrase', 'Feedbacks');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -163,7 +164,7 @@ class FeedbackController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-feedbacks',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -177,14 +178,34 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 		
-		$this->pageTitle = Yii::t('phrase', 'Edit Feedback Support: {subject}', array('{subject}'=>$model->subject));
+		$this->pageTitle = Yii::t('phrase', 'Edit Feedback: {subject}', array('{subject}'=>$model->subject));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
 			'model'=>$model,
 		));
 	}
-	
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = Yii::t('phrase', 'View Feedback: {subject}', array('{subject}'=>$model->subject));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_view',array(
+			'model'=>$model,
+		));
+	}
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -201,7 +222,7 @@ class FeedbackController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedbacks',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback support success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success deleted.').'</strong></div>',
 				));
 			}
 
@@ -210,7 +231,7 @@ class FeedbackController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Delete Feedback Support');
+			$this->pageTitle = Yii::t('phrase', 'Delete Feedback');
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
