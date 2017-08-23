@@ -12,6 +12,7 @@
  *	Manage
  *	Add
  *	Edit
+ *	View
  *	RunAction
  *	Delete
  *	Publish
@@ -82,7 +83,7 @@ class ContactcategoryController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','edit'),
+				'actions'=>array('manage','edit','view'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -203,7 +204,27 @@ class ContactcategoryController extends Controller
 			'model'=>$model,
 		));
 	}
-
+	
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	 public function actionView($id) 
+	 {
+		 $model=$this->loadModel($id);
+		 
+		 $this->dialogDetail = true;
+		 $this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		 $this->dialogWidth = 600;
+ 
+		 $this->pageTitle = Yii::t('phrase', 'View Contact Category');
+		 $this->pageDescription = '';
+		 $this->pageMeta = '';
+		 $this->render('/o/contact_category/admin_view',array(
+			 'model'=>$model,
+		 ));
+	 }
+ 
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
