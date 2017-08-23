@@ -245,7 +245,7 @@ class ViewsController extends Controller
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
-					'id' => 'partial-support-feedback-reply',
+					'id' => 'partial-support-feedback-view',
 					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackView success updated.').'</strong></div>',
 				));
 			}

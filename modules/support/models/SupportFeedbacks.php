@@ -23,6 +23,7 @@
  *
  * The followings are the available columns in table 'ommu_support_feedbacks':
  * @property string $feedback_id
+ * @property integer $publish
  * @property string $user_id
  * @property string $email
  * @property string $displayname
@@ -72,7 +73,7 @@ class SupportFeedbacks extends CActiveRecord
 		return array(
 			array('email, displayname, subject, message', 'required'),
 			//array('displayname, phone', 'required', 'on'=>'contactus'),
-			array('modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish', 'numerical', 'integerOnly'=>true),
 			array('user_id', 'length', 'max'=>11),
 			array('phone', 'length', 'max'=>15),
 			array('email, displayname', 'length', 'max'=>32),
@@ -81,7 +82,7 @@ class SupportFeedbacks extends CActiveRecord
 			array('user_id, displayname, phone, creation_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('feedback_id, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id, updated_date,
+			array('feedback_id, publish, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id, updated_date,
 				user_search, modified_search, view_search, reply_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -108,6 +109,7 @@ class SupportFeedbacks extends CActiveRecord
 	{
 		return array(
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
+			'publish' => Yii::t('attribute', 'Publish'),
 			'user_id' => Yii::t('attribute', 'User'),
 			'email' => Yii::t('attribute', 'Email Address'),
 			'displayname' => Yii::t('attribute', 'Name'),
@@ -152,6 +154,16 @@ class SupportFeedbacks extends CActiveRecord
 		);
 
 		$criteria->compare('t.feedback_id',$this->feedback_id);
+		if(isset($_GET['type']) && $_GET['type'] == 'publish')
+			$criteria->compare('t.publish',1);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish')
+			$criteria->compare('t.publish',0);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'trash')
+			$criteria->compare('t.publish',2);
+		else {
+			$criteria->addInCondition('t.publish',array(0,1));
+			$criteria->compare('t.publish',$this->publish);
+		}
 		$criteria->compare('t.user_id',$this->user_id);
 		$criteria->compare('t.email',$this->email,true);
 		$criteria->compare('t.displayname',$this->displayname,true);
@@ -205,6 +217,7 @@ class SupportFeedbacks extends CActiveRecord
 		}else {
 			//$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
+			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'email';
 			$this->defaultColumns[] = 'displayname';
 			$this->defaultColumns[] = 'phone';
@@ -291,6 +304,20 @@ class SupportFeedbacks extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->feedback_id)), $data->publish)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
+					),
+					'type' => 'raw',
+				);
+			}
 
 		}
 		parent::afterConstruct();

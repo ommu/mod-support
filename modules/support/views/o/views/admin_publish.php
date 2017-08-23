@@ -21,7 +21,7 @@
 ?>
 
 <?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
-	'id'=>'support-feedback-reply-form',
+	'id'=>'support-feedback-view-form',
 	'enableAjaxValidation'=>true,
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')
 )); ?>
