@@ -1,11 +1,11 @@
 <?php
 /**
- * SupportFeedbackView
+ * SupportFeedbackUser
  * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
- * @created date 11 May 2017, 23:12 WIB
+ * @created date 23 August 2017, 05:26 WIB
  * @link https://github.com/ommu/mod-support
  * @contact (+62)856-299-4114
  *
@@ -20,13 +20,13 @@
  *
  * --------------------------------------------------------------------------------------
  *
- * This is the model class for table "ommu_support_feedback_view".
+ * This is the model class for table "ommu_support_feedback_user".
  *
- * The followings are the available columns in table 'ommu_support_feedback_view':
- * @property string $view_id
+ * The followings are the available columns in table 'ommu_support_feedback_user':
+ * @property string $id
+ * @property integer $publish
  * @property string $feedback_id
  * @property string $user_id
- * @property integer $views
  * @property string $creation_date
  * @property string $modified_date
  * @property string $modified_id
@@ -34,12 +34,14 @@
  *
  * The followings are the available model relations:
  * @property SupportFeedbacks $feedback
+ * @property Users[] $user;
+ * @property Users[] $modified;
  */
-class SupportFeedbackView extends CActiveRecord
+class SupportFeedbackUser extends CActiveRecord
 {
 	public $defaultColumns = array();
-	
-	// Variable Search
+
+	// Variable Search	
 	public $subject_search;
 	public $user_search;
 	public $modified_search;
@@ -48,7 +50,7 @@ class SupportFeedbackView extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return SupportFeedbackView the static model class
+	 * @return SupportFeedbackUser the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -60,7 +62,8 @@ class SupportFeedbackView extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'ommu_support_feedback_view';
+		preg_match("/dbname=([^;]+)/i", $this->dbConnection->connectionString, $matches);
+		return $matches[1].'.ommu_support_feedback_user';
 	}
 
 	/**
@@ -72,11 +75,12 @@ class SupportFeedbackView extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('feedback_id, user_id', 'required'),
-			array('views', 'numerical', 'integerOnly'=>true),
-			array('feedback_id, user_id, views, modified_id', 'length', 'max'=>11),
+			array('publish', 'numerical', 'integerOnly'=>true),
+			array('feedback_id, user_id, modified_id', 'length', 'max'=>11),
+			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('view_id, feedback_id, user_id, views, creation_date, modified_date, modified_id, updated_date,
+			array('id, publish, feedback_id, user_id, creation_date, modified_date, modified_id, updated_date, 
 				subject_search, user_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -101,10 +105,10 @@ class SupportFeedbackView extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'view_id' => Yii::t('attribute', 'View'),
+			'id' => Yii::t('attribute', 'ID'),
+			'publish' => Yii::t('attribute', 'Publish'),
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'user_id' => Yii::t('attribute', 'User'),
-			'views' => Yii::t('attribute', 'Views'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
@@ -133,24 +137,34 @@ class SupportFeedbackView extends CActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-		
+
 		// Custom Search
 		$criteria->with = array(
 			'feedback' => array(
 				'alias'=>'feedback',
-				'select'=>'subject',
+				'select'=>'user_id, email, displayname, subject'
 			),
 			'user' => array(
 				'alias'=>'user',
-				'select'=>'displayname',
+				'select'=>'displayname'
 			),
 			'modified' => array(
 				'alias'=>'modified',
-				'select'=>'displayname',
+				'select'=>'displayname'
 			),
 		);
-
-		$criteria->compare('t.view_id',strtolower($this->view_id),true);
+		
+		$criteria->compare('t.id',strtolower($this->id),true);
+		if(isset($_GET['type']) && $_GET['type'] == 'publish')
+			$criteria->compare('t.publish',1);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish')
+			$criteria->compare('t.publish',0);
+		elseif(isset($_GET['type']) && $_GET['type'] == 'trash')
+			$criteria->compare('t.publish',2);
+		else {
+			$criteria->addInCondition('t.publish',array(0,1));
+			$criteria->compare('t.publish',$this->publish);
+		}
 		if(isset($_GET['feedback']))
 			$criteria->compare('t.feedback_id',$_GET['feedback']);
 		else
@@ -159,7 +173,6 @@ class SupportFeedbackView extends CActiveRecord
 			$criteria->compare('t.user_id',$_GET['user']);
 		else
 			$criteria->compare('t.user_id',$this->user_id);
-		$criteria->compare('t.views',$this->views);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -170,13 +183,13 @@ class SupportFeedbackView extends CActiveRecord
 			$criteria->compare('t.modified_id',$this->modified_id);
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
-		
-		$criteria->compare('feedback.subject',strtolower($this->subject_search), true);
-		$criteria->compare('user.displayname',strtolower($this->user_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
-		if(!isset($_GET['SupportFeedbackView_sort']))
-			$criteria->order = 't.view_id DESC';
+		$criteria->compare('feedback.subject',strtolower($this->subject_search),true);
+		$criteria->compare('user.displayname',strtolower($this->user_search),true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+
+		if(!isset($_GET['SupportFeedbackUser_sort']))
+			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -204,10 +217,10 @@ class SupportFeedbackView extends CActiveRecord
 				$this->defaultColumns[] = $val;
 			}
 		} else {
-			//$this->defaultColumns[] = 'view_id';
+			//$this->defaultColumns[] = 'id';
+			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
-			$this->defaultColumns[] = 'views';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
@@ -222,6 +235,14 @@ class SupportFeedbackView extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
+			/*
+			$this->defaultColumns[] = array(
+				'class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'selectableRows' => 2,
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
+			);
+			*/
 			$this->defaultColumns[] = array(
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
@@ -229,7 +250,7 @@ class SupportFeedbackView extends CActiveRecord
 			if(!isset($_GET['feedback'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'subject_search',
-					'value' => '$data->feedback->subject ? $data->feedback->subject : \'-\'',
+					'value' => '$data->feedback->subject',
 				);
 			}
 			if(!isset($_GET['user'])) {
@@ -242,7 +263,7 @@ class SupportFeedbackView extends CActiveRecord
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
 				'htmlOptions' => array(
-					//'class' => 'center',
+					'class' => 'center',
 				),
 				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
@@ -264,17 +285,10 @@ class SupportFeedbackView extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'views',
-				'value' => '$data->views ? $data->views : \'0\'',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->view_id)), $data->publish, 1)',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->id)), $data->publish)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
@@ -307,34 +321,12 @@ class SupportFeedbackView extends CActiveRecord
 	}
 
 	/**
-	 * User get information
-	 */
-	public static function insertView($feedback_id)
-	{
-		$criteria=new CDbCriteria;
-		$criteria->select = 'view_id, feedback_id, user_id, views';
-		$criteria->compare('feedback_id', $feedback_id);
-		$criteria->compare('user_id', Yii::app()->user->id);
-		$findView = self::model()->find($criteria);
-		
-		if($findView != null)
-			self::model()->updateByPk($findView->view_id, array('views'=>$findView->views + 1));
-		
-		else {
-			$view=new SupportFeedbackView;
-			$view->feedback_id = $feedback_id;
-			$view->save();
-		}
-	}
-
-	/**
 	 * before validate attributes
 	 */
-	protected function beforeValidate() {
+	protected function beforeValidate() 
+	{
 		if(parent::beforeValidate()) {
-			if($this->isNewRecord)
-				$this->user_id = Yii::app()->user->id;
-			else
+			if(!$this->isNewRecord)
 				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
