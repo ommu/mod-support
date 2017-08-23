@@ -278,10 +278,11 @@ class SupportFeedbackView extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'views',
-				'value' => '$data->views ? $data->views : \'0\'',
+				'value' => '$data->views ? CHtml::link($data->views, Yii::app()->controller->createUrl("o/history/view/manage",array(\'view\'=>$data->view_id))) : \'0\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
+				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

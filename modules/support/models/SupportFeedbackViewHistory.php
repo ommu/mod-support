@@ -36,7 +36,8 @@ class SupportFeedbackViewHistory extends CActiveRecord
 	public $defaultColumns = array();
 
 	// Variable Search	
-	public $view_search;
+	public $subject_search;
+	public $user_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -71,7 +72,8 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			array('view_ip', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, view_id, view_date, view_ip, view_search', 'safe', 'on'=>'search'),
+			array('id, view_id, view_date, view_ip, 
+				subject_search, user_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -97,7 +99,8 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			'view_id' => Yii::t('attribute', 'View'),
 			'view_date' => Yii::t('attribute', 'View Date'),
 			'view_ip' => Yii::t('attribute', 'View Ip'),
-			'view_search' => Yii::t('attribute', 'View'),
+			'subject_search' => Yii::t('attribute', 'Subject'),
+			'user_search' => Yii::t('attribute', 'View By'),
 		);
 	}
 
@@ -123,7 +126,15 @@ class SupportFeedbackViewHistory extends CActiveRecord
 		$criteria->with = array(
 			'view' => array(
 				'alias'=>'view',
-				'select'=>'column_name_relation'
+				'select'=>'feedback_id, user_id'
+			),
+			'view.feedback' => array(
+				'alias'=>'view_feedback',
+				'select'=>'subject'
+			),
+			'view.user' => array(
+				'alias'=>'view_user',
+				'select'=>'displayname'
 			),
 		);
 		
@@ -136,7 +147,8 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			$criteria->compare('date(t.view_date)',date('Y-m-d', strtotime($this->view_date)));
 		$criteria->compare('t.view_ip',strtolower($this->view_ip),true);
 
-		$criteria->compare('view.column_name_relation',strtolower($this->view_search),true);
+		$criteria->compare('view_feedback.subject',strtolower($this->subject_search),true);
+		$criteria->compare('view_user.displayname',strtolower($this->user_search),true);
 
 		if(!isset($_GET['SupportFeedbackViewHistory_sort']))
 			$criteria->order = 't.id DESC';
@@ -194,14 +206,18 @@ class SupportFeedbackViewHistory extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			if(!isset($_GET['view'])) {
-			$this->defaultColumns[] = array(
-				'name' => 'view_search',
-				'value' => '$data->view->column_name_relation',
-			);
+				$this->defaultColumns[] = array(
+					'name' => 'subject_search',
+					'value' => '$data->view->feedback->subject',
+				);
+				$this->defaultColumns[] = array(
+					'name' => 'user_search',
+					'value' => '$data->view->user->displayname',
+				);
 			}
 			$this->defaultColumns[] = array(
 				'name' => 'view_date',
-				'value' => 'Utility::dateFormat($data->view_date)',
+				'value' => 'Utility::dateFormat($data->view_date, true)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -248,67 +264,6 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			$model = self::model()->findByPk($id);
 			return $model;			
 		}
-	}
-
-	/**
-	 * before validate attributes
-	 */
-	protected function beforeValidate() 
-	{
-		if(parent::beforeValidate()) {
-		}
-		return true;
-	}
-
-	/**
-	 * after validate attributes
-	 */
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-		// Create action
-		
-		return true;
-	}
-	
-	/**
-	 * before save attributes
-	 */
-	protected function beforeSave() 
-	{
-		if(parent::beforeSave()) {
-			// Create action
-		}
-		return true;	
-	}
-	
-	/**
-	 * After save attributes
-	 */
-	protected function afterSave() 
-	{
-		parent::afterSave();
-		// Create action
-	}
-
-	/**
-	 * Before delete attributes
-	 */
-	protected function beforeDelete() 
-	{
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-
-	/**
-	 * After delete attributes
-	 */
-	protected function afterDelete() 
-	{
-		parent::afterDelete();
-		// Create action
 	}
 
 }
