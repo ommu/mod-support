@@ -27,7 +27,8 @@
  * @property string $feedback_id
  * @property string $user_id
  * @property integer $views
- * @property string $creation_date
+ * @property string $view_date
+ * @property string $view_ip
  * @property string $modified_date
  * @property string $modified_id
  * @property string $updated_date
@@ -74,9 +75,10 @@ class SupportFeedbackView extends CActiveRecord
 			array('feedback_id, user_id', 'required'),
 			array('views', 'numerical', 'integerOnly'=>true),
 			array('feedback_id, user_id, views, modified_id', 'length', 'max'=>11),
+			array('view_ip', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('view_id, feedback_id, user_id, views, creation_date, modified_date, modified_id, updated_date,
+			array('view_id, feedback_id, user_id, views, view_date, view_ip, modified_date, modified_id, updated_date,
 				subject_search, user_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -105,7 +107,8 @@ class SupportFeedbackView extends CActiveRecord
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'user_id' => Yii::t('attribute', 'User'),
 			'views' => Yii::t('attribute', 'Views'),
-			'creation_date' => Yii::t('attribute', 'Creation Date'),
+			'view_date' => Yii::t('attribute', 'View Date'),
+			'view_ip' => Yii::t('attribute', 'View Ip'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
@@ -160,8 +163,9 @@ class SupportFeedbackView extends CActiveRecord
 		else
 			$criteria->compare('t.user_id',$this->user_id);
 		$criteria->compare('t.views',$this->views);
-		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
+		if($this->view_date != null && !in_array($this->view_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.view_date)',date('Y-m-d', strtotime($this->view_date)));
+		$criteria->compare('t.view_ip',strtolower($this->view_ip),true);
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		if(isset($_GET['modified']))
@@ -208,7 +212,8 @@ class SupportFeedbackView extends CActiveRecord
 			$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'user_id';
 			$this->defaultColumns[] = 'views';
-			$this->defaultColumns[] = 'creation_date';
+			$this->defaultColumns[] = 'view_date';
+			$this->defaultColumns[] = 'view_ip';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
 			$this->defaultColumns[] = 'updated_date';
@@ -239,19 +244,19 @@ class SupportFeedbackView extends CActiveRecord
 				);
 			}
 			$this->defaultColumns[] = array(
-				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
+				'name' => 'view_date',
+				'value' => 'Utility::dateFormat($data->view_date)',
 				'htmlOptions' => array(
 					//'class' => 'center',
 				),
 				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
-					'attribute'=>'creation_date',
+					'attribute'=>'view_date',
 					'language' => 'en',
 					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
-						'id' => 'creation_date_filter',
+						'id' => 'view_date_filter',
 					),
 					'options'=>array(
 						'showOn' => 'focus',
@@ -263,6 +268,13 @@ class SupportFeedbackView extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'view_ip',
+				'value' => '$data->view_ip',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'views',
@@ -313,12 +325,13 @@ class SupportFeedbackView extends CActiveRecord
 	{
 		$criteria=new CDbCriteria;
 		$criteria->select = 'view_id, feedback_id, user_id, views';
+		$criteria->compare('publish', 1);
 		$criteria->compare('feedback_id', $feedback_id);
 		$criteria->compare('user_id', Yii::app()->user->id);
 		$findView = self::model()->find($criteria);
 		
 		if($findView != null)
-			self::model()->updateByPk($findView->view_id, array('views'=>$findView->views + 1));
+			self::model()->updateByPk($findView->view_id, array('views'=>$findView->views + 1, 'view_ip'=>$_SERVER['REMOTE_ADDR']));
 		
 		else {
 			$view=new SupportFeedbackView;
@@ -336,6 +349,8 @@ class SupportFeedbackView extends CActiveRecord
 				$this->user_id = Yii::app()->user->id;
 			else
 				$this->modified_id = Yii::app()->user->id;
+				
+			$this->view_ip = $_SERVER['REMOTE_ADDR'];
 		}
 		return true;
 	}
