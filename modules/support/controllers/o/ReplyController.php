@@ -109,7 +109,7 @@ class ReplyController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage() 
+	public function actionManage($feedback=null) 
 	{	
 		$model=new SupportFeedbackReply('search');
 		$model->unsetAttributes();  // clear any default values
@@ -127,7 +127,7 @@ class ReplyController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Support Feedback Replies Manage');
+		$this->pageTitle = Yii::t('phrase', 'Feedback Replies');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -150,7 +150,7 @@ class ReplyController extends Controller
 		$this->performAjaxValidation($model);
 
 		if(isset($_POST['SupportFeedbackReply'])) {
-			$model->attributes=$_POST['SupportFeedbackReply'];			
+			$model->attributes=$_POST['SupportFeedbackReply'];
 			$model->feedback_id = $feedbackFind->feedback_id;
 			
 			$jsonError = CActiveForm::validate($model);
@@ -170,7 +170,7 @@ class ReplyController extends Controller
 							'type' => 5,
 							'get' => $dialogGroundUrl,
 							'id' => 'partial-support-feedback-reply',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackReply success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success created.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -179,6 +179,7 @@ class ReplyController extends Controller
 			}
 			Yii::app()->end();
 		}
+
 		if(isset($_GET['hook']) && $_GET['hook'] == 'feedback')
 			$dialogGroundUrl = Yii::app()->controller->createUrl('o/feedback/manage');
 		else 
@@ -188,7 +189,10 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = $dialogGroundUrl;
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Create Support Feedback Replies');
+		$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject,'$user_displayname'=>$feedbackFind->displayname));
+		if($feedbackFind->user_id)
+			$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject,'$user_displayname'=>$feedbackFind->user->displayname));
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -223,7 +227,7 @@ class ReplyController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-feedback-reply',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackReply success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -237,7 +241,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Support Feedback Replies');
+		$this->pageTitle = Yii::t('phrase', 'Update Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -257,7 +261,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Support Feedback Replies');
+		$this->pageTitle = Yii::t('phrase', 'View Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -319,7 +323,7 @@ class ReplyController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-reply',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackReply success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success deleted.').'</strong></div>',
 				));
 			}
 
@@ -328,7 +332,7 @@ class ReplyController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'SupportFeedbackReply Delete.');
+			$this->pageTitle = Yii::t('phrase', 'Delete Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -357,7 +361,7 @@ class ReplyController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-reply',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'SupportFeedbackReply success updated.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success updated.').'</strong></div>',
 				));
 			}
 
@@ -365,8 +369,8 @@ class ReplyController extends Controller
 			$this->dialogDetail = true;
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
-
-			$this->pageTitle = $title;
+			
+			$this->pageTitle = Yii::t('phrase', '$title Reply: by $creation_displayname Feedback $feedback_subject', array('$title'=>$title, '$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(

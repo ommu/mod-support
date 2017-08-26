@@ -113,7 +113,7 @@ class FeedbackController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage() 
+	public function actionManage($user=null) 
 	{
 		$model=new SupportFeedbacks('search');
 		$model->unsetAttributes();  // clear any default values
@@ -179,8 +179,11 @@ class FeedbackController extends Controller
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
-		
-		$this->pageTitle = Yii::t('phrase', 'Edit Feedback: {subject}', array('{subject}'=>$model->subject));
+
+		$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		if($model->user_id)
+			$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -201,7 +204,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Feedback: {subject}', array('{subject}'=>$model->subject));
+		$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		if($model->user_id)
+			$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -272,7 +278,10 @@ class FeedbackController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Delete Feedback');
+			$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+			if($model->user_id)
+				$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -310,7 +319,10 @@ class FeedbackController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', '$title Feedback', array('$title'=>$title));
+			$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject, '$displayname'=>$model->displayname));
+			if($model->user_id)
+				$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$this->pageTitle = $pageTitle;
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(
