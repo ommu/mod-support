@@ -107,8 +107,18 @@ class UserController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage($feedback=null) 
+	public function actionManage($feedback=null, $user=null) 
 	{
+		$pageTitle = Yii::t('phrase', 'Feedback Users');
+		if($feedback != null) {
+			$data = SupportFeedbacks::model()->findByPk($feedback);
+			$pageTitle = Yii::t('phrase', 'Feedback User: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
+		}
+		if($user != null) {
+			$data = Users::model()->findByPk($user);
+			$pageTitle = Yii::t('phrase', 'Feedback User: $user_displayname', array ('$user_displayname'=>$data->displayname));
+		}
+		
 		$model=new SupportFeedbackUser('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportFeedbackUser'])) {
@@ -125,7 +135,7 @@ class UserController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Feedback Users');
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
