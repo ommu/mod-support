@@ -46,7 +46,7 @@
 			<div class="desc">
 				<?php 
 				//echo $form->textArea($model,'reply_message',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller'));
-				$this->widget('application.extensions.imperavi.ImperaviRedactorWidget', array(
+				$this->widget('application.vendors.yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 					'model'=>$model,
 					'attribute'=>reply_message,
 					// Redactor options
