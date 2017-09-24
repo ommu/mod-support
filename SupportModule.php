@@ -11,12 +11,8 @@
  *----------------------------------------------------------------------------------------------------------
  */
 
-namespace application\modules\support;
-
 class SupportModule extends CWebModule
 {
-	public $controllerNamespace = '\application\modules\support\controllers';
-
 	public $defaultController = 'contact'; 
 	
 	// getAssetsUrl()
