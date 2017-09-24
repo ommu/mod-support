@@ -53,7 +53,7 @@ class SupportContactCategory extends CActiveRecord
 	{
 		return array(
 			'sluggable' => array(
-				'class'=>'ext.yii-behavior-sluggable.SluggableBehavior',
+				'class'=>'application.vendors.mintao.yii-behavior-sluggable.SluggableBehavior',
 				'columns' => array('title.en_us'),
 				'unique' => true,
 				'update' => true,
@@ -302,7 +302,7 @@ class SupportContactCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'contact_search',
-				'value' => '$data->view->contact == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+				'value' => '$data->view->contact == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -314,7 +314,7 @@ class SupportContactCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'widget_search',
-				'value' => '$data->view->widget == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+				'value' => '$data->view->widget == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

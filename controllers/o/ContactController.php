@@ -382,6 +382,8 @@ class ContactController extends Controller
 	public function actionSetting() 
 	{
 		$model = OmmuMeta::model()->findByPk(1);
+		if($model == null)
+			$model=new OmmuMeta;
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);

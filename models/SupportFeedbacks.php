@@ -282,7 +282,7 @@ class SupportFeedbacks extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'view_search',
-				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl("o/views/manage",array(\'feedback\'=>$data->feedback_id))) : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl("o/views/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -294,7 +294,7 @@ class SupportFeedbacks extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'reply_search',
-				'value' => '$data->view->reply_condition != 0 ? CHtml::link($data->view->replies, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'value' => '$data->view->reply_condition != 0 ? CHtml::link($data->view->replies, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
