@@ -11,7 +11,12 @@
  *----------------------------------------------------------------------------------------------------------
  */
 
-class SupportModule extends CWebModule
+namespace ommu\support;
+
+use Yii;
+use Utility;
+
+class SupportModule extends \CWebModule
 {
 	public $defaultController = 'contact'; 
 	
