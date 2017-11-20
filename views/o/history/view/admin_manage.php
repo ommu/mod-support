@@ -95,7 +95,7 @@
 				'template' => '{delete}',
 			));
 
-			$this->widget('application.components.system.OGridView', array(
+			$this->widget('application.libraries.core.components.system.OGridView', array(
 				'id'=>'support-feedback-view-history-grid',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,

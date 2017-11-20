@@ -40,7 +40,7 @@ EOP;
 	$cs->registerScript('smtp', $js, CClientScript::POS_END);
 ?>
 
-<?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
+<?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
 	'id'=>'support-mail-setting-form',
 	'enableAjaxValidation'=>true,
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')

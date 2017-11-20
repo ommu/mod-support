@@ -23,7 +23,7 @@ Untuk komentar yang bersifat keluhan atau pertanyaan dan memerlukan jawaban, aka
 
 <div class="sep-form">
 <?php if(!isset($_GET['email'])) {
-	$form=$this->beginWidget('application.components.system.OActiveForm', array(
+	$form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
 		'id'=>'support-contacts-form',
 		'enableAjaxValidation'=>true,
 		'htmlOptions' => array(
