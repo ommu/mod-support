@@ -183,7 +183,7 @@ class ContactcategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 		
-		$this->pageTitle = Yii::t('phrase', 'Update Category: $category_name', array('$category_name'=>Phrase::trans($model->name)));
+		$this->pageTitle = Yii::t('phrase', 'Update Category: $category_name', array('$category_name'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('/o/contact_category/admin_edit',array(
@@ -203,7 +203,7 @@ class ContactcategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Category: $category_name', array('$category_name'=>Phrase::trans($model->name)));
+		$this->pageTitle = Yii::t('phrase', 'View Category: $category_name', array('$category_name'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('/o/contact_category/admin_view',array(
@@ -259,8 +259,9 @@ class ContactcategoryController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
 			
-			if($model->save()) {
+			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
@@ -274,7 +275,7 @@ class ContactcategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Delete Category: $category_name', array('$category_name'=>Phrase::trans($model->name)));
+			$this->pageTitle = Yii::t('phrase', 'Delete Category: $category_name', array('$category_name'=>$model->title->message));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('/o/contact_category/admin_delete');
@@ -297,6 +298,7 @@ class ContactcategoryController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
 
 			if($model->update()) {
 				echo CJSON::encode(array(
@@ -312,7 +314,7 @@ class ContactcategoryController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', '$title Category: $category_name', array('$title'=>$title, '$category_name'=>Phrase::trans($model->name)));
+			$this->pageTitle = Yii::t('phrase', '$title Category: $category_name', array('$title'=>$title, '$category_name'=>$model->title->message));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('/o/contact_category/admin_publish',array(

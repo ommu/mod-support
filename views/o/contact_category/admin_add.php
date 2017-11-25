@@ -15,7 +15,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Contact Categories'=>array('manage'),
-		$model->name=>array('view','id'=>$model->cat_id),
+		$model->title->message=>array('view','id'=>$model->cat_id),
 		'Update',
 	);
 ?>

@@ -45,7 +45,7 @@
 						else
 							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')));
 					} else {?>
-						<strong><?php echo Phrase::trans($model->cat->name); ?></strong>
+						<strong><?php echo $model->cat->title->message; ?></strong>
 					<?php }?>
 					<?php echo $form->error($model,'cat_id'); ?>
 				</div>

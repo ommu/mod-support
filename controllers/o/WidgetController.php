@@ -100,7 +100,7 @@ class WidgetController extends Controller
 		$pageTitle = Yii::t('phrase', 'Widgets Manage');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Widgets: Category $category_name', array ('$category_name'=>Phrase::trans($data->name)));
+			$pageTitle = Yii::t('phrase', 'Widgets: Category $category_name', array ('$category_name'=>$data->title->message));
 		}
 		
 		$model=new SupportWidget('search');
@@ -216,7 +216,7 @@ class WidgetController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 550;
 
-			$this->pageTitle = Yii::t('phrase', 'Update Widget: $category_name', array('$category_name'=>Phrase::trans($model->cat->name)));
+			$this->pageTitle = Yii::t('phrase', 'Update Widget: $category_name', array('$category_name'=>$model->cat->title->message));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_edit',array(
@@ -237,7 +237,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Widget: $category_name', array('$category_name'=>Phrase::trans($model->cat->name)));
+		$this->pageTitle = Yii::t('phrase', 'View Widget: $category_name', array('$category_name'=>$model->cat->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -308,7 +308,7 @@ class WidgetController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', 'Delete Widget: $category_name', array('$category_name'=>Phrase::trans($model->cat->name)));
+			$this->pageTitle = Yii::t('phrase', 'Delete Widget: $category_name', array('$category_name'=>$model->cat->title->message));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -346,7 +346,7 @@ class WidgetController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = Yii::t('phrase', '$title Widget: $category_name', array('$title'=>$title, '$category_name'=>Phrase::trans($model->cat->name)));
+			$this->pageTitle = Yii::t('phrase', '$title Widget: $category_name', array('$title'=>$title, '$category_name'=>$model->cat->title->message));
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_publish',array(

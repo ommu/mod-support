@@ -36,7 +36,7 @@
 						else
 							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')));
 					} else {?>
-						<strong><?php echo Phrase::trans($model->cat->name); ?></strong>
+						<strong><?php echo $model->cat->title->message; ?></strong>
 					<?php }?>
 					<?php echo $form->error($model,'cat_id'); ?>
 				</div>
@@ -47,7 +47,7 @@
 			<?php if($model->cat->publish != '2') {?>
 				<label><?php echo $model->getAttributeLabel('contact_name');?> <span class="required">*</span></label>
 			<?php } else {?>
-				<label><?php echo Phrase::trans($model->cat->name);?> <span class="required">*</span></label>
+				<label><?php echo $model->cat->title->message;?> <span class="required">*</span></label>
 			<?php }?>
 			<div class="desc">
 				<?php echo $form->textArea($model,'contact_name',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller')); ?>

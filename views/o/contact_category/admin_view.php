@@ -44,7 +44,7 @@
 			),
 			array(
 				'name'=>'name',
-				'value'=>$model->name ? Phrase::trans($model->name) : '-',
+				'value'=>$model->name ? $model->title->message : '-',
 			),
 			array(
 				'name'=>'cat_icon',

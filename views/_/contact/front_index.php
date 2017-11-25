@@ -65,7 +65,7 @@ EOP;
 					$url = $val->value;
 					$target = 'target="_blank"';
 				}
-				echo '<li><a off_address="" href="'.$url.'" title="'.Phrase::trans($val->cat->name, 2).'" '.$target.'><img src="'.$images.'" alt="'.Phrase::trans($val->cat->name, 2).'"></a></li>';
+				echo '<li><a off_address="" href="'.$url.'" title="'.$val->cat->title->message.'" '.$target.'><img src="'.$images.'" alt="'.$val->cat->title->message.'"></a></li>';
 			}?>
 		</ul>
 	</div>
