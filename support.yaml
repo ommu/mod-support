@@ -27,7 +27,7 @@ plugin_menu		:
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/setting/manual, attr: -, icon: -}
 
-content_menu	:		
+content_menu	:
 # controller o/reply
 	- urlTitle: Back to Feedbacks
 		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
