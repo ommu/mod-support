@@ -80,7 +80,7 @@ Untuk komentar yang bersifat keluhan atau pertanyaan dan memerlukan jawaban, aka
 			<?php echo $form->error($model,'message'); ?>
 		</div>
 
-		<div class="submit clearfix">
+		<div class="form-group row submit">
 			<?php echo CHtml::submitButton(Yii::t('phrase', 'Send Message'), array('onclick' => 'setEnableSave()')); ?>
 		</div>
 

@@ -25,16 +25,16 @@
 
 		<?php 
 		if($model->cat->publish != 2) {?>
-			<div class="clearfix">
-				<label><?php echo $model->getAttributeLabel('cat_id');?> <span class="required">*</span></label>
-				<div class="desc">
+			<div class="form-group row">
+				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('cat_id');?> <span class="required">*</span></label>
+				<div class="col-lg-8 col-md-9 col-sm-12">
 					<?php
 					if($model->isNewRecord) {
 						$category = SupportContactCategory::getCategory(1, 'contact');
 						if($category != null)
-							echo $form->dropDownList($model,'cat_id', $category, array('prompt'=>''));
+							echo $form->dropDownList($model,'cat_id', $category, array('prompt'=>'', 'class'=>'form-control'));
 						else
-							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')));
+							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent'), 'class'=>'form-control'));
 					} else {?>
 						<strong><?php echo $model->cat->title->message; ?></strong>
 					<?php }?>
@@ -43,24 +43,23 @@
 			</div>
 		<?php }?>
 
-		<div class="clearfix">
+		<div class="form-group row">
 			<?php if($model->cat->publish != '2') {?>
-				<label><?php echo $model->getAttributeLabel('contact_name');?> <span class="required">*</span></label>
+				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('contact_name');?> <span class="required">*</span></label>
 			<?php } else {?>
-				<label><?php echo $model->cat->title->message;?> <span class="required">*</span></label>
+				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->cat->title->message;?> <span class="required">*</span></label>
 			<?php }?>
-			<div class="desc">
-				<?php echo $form->textArea($model,'contact_name',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textArea($model,'contact_name',array('rows'=>6, 'cols'=>50, 'class'=>'form-control smaller')); ?>
 				<?php echo $form->error($model,'contact_name'); ?>
 			</div>
 		</div>
 
 		<?php if($model->cat->publish != 2) {?>
-		<div class="clearfix publish">
-			<?php echo $form->labelEx($model,'publish'); ?>
-			<div class="desc">
-				<?php echo $form->checkBox($model,'publish'); ?>
-				<?php echo $form->labelEx($model,'publish'); ?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'publish', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->checkBox($model,'publish', array('class'=>'form-control')); ?>
 				<?php echo $form->error($model,'publish'); ?>
 			</div>
 		</div>

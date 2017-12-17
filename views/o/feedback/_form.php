@@ -26,41 +26,41 @@
 			<?php echo $form->errorSummary($model); ?>
 		</div>
 
-		<div class="clearfix info">
-			<?php echo $form->labelEx($model,'displayname'); ?>
-			<div class="desc">
-				<?php echo $form->textField($model,'displayname',array('maxlength'=>32,'class'=>'span-7'));?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'displayname', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textField($model,'displayname',array('maxlength'=>32,'class'=>'form-control'));?>
 				<?php echo $form->error($model,'displayname');?>
 			</div>
 		</div>
 
-		<div class="clearfix info">
-			<?php echo $form->labelEx($model,'email'); ?>
-			<div class="desc">
-				<?php echo $form->textField($model,'email',array('maxlength'=>32,'class'=>'span-7'));?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'email', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textField($model,'email',array('maxlength'=>32,'class'=>'form-control'));?>
 				<?php echo $form->error($model,'email');?>
 			</div>
 		</div>
 
-		<div class="clearfix info">
-			<?php echo $form->labelEx($model,'phone'); ?>
-			<div class="desc">
-				<?php echo $form->textField($model,'phone',array('maxlength'=>15,'class'=>'span-5'));?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'phone', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textField($model,'phone',array('maxlength'=>15,'class'=>'form-control'));?>
 				<?php echo $form->error($model,'phone');?>
 			</div>
 		</div>
 
-		<div class="clearfix info">
-			<?php echo $form->labelEx($model,'subject'); ?>
-			<div class="desc">
-				<?php echo $form->textField($model,'subject',array('maxlength'=>64,'class'=>'span-10'));?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'subject', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textField($model,'subject',array('maxlength'=>64,'class'=>'form-control'));?>
 				<?php echo $form->error($model,'subject');?>
 			</div>
 		</div>
 
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'message'); ?>
-			<div class="desc">
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'message', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
 				<?php 
 				//echo $form->textArea($model,'message',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller'));
 				$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
@@ -81,6 +81,9 @@
 						'table' => array('js' => array('table.js')),
 						'fullscreen' => array('js' => array('fullscreen.js')),
 					),
+					'htmlOptions'=>array(
+						'class' => 'form-control',
+					 ),
 				)); ?>
 				<?php echo $form->error($model,'message'); ?>
 			</div>

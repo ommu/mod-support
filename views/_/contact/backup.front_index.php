@@ -71,8 +71,8 @@ EOP;
 
 			<fieldset>
 
-				<div class="clearfix">
-					<div class="desc">
+				<div class="form-group row">
+					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php 
 						$model->displayname = $user->displayname;
 						echo $form->textField($model,'displayname',array('maxlength'=>32)); ?>
@@ -81,8 +81,8 @@ EOP;
 					<?php echo $form->labelEx($model,'displayname'); ?>
 				</div>
 
-				<div class="clearfix">
-					<div class="desc">
+				<div class="form-group row">
+					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php 
 						$model->email = $user->email;
 						echo $form->textField($model,'email',array('maxlength'=>32)); ?>
@@ -91,8 +91,8 @@ EOP;
 					<?php echo $form->labelEx($model,'email'); ?>
 				</div>
 
-				<div class="clearfix">
-					<div class="desc">
+				<div class="form-group row">
+					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php echo $form->textField($model,'subject',array('maxlength'=>64)); ?>
 						<?php echo $form->error($model,'subject'); ?>
 					</div>
@@ -100,15 +100,15 @@ EOP;
 				</div>
 
 				<div class="clearfix message">
-					<div class="desc">
+					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php echo $form->textArea($model,'message',array('rows'=>6, 'cols'=>50)); ?>
 						<?php echo $form->error($model,'message'); ?>
 					</div>
 				</div>
 
-				<div class="submit clearfix">
-					<label>&nbsp;</label>
-					<div class="desc">
+				<div class="form-group row submit">
+					<label class="col-form-label col-lg-4 col-md-3 col-sm-12">&nbsp;</label>
+					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php echo CHtml::submitButton(Yii::t('phrase', 'Send Message'), array('onclick' => 'setEnableSave()')); ?>
 					</div>
 				</div>

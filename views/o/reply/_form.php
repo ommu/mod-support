@@ -30,9 +30,9 @@
 		</div>
 		<?php //begin.Messages ?>
 
-		<div class="clearfix info">
-			<label><?php echo $model->getAttributeLabel('message')?></label>
-			<div class="desc">
+		<div class="form-group row">
+			<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('message')?></label>
+			<div class="col-lg-8 col-md-9 col-sm-12">
 				<?php 
 				$subject = $model->isNewRecord ? $feedback->subject : ($model->feedback->subject ? $model->feedback->subject : '-');
 				echo Yii::t('phrase', 'Subject: ').$subject;?><br/>
@@ -41,9 +41,9 @@
 			</div>
 		</div>
 
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'reply_message'); ?>
-			<div class="desc">
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'reply_message', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
 				<?php 
 				//echo $form->textArea($model,'reply_message',array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller'));
 				$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
@@ -64,16 +64,18 @@
 						'table' => array('js' => array('table.js')),
 						'fullscreen' => array('js' => array('fullscreen.js')),
 					),
+					'htmlOptions'=>array(
+						'class' => 'form-control',
+					 ),
 				)); ?>
 				<?php echo $form->error($model,'reply_message'); ?>
 			</div>
 		</div>
 
-		<div class="clearfix publish">
-			<?php echo $form->labelEx($model,'publish'); ?>
-			<div class="desc">
-				<?php echo $form->checkBox($model,'publish'); ?>
-				<?php echo $form->labelEx($model,'publish'); ?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model,'publish', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->checkBox($model,'publish', array('class'=>'form-control')); ?>
 				<?php echo $form->error($model,'publish'); ?>
 			</div>
 		</div>
