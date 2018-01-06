@@ -4,9 +4,8 @@
  * @var $this UserController
  * @var $model SupportFeedbackUser
  * @var $form CActiveForm
- * version: 0.0.1
- * Reference start
  *
+ * Reference start
  * TOC :
  *	Index
  *	Manage
@@ -19,10 +18,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 05:42 WIB
  * @link https://github.com/ommu/ommu-support
- * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
