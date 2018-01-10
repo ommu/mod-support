@@ -268,17 +268,17 @@ class ContactcategoryController extends Controller
 					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Category success deleted.').'</strong></div>',
 				));
 			}
-
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 350;
-
-			$this->pageTitle = Yii::t('phrase', 'Delete Category: $category_name', array('$category_name'=>$model->title->message));
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('/o/contact_category/admin_delete');
+			Yii::app()->end();
 		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', 'Delete Category: $category_name', array('$category_name'=>$model->title->message));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/contact_category/admin_delete');
 	}
 
 	/**
@@ -307,20 +307,20 @@ class ContactcategoryController extends Controller
 					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Category success updated.').'</strong></div>',
 				));
 			}
-
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 350;
-
-			$this->pageTitle = Yii::t('phrase', '$title Category: $category_name', array('$title'=>$title, '$category_name'=>$model->title->message));
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('/o/contact_category/admin_publish',array(
-				'title'=>$title,
-				'model'=>$model,
-			));
+			Yii::app()->end();
 		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', '$title Category: $category_name', array('$title'=>$title, '$category_name'=>$model->title->message));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/contact_category/admin_publish',array(
+			'title'=>$title,
+			'model'=>$model,
+		));
 	}
 
 	/**

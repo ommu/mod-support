@@ -312,8 +312,9 @@ class ReplyController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
 			
-			if($model->save()) {
+			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
@@ -321,17 +322,17 @@ class ReplyController extends Controller
 					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success deleted.').'</strong></div>',
 				));
 			}
-
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 350;
-
-			$this->pageTitle = Yii::t('phrase', 'Delete Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_delete');
+			Yii::app()->end();
 		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', 'Delete Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_delete');
 	}
 
 	/**
@@ -350,7 +351,8 @@ class ReplyController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
@@ -359,20 +361,20 @@ class ReplyController extends Controller
 					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback Reply success updated.').'</strong></div>',
 				));
 			}
-
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 350;
-			
-			$this->pageTitle = Yii::t('phrase', '$title Reply: by $creation_displayname Feedback $feedback_subject', array('$title'=>$title, '$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_publish',array(
-				'title'=>$title,
-				'model'=>$model,
-			));
+			Yii::app()->end();
 		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+		
+		$this->pageTitle = Yii::t('phrase', '$title Reply: by $creation_displayname Feedback $feedback_subject', array('$title'=>$title, '$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_publish',array(
+			'title'=>$title,
+			'model'=>$model,
+		));
 	}
 
 	/**
