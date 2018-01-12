@@ -246,90 +246,9 @@ class SupportMailSetting extends CActiveRecord
 			
 		} else {
 			$model = self::model()->findByPk(1);
-			return $model;			
+			return $model;
 		}
 	}
-
-    /**
-	 * Sent Email
-	 */
-	public static function sendEmail($to_email=null, $to_name=null, $subject, $message, $cc=null, $attachment=null) 
-	{
-		ini_set('max_execution_time', 0);
-		ob_start();
-		
-		$model = self::model()->findByPk(1,array(
-			'select' => 'mail_contact, mail_name, mail_from, mail_smtp, smtp_address, smtp_port, smtp_username, smtp_password, smtp_ssl',
-		));
-		$setting = OmmuSettings::model()->findByPk(1, array(
-			'select' => 'site_title',
-		));
-		
-		$debug = Yii::app()->params['debug']['send_email'];
-		$debugStatus = $debug['status'];
-		$debugContent = $debug['content'];
-		$debugEmail = $debug['email'];
-		
-		if($debugStatus && $debugContent == 'file_put_contents' && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13'))) {
-			file_put_contents(Utility::getUrlTitle($subject).'.htm', $message);
-			
-		} else {
-			if($debugStatus && $debugContent == 'send_email' && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13')))
-				$to_email = $to_name = $debugEmail;
-				
-			Yii::import('application.extensions.phpmailer.JPhpMailer');
-			$mail=new JPhpMailer;
-
-			if($model->mail_smtp == 1 || $_SERVER["SERVER_ADDR"]=='127.0.0.1' || $_SERVER["HTTP_HOST"]=='localhost') {
-				//in localhost or testing condition
-				//smtp google 
-				$mail->IsSMTP();								// Set mailer to use SMTP
-				$mail->Host			= $model->smtp_address;		// Specify main and backup server
-				$mail->Port			= $model->smtp_port;		// set the SMTP port
-				$mail->SMTPAuth		= true;						// Enable SMTP authentication
-				$mail->Username		= $model->smtp_username;	// SES SMTP  username
-				$mail->Password		= $model->smtp_password;	// SES SMTP password
-				if($model->smtp_ssl != 0)
-					$mail->SMTPSecure	= $model->smtp_ssl == 1 ? "tls" : "ssl";	// Enable encryption, 'ssl' also accepted
-
-			} else {
-				//live server 
-				$mail->IsMail();
-			}
-			
-			if($to_email != null && $to_name != null) {
-				$mail->SetFrom($model->mail_from, $model->mail_name);
-				$mail->AddReplyTo($model->mail_from, $model->mail_name);
-				$mail->AddAddress($to_email, $to_name);
-			} else {
-				$mail->SetFrom($model->mail_from, Yii::t('phrase', '[System]').' '.$setting->site_title);
-				$mail->AddReplyTo($model->mail_from, Yii::t('phrase', '[System]').' '.$setting->site_title);
-				$mail->AddAddress($model->mail_contact, $model->mail_name);
-			}
-				
-			// cc
-			if ($cc != null && count($cc) > 0) {
-				foreach ($cc as $email => $name)
-					$mail->AddAddress($email, $name);
-			}
-			// attachment
-			if ($attachment != null)
-				$mail->addAttachment($attachment);
-			
-			$mail->Subject = $subject;
-			$mail->MsgHTML($message);
-
-			if($mail->Send()) {
-				return true;
-				//echo 'send';
-			} else {
-				return false;
-				//echo 'no send';
-			}
-		}
-
-		ob_end_flush();
-    }
 
 	/**
 	 * before validate attributes
