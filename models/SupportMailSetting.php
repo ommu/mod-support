@@ -270,11 +270,11 @@ class SupportMailSetting extends CActiveRecord
 		$debugContent = $debug['content'];
 		$debugEmail = $debug['email'];
 		
-		if($debugStatus == 1 && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13')) && $debugContent == 'file_put_contents') {
+		if($debugStatus && $debugContent == 'file_put_contents' && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13'))) {
 			file_put_contents(Utility::getUrlTitle($subject).'.htm', $message);
 			
 		} else {
-			if($debugStatus == 1 && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13')) && $debugContent == 'send_email')
+			if($debugStatus && $debugContent == 'send_email' && in_array(Yii::app()->request->serverName, array('localhost','127.0.0.1','192.168.3.13')))
 				$to_email = $to_name = $debugEmail;
 				
 			Yii::import('application.extensions.phpmailer.JPhpMailer');
@@ -299,7 +299,7 @@ class SupportMailSetting extends CActiveRecord
 			
 			if($to_email != null && $to_name != null) {
 				$mail->SetFrom($model->mail_from, $model->mail_name);
-				$mail->AddReplyTo($model->mail_from, $model->mail_name);			
+				$mail->AddReplyTo($model->mail_from, $model->mail_name);
 				$mail->AddAddress($to_email, $to_name);
 			} else {
 				$mail->SetFrom($model->mail_from, Yii::t('phrase', '[System]').' '.$setting->site_title);
@@ -325,7 +325,7 @@ class SupportMailSetting extends CActiveRecord
 			} else {
 				return false;
 				//echo 'no send';
-			}			
+			}
 		}
 
 		ob_end_flush();
