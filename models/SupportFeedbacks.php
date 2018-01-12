@@ -342,12 +342,15 @@ class SupportFeedbacks extends CActiveRecord
 	 */
 	protected function afterSave() 
 	{
+		Yii::import('ext.phpmailer.Mailer');
+
 		$action = strtolower(Yii::app()->controller->action->id);
 		$setting = OmmuSettings::model()->findByPk(1, array(
 			'select' => 'site_title',
 		));
 		
 		parent::afterSave();
+		
 		if($this->isNewRecord) {
 			// Send Email to Member
 			$feedback_search = array(
@@ -360,7 +363,7 @@ class SupportFeedbacks extends CActiveRecord
 			$feedback_title = Yii::t('phrase', '[Feedback]').' '.$this->subject.' | '.$setting->site_title;
 			$feedback_message = file_get_contents(YiiBase::getPathOfAlias('webroot.protected.modules.support.components.template').'/'.$feedback_template.'.php');			
 			$feedback_ireplace = str_ireplace($feedback_search, $feedback_replace, $feedback_message);
-			SupportMailSetting::sendEmail(null, null, $feedback_title, $feedback_ireplace);
+			Mailer::send(null, null, $feedback_title, $feedback_ireplace);
 			
 		} //else {
 		/*
@@ -377,7 +380,7 @@ class SupportFeedbacks extends CActiveRecord
 				$reply_title = Yii::t('phrase', '[Reply]').' '.$this->subject.' | '.$setting->site_title;
 				$reply_message = file_get_contents(YiiBase::getPathOfAlias('webroot.protected.modules.support.components.template').'/'.$reply_template.'.php');			
 				$reply_ireplace = str_ireplace($reply_search, $reply_replace, $reply_message);
-				SupportMailSetting::sendEmail($this->email, $this->displayname, $reply_title, $reply_ireplace);
+				Mailer::send($this->email, $this->displayname, $reply_title, $reply_ireplace);
 			}
 		}
 		*/
