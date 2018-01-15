@@ -110,7 +110,7 @@ class SupportFeedbacks extends CActiveRecord
 		return array(
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'user_id' => Yii::t('attribute', 'User'),
+			'user_id' => Yii::t('attribute', 'Creation'),
 			'email' => Yii::t('attribute', 'Email Address'),
 			'displayname' => Yii::t('attribute', 'Name'),
 			'phone' => Yii::t('attribute', 'Phone'),

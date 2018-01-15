@@ -57,11 +57,15 @@
 			),
 			array(
 				'name'=>'view_search',
-				'value'=>$model->view->views ? $model->view->views : '-',
+				'value'=>$model->view->views ? $model->view->views : '0',
 			),
 			array(
 				'name'=>'reply_search',
-				'value'=>$model->view->replies ? $model->view->replies : '-',
+				'value'=>$model->view->replies ? $model->view->replies : '0',
+			),
+			array(
+				'name'=>'user_search',
+				'value'=>$model->view->view_users ? $model->view->view_users : '0',
 			),
 			array(
 				'name'=>'creation_date',
