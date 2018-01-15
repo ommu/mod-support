@@ -14,15 +14,6 @@ plugin_menu		:
 	- urlTitle: Feedbacks
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/feedback/manage, attr: -, icon: -}
-	- urlTitle: Replies
-		urlRules: {siteType: "0,1", userLevel: "1"}
-		urlPath: {url: o/reply/manage, attr: -, icon: -}
-	- urlTitle: Views
-		urlRules: {siteType: "0,1", userLevel: "1"}
-		urlPath: {url: o/views/manage, attr: -, icon: -}
-	- urlTitle: Users
-		urlRules: {siteType: "0,1", userLevel: "1"}
-		urlPath: {url: o/user/manage, attr: -, icon: -}
 	- urlTitle: Support Manual
 		urlRules: {siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/setting/manual, attr: -, icon: -}
@@ -32,6 +23,9 @@ content_menu	:
 	- urlTitle: Back to Feedbacks
 		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/feedback/manage, attr: -, icon: -}
+	- urlTitle: View Feedback Replies Data
+		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/reply/manage, attr: -, icon: -}
 	- urlTitle: Add Reply
 		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/reply/add, attr: feedback=$_GET*feedback, icon: -}

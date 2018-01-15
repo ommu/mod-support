@@ -39,10 +39,11 @@ class SupportFeedbacks extends CActiveRecord
 	public $defaultColumns = array();
 	
 	// Variable Search
-	public $user_search;
+	public $creation_search;
 	public $modified_search;
 	public $view_search;
 	public $reply_search;
+	public $user_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -82,7 +83,7 @@ class SupportFeedbacks extends CActiveRecord
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('feedback_id, publish, user_id, email, displayname, phone, subject, message, creation_date, modified_date, modified_id, updated_date,
-				user_search, modified_search, view_search, reply_search', 'safe', 'on'=>'search'),
+				creation_search, modified_search, view_search, reply_search, user_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -119,10 +120,11 @@ class SupportFeedbacks extends CActiveRecord
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
-			'user_search' => Yii::t('attribute', 'User'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
-			'view_search' => Yii::t('attribute', 'View'),
-			'reply_search' => Yii::t('attribute', 'Reply'),
+			'view_search' => Yii::t('attribute', 'Views'),
+			'reply_search' => Yii::t('attribute', 'Replies'),
+			'user_search' => Yii::t('attribute', 'Users'),
 		);
 	}
 	
@@ -180,10 +182,11 @@ class SupportFeedbacks extends CActiveRecord
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
 		
-		$criteria->compare('user.displayname',strtolower($this->user_search), true);
+		$criteria->compare('user.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 		$criteria->compare('view.view_condition',$this->view_search);
 		$criteria->compare('view.reply_condition',$this->reply_search);
+		$criteria->compare('view.view_users',$this->user_search);
 			
 		if(!isset($_GET['SupportFeedbacks_sort']))
 			$criteria->order = 't.feedback_id DESC';
@@ -301,6 +304,15 @@ class SupportFeedbacks extends CActiveRecord
 					1=>Yii::t('phrase', 'Yes'),
 					0=>Yii::t('phrase', 'No'),
 				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'user_search',
+				'value' => 'CHtml::link($data->view->view_users ? $data->view->view_users : \'0\', Yii::app()->controller->createUrl("o/user/manage",array(\'feedback\'=>$data->feedback_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>false,
 				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
