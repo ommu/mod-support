@@ -336,5 +336,35 @@ class SupportFeedbackReply extends CActiveRecord
 		}
 		return true;
 	}
+	
+	/**
+	 * After save attributes
+	 */
+	protected function afterSave() 
+	{
+		Yii::import('ext.phpmailer.Mailer');
+		
+		parent::afterSave();
+		
+		if($this->isNewRecord) {
+			// Send Email to Member
+			$reply_search = array(
+				'{displayname}','{subject}','{message}','{creation_date}',
+				'{reply_message}',
+			);
+			$reply_replace = array(
+				$this->feedback->displayname, $this->feedback->subject, $this->feedback->message, Utility::dateFormat($this->feedback->creation_date, true), 
+				$this->reply_message,
+			);
+			$reply_template = 'support_feedback_reply';
+			$reply_title = Yii::t('phrase', 'Feedback Reply: {subject}', array('{subject}'=>$this->feedback->subject));
+			$reply_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$reply_template.'.php';
+			if(!file_exists($reply_file))
+				$reply_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$reply_template.'.php';
+			$reply_message = Utility::getEmailTemplate(str_ireplace($reply_search, $reply_replace, file_get_contents($reply_file)));
+			Mailer::send($this->feedback->email, $this->feedback->displayname, $reply_title, $reply_message);
+		}
+	}
+
 
 }

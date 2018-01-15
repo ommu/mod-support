@@ -293,7 +293,7 @@ class SupportFeedbacks extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'reply_search',
-				'value' => '$data->view->reply_condition != 0 ? CHtml::link($data->view->replies, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'value' => '$data->view->reply_condition != 0 ? CHtml::link($data->view->replies, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::link(CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\'), Yii::app()->controller->createUrl("o/reply/add",array(\'feedback\'=>$data->feedback_id,\'hook\'=>\'feedback\')))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -343,8 +343,7 @@ class SupportFeedbacks extends CActiveRecord
 	protected function afterSave() 
 	{
 		Yii::import('ext.phpmailer.Mailer');
-
-		$action = strtolower(Yii::app()->controller->action->id);
+		
 		$setting = OmmuSettings::model()->findByPk(1, array(
 			'select' => 'site_title',
 		));
@@ -354,40 +353,19 @@ class SupportFeedbacks extends CActiveRecord
 		if($this->isNewRecord) {
 			// Send Email to Member
 			$feedback_search = array(
-				'{$displayname}','{$email}','{$subject}','{$message}','{$creation_date}',
+				'{displayname}','{subject}','{message}','{creation_date}',
 			);
 			$feedback_replace = array(
-				$this->displayname, $this->email, $this->subject, $this->message, Utility::dateFormat(date('Y-m-d H:i:s'), true),
+				$this->displayname, $this->subject, $this->message, Utility::dateFormat(date('Y-m-d H:i:s'), true),
 			);
 			$feedback_template = 'support_feedback';
-			$feedback_title = ' | '.$setting->site_title;
+			$feedback_title = Yii::t('phrase', 'Feedback: {subject}', array('{subject}'=>$this->subject));
 			$feedback_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$feedback_template.'.php';
 			if(!file_exists($feedback_file))
 				$feedback_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$feedback_template.'.php';
 			$feedback_message = Utility::getEmailTemplate(str_ireplace($feedback_search, $feedback_replace, file_get_contents($feedback_file)));
 			Mailer::send($this->email, $this->displayname, $feedback_title, $feedback_message);
-			
-		} //else {
-		/*
-			if($action == 'reply') {
-				$reply_search = array(
-					'{$displayname}','{$email}','{$creation_date}','{$subject}','{$message}','{$reply}',
-					'{$reply_displayname}','{$reply_email}',
-				);
-				$reply_replace = array(
-					$this->displayname, $this->email, Utility::dateFormat($this->creation_date, true), $this->subject, $this->message, $this->message_reply,
-					$this->user_reply->displayname, $this->user_reply->email,
-				);
-				$reply_template = 'support_feedback_reply';
-				$reply_title = Yii::t('phrase', '[Reply]').' '.$this->subject.' | '.$setting->site_title;
-				$reply_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$reply_template.'.php';
-				if(!file_exists($reply_file))
-					$reply_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$reply_template.'.php';
-				$reply_message = Utility::getEmailTemplate(str_ireplace($reply_search, $reply_replace, file_get_contents($reply_file)));
-				Mailer::send($this->email, $this->displayname, $reply_title, $reply_message);
-			}
 		}
-		*/
 	}
 
 }

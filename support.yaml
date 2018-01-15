@@ -32,6 +32,9 @@ content_menu	:
 	- urlTitle: Back to Feedbacks
 		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/feedback/manage, attr: -, icon: -}
+	- urlTitle: Add Reply
+		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/reply/add, attr: feedback=$_GET*feedback, icon: -}
 		
 # controller o/views
 	- urlTitle: Back to Feedbacks

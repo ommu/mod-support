@@ -74,12 +74,6 @@
 				'header' => Yii::t('phrase', 'Options'),
 				'class'=>'CButtonColumn',
 				'buttons' => array(
-					'reply' => array(
-						'label' => 'reply',
-						'options' => array(
-							'class' => 'reply'
-						),
-						'url' => 'Yii::app()->controller->createUrl("o/reply/add",array("feedback"=>$data->primaryKey,"hook"=>"feedback"))'),
 					'view' => array(
 						'label' => 'view',
 						'imageUrl' => false,
@@ -101,7 +95,7 @@
 						),
 						'url' => 'Yii::app()->controller->createUrl("delete",array("id"=>$data->primaryKey))')
 				),
-				'template' => '{reply}|{view}|{update}|{delete}',
+				'template' => '{view}|{update}|{delete}',
 			));
 
 			$this->widget('application.libraries.core.components.system.OGridView', array(

@@ -1,14 +1,6 @@
-<div>
-	Hi, {$displayname} ({$email}) terimakasih telah menghubungi kontak kami.<br/>
-	Berikut adalah jawaban atas pertanyaan/kirik/saran yang telah Anda ajukan pada tanggal <em>{$creation_date}</em> dengan subyek <em>{$subject}</em>
-</div><br/>
-<div>
-	<strong>Message</strong><br/>
-	{$message}
-</div><br/>
-<div>
-	<strong>Balasan</strong><br/>
-	{$reply}<hr/>
-	{$reply_displayname} ({$reply_email})
-</div>
-
+Dear {displayname}
+<p><strong>Terimakasih telah menghubungi kontak kami.</strong></p>
+<p>Berikut adalah jawaban atas pertanyaan/kirik/saran yang telah Anda ajukan pada tanggal <em>{creation_date}</em> dengan subyek <em>{subject}</em></p>
+<p><strong>Message</strong>:<br/>{message}</p>
+<strong>Balasan</strong>: 
+{reply_message}
