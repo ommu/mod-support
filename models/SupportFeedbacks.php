@@ -354,16 +354,18 @@ class SupportFeedbacks extends CActiveRecord
 		if($this->isNewRecord) {
 			// Send Email to Member
 			$feedback_search = array(
-				'{$subject}','{$displayname}','{$email}','{$creation_date}','{$message}',
+				'{$displayname}','{$email}','{$subject}','{$message}','{$creation_date}',
 			);
 			$feedback_replace = array(
-				$this->subject, $this->displayname, $this->email, Utility::dateFormat(date('Y-m-d H:i:s'), true), $this->message,
+				$this->displayname, $this->email, $this->subject, $this->message, Utility::dateFormat(date('Y-m-d H:i:s'), true),
 			);
 			$feedback_template = 'support_feedback';
-			$feedback_title = Yii::t('phrase', '[Feedback]').' '.$this->subject.' | '.$setting->site_title;
-			$feedback_message = file_get_contents(YiiBase::getPathOfAlias('webroot.protected.modules.support.components.template').'/'.$feedback_template.'.php');			
-			$feedback_ireplace = str_ireplace($feedback_search, $feedback_replace, $feedback_message);
-			Mailer::send(null, null, $feedback_title, $feedback_ireplace);
+			$feedback_title = ' | '.$setting->site_title;
+			$feedback_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$feedback_template.'.php';
+			if(!file_exists($feedback_file))
+				$feedback_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$feedback_template.'.php';
+			$feedback_message = Utility::getEmailTemplate(str_ireplace($feedback_search, $feedback_replace, file_get_contents($feedback_file)));
+			Mailer::send($this->email, $this->displayname, $feedback_title, $feedback_message);
 			
 		} //else {
 		/*
@@ -378,9 +380,11 @@ class SupportFeedbacks extends CActiveRecord
 				);
 				$reply_template = 'support_feedback_reply';
 				$reply_title = Yii::t('phrase', '[Reply]').' '.$this->subject.' | '.$setting->site_title;
-				$reply_message = file_get_contents(YiiBase::getPathOfAlias('webroot.protected.modules.support.components.template').'/'.$reply_template.'.php');			
-				$reply_ireplace = str_ireplace($reply_search, $reply_replace, $reply_message);
-				Mailer::send($this->email, $this->displayname, $reply_title, $reply_ireplace);
+				$reply_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$reply_template.'.php';
+				if(!file_exists($reply_file))
+					$reply_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$reply_template.'.php';
+				$reply_message = Utility::getEmailTemplate(str_ireplace($reply_search, $reply_replace, file_get_contents($reply_file)));
+				Mailer::send($this->email, $this->displayname, $reply_title, $reply_message);
 			}
 		}
 		*/

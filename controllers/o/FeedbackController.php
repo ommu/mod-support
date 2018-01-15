@@ -100,12 +100,6 @@ class FeedbackController extends Controller
 	 */
 	public function actionManage($user=null) 
 	{
-		$pageTitle = Yii::t('phrase', 'Feedbacks');
-		if($user != null && $user != '0') {
-			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback: User $user_displayname', array ('$user_displayname'=>$data->displayname));
-		}
-		
 		$model=new SupportFeedbacks('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportFeedbacks'])) {
@@ -122,6 +116,12 @@ class FeedbackController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
+		$pageTitle = Yii::t('phrase', 'Feedbacks');
+		if($user != null && $user != '0') {
+			$data = Users::model()->findByPk($user);
+			$pageTitle = Yii::t('phrase', 'Feedback: User $user_displayname', array ('$user_displayname'=>$data->displayname));
+		}
+		
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';

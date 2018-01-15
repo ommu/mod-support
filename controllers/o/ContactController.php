@@ -101,12 +101,6 @@ class ContactController extends Controller
 	 */
 	public function actionManage($category=null) 
 	{
-		$pageTitle = Yii::t('phrase', 'Contacts');
-		if($category != null) {
-			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Contacts: Category $category_name', array ('$category_name'=>$data->title->message));
-		}
-		
 		$model=new SupportContacts('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportContacts'])) {
@@ -123,6 +117,12 @@ class ContactController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
+		$pageTitle = Yii::t('phrase', 'Contacts');
+		if($category != null) {
+			$data = SupportContactCategory::model()->findByPk($category);
+			$pageTitle = Yii::t('phrase', 'Contacts: Category $category_name', array ('$category_name'=>$data->title->message));
+		}
+		
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';

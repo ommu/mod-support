@@ -96,16 +96,6 @@ class ReplyController extends Controller
 	 */
 	public function actionManage($feedback=null, $creation=null) 
 	{
-		$pageTitle = Yii::t('phrase', 'Feedback Replies');
-		if($feedback != null) {
-			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback Reply: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
-		}
-		if($creation != null) {
-			$data = Users::model()->findByPk($creation);
-			$pageTitle = Yii::t('phrase', 'Feedback Reply: User $creation_displayname', array ('$creation_displayname'=>$data->displayname));
-		}
-		
 		$model=new SupportFeedbackReply('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportFeedbackReply'])) {
@@ -122,6 +112,16 @@ class ReplyController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
+		$pageTitle = Yii::t('phrase', 'Feedback Replies');
+		if($feedback != null) {
+			$data = SupportFeedbacks::model()->findByPk($feedback);
+			$pageTitle = Yii::t('phrase', 'Feedback Reply: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
+		}
+		if($creation != null) {
+			$data = Users::model()->findByPk($creation);
+			$pageTitle = Yii::t('phrase', 'Feedback Reply: User $creation_displayname', array ('$creation_displayname'=>$data->displayname));
+		}
+		
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';

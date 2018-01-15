@@ -96,12 +96,6 @@ class WidgetController extends Controller
 	 */
 	public function actionManage($category=null) 
 	{
-		$pageTitle = Yii::t('phrase', 'Widgets Manage');
-		if($category != null) {
-			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Widgets: Category $category_name', array ('$category_name'=>$data->title->message));
-		}
-		
 		$model=new SupportWidget('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportWidget'])) {
@@ -118,6 +112,12 @@ class WidgetController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
+		$pageTitle = Yii::t('phrase', 'Widgets Manage');
+		if($category != null) {
+			$data = SupportContactCategory::model()->findByPk($category);
+			$pageTitle = Yii::t('phrase', 'Widgets: Category $category_name', array ('$category_name'=>$data->title->message));
+		}
+		
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';

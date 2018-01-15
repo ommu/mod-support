@@ -313,4 +313,14 @@ class SupportContacts extends CActiveRecord
 		}
 		return true;
 	}
+	
+	/**
+	 * After save attributes
+	 */
+	protected function afterSave() 
+	{
+		parent::afterSave();
+		Utility::generateEmailTemplate();
+	}
+
 }

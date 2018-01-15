@@ -94,16 +94,6 @@ class ViewsController extends Controller
 	 */
 	public function actionManage($feedback=null, $user=null) 
 	{
-		$pageTitle = Yii::t('phrase', 'Feedback Views');
-		if($feedback != null) {
-			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback View: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
-		}
-		if($user != null) {
-			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback View: User $user_displayname', array ('$user_displayname'=>$data->displayname));
-		}
-		
 		$model=new SupportFeedbackView('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['SupportFeedbackView'])) {
@@ -120,6 +110,16 @@ class ViewsController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
+		$pageTitle = Yii::t('phrase', 'Feedback Views');
+		if($feedback != null) {
+			$data = SupportFeedbacks::model()->findByPk($feedback);
+			$pageTitle = Yii::t('phrase', 'Feedback View: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
+		}
+		if($user != null) {
+			$data = Users::model()->findByPk($user);
+			$pageTitle = Yii::t('phrase', 'Feedback View: User $user_displayname', array ('$user_displayname'=>$data->displayname));
+		}
+		
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
