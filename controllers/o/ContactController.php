@@ -130,7 +130,7 @@ class ContactController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
 	
 	/**
 	 * Creates a new model.
@@ -407,15 +407,14 @@ class ContactController extends Controller
 				}
 			}
 			Yii::app()->end();
-
-		} else {
-			$this->pageTitle = Yii::t('phrase', 'Address Settings');
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_setting',array(
-				'model'=>$model,
-			));
 		}
+		
+		$this->pageTitle = Yii::t('phrase', 'Address Settings');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_setting',array(
+			'model'=>$model,
+		));
 	}
 
 	/**

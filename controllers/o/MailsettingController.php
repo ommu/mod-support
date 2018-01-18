@@ -128,16 +128,14 @@ class MailsettingController extends Controller
 				}
 			}
 			Yii::app()->end();
-
-		} else {
-			$this->pageTitle = Yii::t('phrase', 'Mail Settings');
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('/o/mail_setting/admin_edit',array(
-				'model'=>$model,
-			));
 		}
-
+		
+		$this->pageTitle = Yii::t('phrase', 'Mail Settings');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/mail_setting/admin_edit',array(
+			'model'=>$model,
+		));
 	}
 
 	/**

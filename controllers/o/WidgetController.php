@@ -125,7 +125,7 @@ class WidgetController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
 	
 	/**
 	 * Creates a new model.
@@ -160,19 +160,18 @@ class WidgetController extends Controller
 				}
 			}
 			Yii::app()->end();
-			
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 550;
-
-			$this->pageTitle = Yii::t('phrase', 'Create Widget');
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_add',array(
-				'model'=>$model,
-			));			
 		}
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 550;
+
+		$this->pageTitle = Yii::t('phrase', 'Create Widget');
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_add',array(
+			'model'=>$model,
+		));
 	}
 
 	/**
@@ -209,19 +208,18 @@ class WidgetController extends Controller
 				}
 			}
 			Yii::app()->end();
-			
-		} else {
-			$this->dialogDetail = true;
-			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-			$this->dialogWidth = 550;
-
-			$this->pageTitle = Yii::t('phrase', 'Update Widget: $category_name', array('$category_name'=>$model->cat->title->message));
-			$this->pageDescription = '';
-			$this->pageMeta = '';
-			$this->render('admin_edit',array(
-				'model'=>$model,
-			));			
 		}
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 550;
+
+		$this->pageTitle = Yii::t('phrase', 'Update Widget: $category_name', array('$category_name'=>$model->cat->title->message));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_edit',array(
+			'model'=>$model,
+		));
 	}
 	
 	/**
@@ -242,7 +240,7 @@ class WidgetController extends Controller
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));
-	}	
+	}
 
 	/**
 	 * Displays a particular model.

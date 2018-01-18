@@ -48,7 +48,7 @@ function initialize() {
 			success: function(v){
 				for(i in v.data){				
 					printMarker(v.data[i]);
-				}		
+				}
 			}
 		});		
 	}

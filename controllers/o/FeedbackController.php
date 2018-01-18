@@ -129,7 +129,7 @@ class FeedbackController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
 	
 	/**
 	 * Updates a particular model.

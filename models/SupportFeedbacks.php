@@ -344,7 +344,7 @@ class SupportFeedbacks extends CActiveRecord
 			if(!$this->isNewRecord) {
 				if($action == 'edit')
 					$this->modified_id = Yii::app()->user->id;
-			}	
+			}
 		}
 		return true;
 	}

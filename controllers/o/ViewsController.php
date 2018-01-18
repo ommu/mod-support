@@ -127,7 +127,7 @@ class ViewsController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
 	
 	/**
 	 * Displays a particular model.
@@ -147,7 +147,7 @@ class ViewsController extends Controller
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));
-	}	
+	}
 
 	/**
 	 * Displays a particular model.
