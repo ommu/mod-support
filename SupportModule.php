@@ -29,7 +29,6 @@ class SupportModule extends CWebModule
 		// import the module-level models and components
 		$this->setImport(array(
 			'support.models.*',
-			'support.models.view.*',
 			'support.components.*',
 		));
 

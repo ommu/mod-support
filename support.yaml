@@ -17,9 +17,20 @@ plugin_menu		:
 
 content_menu	:
 # controller o/admin
+	- urlTitle: Subjects
+		urlRules: {support, o/feedback, manage, siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/subject/manage, attr: -, icon: -}
 	- urlTitle: Manual Book
 		urlRules: {support, o/feedback, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/setting/manual, attr: -, icon: -}
+
+# controller o/admin
+	- urlTitle: Back to Feedbacks
+		urlRules: {support, o/subject, manage, siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/feedback/manage, attr: -, icon: -}
+	- urlTitle: Add Subject
+		urlRules: {support, o/subject, manage, siteType: "0,1", userLevel: "1,2"}
+		urlPath: {url: o/subject/add, attr: -, icon: -}
 
 # controller o/reply
 	- urlTitle: Back to Feedbacks
