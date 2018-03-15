@@ -19,9 +19,9 @@
  *
  * --------------------------------------------------------------------------------------
  *
- * This is the model class for table "_view_support_feedbacks".
+ * This is the model class for table "_support_feedbacks".
  *
- * The followings are the available columns in table '_view_support_feedbacks':
+ * The followings are the available columns in table '_support_feedbacks':
  * @property string $feedback_id
  * @property string $reply_condition
  * @property string $replies
@@ -59,7 +59,7 @@ class ViewSupportFeedbacks extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '_view_support_feedbacks';
+		return '_support_feedbacks';
 	}
 
 	/**

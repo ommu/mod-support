@@ -18,9 +18,9 @@
  *
  * --------------------------------------------------------------------------------------
  *
- * This is the model class for table "_view_support_contact_category".
+ * This is the model class for table "_support_contact_category".
  *
- * The followings are the available columns in table '_view_support_contact_category':
+ * The followings are the available columns in table '_support_contact_category':
  * @property integer $cat_id
  * @property string $contact
  * @property string $widget
@@ -45,7 +45,7 @@ class ViewSupportContactCategory extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '_view_support_contact_category';
+		return '_support_contact_category';
 	}
 
 	/**
