@@ -65,7 +65,7 @@ class SupportFeedbackSubject extends OActiveRecord
 			array('publish, parent_id, subject_name', 'numerical', 'integerOnly'=>true),
 			array('creation_id, modified_id', 'length', 'max'=>11),
 			array('', 'safe'),
-			array('subject_name_i', 'length', 'max'=>32),
+			array('subject_name_i', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, 

@@ -52,7 +52,7 @@
 		<div class="form-group row">
 			<?php echo $form->labelEx($model, 'subject_name_i', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<?php echo $form->textField($model, 'subject_name_i', array('maxlength'=>32, 'class'=>'form-control')); ?>
+				<?php echo $form->textField($model, 'subject_name_i', array('maxlength'=>64, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'subject_name_i'); ?>
 			</div>
 		</div>

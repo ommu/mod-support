@@ -32,6 +32,10 @@
 				'type'=>'raw',
 			),
 			array(
+				'name'=>'subject_id',
+				'value'=>$model->subject_id ? $model->subject->title->message : '-',
+			),
+			array(
 				'name'=>'user_id',
 				'value'=>$model->user->displayname ? $model->user->displayname : '-',
 			),
@@ -46,10 +50,6 @@
 			array(
 				'name'=>'phone',
 				'value'=>$model->phone ? $model->phone : '-',
-			),
-			array(
-				'name'=>'subject',
-				'value'=>$model->subject ? $model->subject : '-',
 			),
 			array(
 				'name'=>'message',

@@ -33,7 +33,7 @@
 			<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('message')?></label>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<?php 
-				$subject = $model->isNewRecord ? $feedback->subject : ($model->feedback->subject ? $model->feedback->subject : '-');
+				$subject = $model->isNewRecord ? $feedback->subject->title->message : ($model->feedback->subject_id ? $model->feedback->subject->title->message : '-');
 				echo Yii::t('phrase', 'Subject: ').$subject;?><br/>
 				<?php echo $model->isNewRecord ? $feedback->message : $model->feedback->message;?><br/>
 				<span class="small-px"><strong><?php echo $model->isNewRecord ? $feedback->displayname : $model->feedback->displayname;?></strong><br/><?php echo $model->isNewRecord ? $feedback->email : $model->feedback->email;?><br/>Date: <?php echo $model->isNewRecord ? $feedback->creation_date : $model->feedback->creation_date;?></span>

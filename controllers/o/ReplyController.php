@@ -114,7 +114,7 @@ class ReplyController extends Controller
 		$pageTitle = Yii::t('phrase', 'Feedback Replies');
 		if($feedback != null) {
 			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback Reply: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
+			$pageTitle = Yii::t('phrase', 'Feedback Reply: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject->title->message));
 		}
 		if($creation != null) {
 			$data = Users::model()->findByPk($creation);
@@ -183,9 +183,9 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = $dialogGroundUrl;
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject,'$user_displayname'=>$feedbackFind->displayname));
+		$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject->title->message,'$user_displayname'=>$feedbackFind->displayname));
 		if($feedbackFind->user_id)
-			$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject,'$user_displayname'=>$feedbackFind->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Feedback Reply: $feedback_subject by $user_displayname', array('$feedback_subject'=>$feedbackFind->subject->title->message,'$user_displayname'=>$feedbackFind->user->displayname));
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -235,7 +235,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', 'Update Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -255,7 +255,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', 'View Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -328,7 +328,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', 'Delete Reply: by $creation_displayname Feedback $feedback_subject', array('$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -367,7 +367,7 @@ class ReplyController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 		
-		$this->pageTitle = Yii::t('phrase', '$title Reply: by $creation_displayname Feedback $feedback_subject', array('$title'=>$title, '$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', '$title Reply: by $creation_displayname Feedback $feedback_subject', array('$title'=>$title, '$creation_displayname'=>$model->creation->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

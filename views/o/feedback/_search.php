@@ -29,6 +29,11 @@
 		</li>
 		
 		<li>
+			<?php echo $model->getAttributeLabel('subject_id'); ?><br/>
+			<?php echo $form->textField($model,'subject_id'); ?>
+		</li>
+		
+		<li>
 			<?php echo $model->getAttributeLabel('user_id'); ?><br/>
 			<?php echo $form->textField($model,'user_id'); ?>
 		</li>
@@ -46,11 +51,6 @@
 		<li>
 			<?php echo $model->getAttributeLabel('phone'); ?><br/>
 			<?php echo $form->textField($model,'phone'); ?>
-		</li>
-
-		<li>
-			<?php echo $model->getAttributeLabel('subject'); ?><br/>
-			<?php echo $form->textField($model,'subject'); ?>
 		</li>
 
 		<li>

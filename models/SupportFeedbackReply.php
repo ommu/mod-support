@@ -141,7 +141,11 @@ class SupportFeedbackReply extends CActiveRecord
 		$criteria->with = array(
 			'feedback' => array(
 				'alias'=>'feedback',
-				'select'=>'subject',
+				'select'=>'subject_id',
+			),
+			'feedback.subject.title' => array(
+				'alias'=>'feedback_subject',
+				'select'=>'message',
 			),
 			'creation' => array(
 				'alias'=>'creation',
@@ -184,7 +188,7 @@ class SupportFeedbackReply extends CActiveRecord
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
 		
-		$criteria->compare('feedback.subject',strtolower($this->subject_search), true);
+		$criteria->compare('feedback_subject.message',strtolower($this->subject_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
@@ -251,7 +255,7 @@ class SupportFeedbackReply extends CActiveRecord
 			if(!isset($_GET['feedback'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'subject_search',
-					'value' => '$data->feedback->subject ? $data->feedback->subject : \'-\'',
+					'value' => '$data->feedback->subject_id ? $data->feedback->subject->title->message : \'-\'',
 				);
 			}
 			$this->defaultColumns[] = array(
@@ -353,11 +357,11 @@ class SupportFeedbackReply extends CActiveRecord
 				'{reply_message}',
 			);
 			$reply_replace = array(
-				$this->feedback->displayname, $this->feedback->subject, $this->feedback->message, Utility::dateFormat($this->feedback->creation_date, true), 
+				$this->feedback->displayname, $this->feedback->subject->title->message, $this->feedback->message, Utility::dateFormat($this->feedback->creation_date, true), 
 				$this->reply_message,
 			);
 			$reply_template = 'support_feedback_reply';
-			$reply_title = Yii::t('phrase', 'Feedback Reply: {subject}', array('{subject}'=>$this->feedback->subject));
+			$reply_title = Yii::t('phrase', 'Feedback Reply: {subject}', array('{subject}'=>$this->feedback->subject->title->message));
 			$reply_file = YiiBase::getPathOfAlias('support.components.templates').'/'.$reply_template.'.php';
 			if(!file_exists($reply_file))
 				$reply_file = YiiBase::getPathOfAlias('ommu.support.components.templates').'/'.$reply_template.'.php';

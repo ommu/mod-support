@@ -112,7 +112,7 @@ class UserController extends Controller
 		$pageTitle = Yii::t('phrase', 'Feedback Users');
 		if($feedback != null) {
 			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback User: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject));
+			$pageTitle = Yii::t('phrase', 'Feedback User: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject->title->message));
 		}
 		if($user != null) {
 			$data = Users::model()->findByPk($user);
@@ -140,7 +140,7 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', 'View User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -213,7 +213,7 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', 'Delete User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -252,7 +252,7 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title User: $user_displayname Feedback $feedback_subject', array('$title'=>$title, '$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject));
+		$this->pageTitle = Yii::t('phrase', '$title User: $user_displayname Feedback $feedback_subject', array('$title'=>$title, '$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

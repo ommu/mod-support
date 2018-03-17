@@ -140,7 +140,11 @@ class SupportFeedbackView extends CActiveRecord
 		$criteria->with = array(
 			'feedback' => array(
 				'alias'=>'feedback',
-				'select'=>'subject',
+				'select'=>'subject_id',
+			),
+			'feedback.subject.title' => array(
+				'alias'=>'feedback_subject',
+				'select'=>'message',
 			),
 			'user' => array(
 				'alias'=>'user',
@@ -174,7 +178,7 @@ class SupportFeedbackView extends CActiveRecord
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
 		
-		$criteria->compare('feedback.subject',strtolower($this->subject_search), true);
+		$criteria->compare('feedback_subject.message',strtolower($this->subject_search), true);
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
@@ -233,7 +237,7 @@ class SupportFeedbackView extends CActiveRecord
 			if(!isset($_GET['feedback'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'subject_search',
-					'value' => '$data->feedback->subject ? $data->feedback->subject : \'-\'',
+					'value' => '$data->feedback->subject_id ? $data->feedback->subject->title->message : \'-\'',
 				);
 			}
 			if(!isset($_GET['user'])) {

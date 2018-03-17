@@ -11,6 +11,19 @@
  * @link https://github.com/ommu/ommu-support
  *
  */
+
+	$cs = Yii::app()->getClientScript();
+$js=<<<EOP
+	$('select#SupportFeedbacks_subject_id').on('change', function() {
+		var id = $(this).val();
+		if(id == '') {
+			$('div#subject_i').slideDown();
+		} else {
+			$('div#subject_i').slideUp();
+		}
+	});
+EOP;
+	$cs->registerScript('type', $js, CClientScript::POS_END);
 ?>
 
 <?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
@@ -50,10 +63,23 @@
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model,'subject', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<?php echo $form->labelEx($model,'subject_id', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<?php echo $form->textField($model,'subject',array('maxlength'=>64,'class'=>'form-control'));?>
-				<?php echo $form->error($model,'subject');?>
+				<?php 
+				$subjects = SupportFeedbackSubject::getSubject();
+				if($subjects != null)
+					echo $form->dropDownList($model, 'subject_id', $subjects, array('prompt'=>Yii::t('phrase', 'Other Subject'), 'class'=>'form-control'));
+				else 
+					echo $form->dropDownList($model, 'paresubject_idnt_id', array(0=>Yii::t('phrase', 'Other Subject')), array('class'=>'form-control'));?>
+				<?php echo $form->error($model,'subject_id');?>
+			</div>
+		</div>
+
+		<div id="subject_i" class="form-group row hide">
+			<?php echo $form->labelEx($model,'subject_i', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->textField($model,'subject_i',array('maxlength'=>64,'class'=>'form-control'));?>
+				<?php echo $form->error($model,'subject_i');?>
 			</div>
 		</div>
 

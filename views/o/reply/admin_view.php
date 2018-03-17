@@ -38,7 +38,7 @@
 			),
 			array(
 				'name'=>'subject_search',
-				'value'=>$model->feedback->subject ? $model->feedback->subject : '-',
+				'value'=>$model->feedback->subject_id ? $model->feedback->subject->title->message : '-',
 			),
 			array(
 				'name'=>'message_i',

@@ -129,7 +129,11 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			),
 			'view.feedback' => array(
 				'alias'=>'view_feedback',
-				'select'=>'subject'
+				'select'=>'subject_id'
+			),
+			'view.feedback.subject.title' => array(
+				'alias'=>'view_feedback_subject',
+				'select'=>'message',
 			),
 			'view.user' => array(
 				'alias'=>'view_user',
@@ -146,7 +150,7 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			$criteria->compare('date(t.view_date)',date('Y-m-d', strtotime($this->view_date)));
 		$criteria->compare('t.view_ip',strtolower($this->view_ip),true);
 
-		$criteria->compare('view_feedback.subject',strtolower($this->subject_search),true);
+		$criteria->compare('view_feedback_subject.message',strtolower($this->subject_search), true);
 		$criteria->compare('view_user.displayname',strtolower($this->user_search),true);
 
 		if(!isset($_GET['SupportFeedbackViewHistory_sort']))
@@ -207,7 +211,7 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			if(!isset($_GET['view'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'subject_search',
-					'value' => '$data->view->feedback->subject',
+					'value' => '$data->view->feedback->subject->title->message',
 				);
 				$this->defaultColumns[] = array(
 					'name' => 'user_search',

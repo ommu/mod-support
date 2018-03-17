@@ -170,9 +170,9 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -194,9 +194,9 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -270,9 +270,9 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -312,9 +312,9 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
