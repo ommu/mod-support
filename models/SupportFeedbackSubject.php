@@ -266,6 +266,7 @@ class SupportFeedbackSubject extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
+				'filter'=>false,
 			);
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',
