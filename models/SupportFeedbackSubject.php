@@ -31,6 +31,7 @@ class SupportFeedbackSubject extends OActiveRecord
 	public $parent_search;
 	public $creation_search;
 	public $modified_search;
+	public $feedback_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -69,7 +70,7 @@ class SupportFeedbackSubject extends OActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, 
-				subject_name_i, parent_search, creation_search, modified_search', 'safe', 'on'=>'search'),
+				subject_name_i, parent_search, creation_search, modified_search, feedback_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +82,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'view' => array(self::BELONGS_TO, 'ViewSupportFeedbackSubject', 'subject_id'),
 			'title' => array(self::BELONGS_TO, 'SourceMessage', 'subject_name'),
 			'parent' => array(self::BELONGS_TO, 'SupportFeedbackSubject', 'parent_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
@@ -107,6 +109,7 @@ class SupportFeedbackSubject extends OActiveRecord
 			'parent_search' => Yii::t('attribute', 'Parent'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
+			'feedback_search' => Yii::t('attribute', 'Feedabcks'),
 		);
 	}
 
@@ -130,6 +133,9 @@ class SupportFeedbackSubject extends OActiveRecord
 
 		// Custom Search
 		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
 			'title' => array(
 				'alias'=>'title',
 				'select'=>'message',
@@ -178,6 +184,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		$criteria->compare('parent_title.message', strtolower($this->parent_search), true);
 		$criteria->compare('creation.displayname', strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
+		$criteria->compare('view.feedbacks', $this->feedback_search);
 
 		if(!Yii::app()->getRequest()->getParam('SupportFeedbackSubject_sort'))
 			$criteria->order = 't.subject_id DESC';
@@ -253,6 +260,13 @@ class SupportFeedbackSubject extends OActiveRecord
 					'value' => '$data->creation->displayname ? $data->creation->displayname : \'-\'',
 				);
 			}
+			$this->templateColumns['feedback_search'] = array(
+				'name' => 'feedback_search',
+				'value' => '$data->view->feedbacks ? $data->view->feedbacks : 0',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',
 				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->modified_date) : \'-\'',

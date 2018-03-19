@@ -24,8 +24,6 @@
  * The followings are the available columns in table '_support_feedbacks':
  * @property string $feedback_id
  * @property string $reply_condition
- * @property string $replies
- * @property string $reply_all
  * @property string $view_condition
  * @property string $views
  * @property string $view_all
@@ -72,11 +70,10 @@ class ViewSupportFeedbacks extends CActiveRecord
 		return array(
 			array('reply_condition, view_condition', 'numerical', 'integerOnly'=>true),
 			array('feedback_id', 'length', 'max'=>11),
-			array('replies, views, view_all, view_users', 'length', 'max'=>23),
-			array('reply_all', 'length', 'max'=>21),
+			array('views, view_all, view_users', 'length', 'max'=>23),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('feedback_id, reply_condition, replies, reply_all, view_condition, views, view_all, users', 'safe', 'on'=>'search'),
+			array('feedback_id, reply_condition, view_condition, views, view_all, users', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -99,8 +96,6 @@ class ViewSupportFeedbacks extends CActiveRecord
 		return array(
 			'feedback_id' => Yii::t('attribute', 'Feedback'),
 			'reply_condition' => Yii::t('attribute', 'Reply'),
-			'replies' => Yii::t('attribute', 'Replies'),
-			'reply_all' => Yii::t('attribute', 'Reply All'),
 			'view_condition' => Yii::t('attribute', 'View'),
 			'views' => Yii::t('attribute', 'Views'),
 			'view_all' => Yii::t('attribute', 'View All'),
@@ -128,8 +123,6 @@ class ViewSupportFeedbacks extends CActiveRecord
 
 		$criteria->compare('t.feedback_id',$this->feedback_id);
 		$criteria->compare('t.reply_condition',$this->reply_condition);
-		$criteria->compare('t.replies',$this->replies);
-		$criteria->compare('t.reply_all',$this->reply_all);
 		$criteria->compare('t.view_condition',$this->view_condition);
 		$criteria->compare('t.views',$this->views);
 		$criteria->compare('t.view_all',$this->view_all);
@@ -166,8 +159,6 @@ class ViewSupportFeedbacks extends CActiveRecord
 		} else {
 			$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'reply_condition';
-			$this->defaultColumns[] = 'replies';
-			$this->defaultColumns[] = 'reply_all';
 			$this->defaultColumns[] = 'view_condition';
 			$this->defaultColumns[] = 'views';
 			$this->defaultColumns[] = 'view_all';
@@ -188,8 +179,6 @@ class ViewSupportFeedbacks extends CActiveRecord
 			);
 			//$this->defaultColumns[] = 'feedback_id';
 			$this->defaultColumns[] = 'reply_condition';
-			$this->defaultColumns[] = 'replies';
-			$this->defaultColumns[] = 'reply_all';
 			$this->defaultColumns[] = 'view_condition';
 			$this->defaultColumns[] = 'views';
 			$this->defaultColumns[] = 'view_all';

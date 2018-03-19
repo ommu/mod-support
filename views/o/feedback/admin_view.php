@@ -37,7 +37,7 @@
 			),
 			array(
 				'name'=>'user_id',
-				'value'=>$model->user->displayname ? $model->user->displayname : '-',
+				'value'=>$model->user_id ? $model->user->displayname : '-',
 			),
 			array(
 				'name'=>'email',
@@ -54,17 +54,31 @@
 			array(
 				'name'=>'message',
 				'value'=>$model->message ? $model->message : '-',
-			),
-			array(
-				'name'=>'view_search',
-				'value'=>$model->view->views ? $model->view->views : '0',
+				'type'=>'raw',
 			),
 			array(
 				'name'=>'reply_search',
-				'value'=>$model->view->replies ? $model->view->replies : '0',
+				'value'=>$model->view->reply_condition ? Yii::t('phrase', 'Yes') : Yii::t('phrase', 'No'),
 			),
 			array(
-				'name'=>'user_search',
+				'name'=>'reply_message',
+				'value'=>$model->reply_message ? $model->reply_message : '-',
+				'type'=>'raw',
+			),
+			array(
+				'name'=>'replied_date',
+				'value'=>!in_array($model->replied_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->replied_date, true) : '-',
+			),
+			array(
+				'name'=>'replied_id',
+				'value'=>$model->replied_id ? $model->replied->displayname : '-',
+			),
+			array(
+				'name'=>'views_search',
+				'value'=>$model->view->views ? $model->view->views : '0',
+			),
+			array(
+				'name'=>'users_search',
 				'value'=>$model->view->view_users ? $model->view->view_users : '0',
 			),
 			array(
@@ -77,7 +91,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified->displayname ? $model->modified->displayname : '-',
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 			array(
 				'name'=>'updated_date',

@@ -31,17 +31,6 @@ content_menu	:
 	- urlTitle: Add Subject
 		urlRules: {support, o/subject, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/subject/add, attr: -, icon: -}
-
-# controller o/reply
-	- urlTitle: Back to Feedbacks
-		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/feedback/manage, attr: -, icon: -}
-	- urlTitle: View Feedback Replies Data
-		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/reply/manage, attr: -, icon: -}
-	- urlTitle: Add Reply
-		urlRules: {support, o/reply, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/reply/add, attr: feedback=$_GET*feedback, icon: -}
 		
 # controller o/views
 	- urlTitle: Back to Feedbacks

@@ -29,6 +29,9 @@
  * @property string $displayname
  * @property string $phone
  * @property string $message
+ * @property string $reply_message
+ * @property string $replied_date
+ * @property string $replied_id
  * @property string $creation_date
  * @property string $modified_date
  * @property string $modified_id
@@ -40,11 +43,12 @@ class SupportFeedbacks extends CActiveRecord
 	public $subject_i;
 	
 	// Variable Search
-	public $creation_search;
-	public $modified_search;
-	public $view_search;
-	public $reply_search;
 	public $user_search;
+	public $replied_search;
+	public $modified_search;
+	public $views_search;
+	public $reply_search;
+	public $users_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -73,7 +77,7 @@ class SupportFeedbacks extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('email, displayname, message', 'required'),
-			//array('displayname, phone', 'required', 'on'=>'contactus'),
+			array('reply_message', 'required', 'on'=>'replyMessage'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('subject_id', 'length', 'max'=>5),
 			array('user_id', 'length', 'max'=>11),
@@ -84,8 +88,8 @@ class SupportFeedbacks extends CActiveRecord
 			array('subject_id, user_id, displayname, phone', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('feedback_id, publish, subject_id, user_id, email, displayname, phone, message, creation_date, modified_date, modified_id, updated_date,
-				subject_i, creation_search, modified_search, view_search, reply_search, user_search', 'safe', 'on'=>'search'),
+			array('feedback_id, publish, subject_id, user_id, email, displayname, phone, message, reply_message, replied_date, replied_id, creation_date, modified_date, modified_id, updated_date,
+				subject_i, user_search, replied_search, modified_search, views_search, reply_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -100,8 +104,8 @@ class SupportFeedbacks extends CActiveRecord
 			'view' => array(self::BELONGS_TO, 'ViewSupportFeedbacks', 'feedback_id'),
 			'subject' => array(self::BELONGS_TO, 'SupportFeedbackSubject', 'subject_id'),
 			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+			'replied' => array(self::BELONGS_TO, 'Users', 'replied_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
-			'replies' => array(self::HAS_MANY, 'SupportFeedbackReply', 'feedback_id'),
 		);
 	}
 
@@ -119,16 +123,20 @@ class SupportFeedbacks extends CActiveRecord
 			'displayname' => Yii::t('attribute', 'Name'),
 			'phone' => Yii::t('attribute', 'Phone'),
 			'message' => Yii::t('attribute', 'Message'),
+			'reply_message' => Yii::t('attribute', 'Reply Message'),
+			'replied_date' => Yii::t('attribute', 'Replied Date'),
+			'replied_id' => Yii::t('attribute', 'Replied'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
 			'subject_i' => Yii::t('attribute', 'Subject'),
-			'creation_search' => Yii::t('attribute', 'Creation'),
+			'user_search' => Yii::t('attribute', 'User'),
+			'replied_search' => Yii::t('attribute', 'Replied'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
-			'view_search' => Yii::t('attribute', 'Views'),
+			'views_search' => Yii::t('attribute', 'Views'),
 			'reply_search' => Yii::t('attribute', 'Replies'),
-			'user_search' => Yii::t('attribute', 'Users'),
+			'users_search' => Yii::t('attribute', 'Users'),
 		);
 	}
 	
@@ -160,6 +168,10 @@ class SupportFeedbacks extends CActiveRecord
 				'alias'=>'user',
 				'select'=>'displayname',
 			),
+			'replied' => array(
+				'alias'=>'replied',
+				'select'=>'displayname',
+			),
 			'modified' => array(
 				'alias'=>'modified',
 				'select'=>'displayname',
@@ -183,6 +195,13 @@ class SupportFeedbacks extends CActiveRecord
 		$criteria->compare('t.displayname',$this->displayname,true);
 		$criteria->compare('t.phone',$this->phone,true);
 		$criteria->compare('t.message',$this->message,true);
+		$criteria->compare('t.reply_message',$this->reply_message,true);
+		if($this->replied_date != null && !in_array($this->replied_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.replied_date)',date('Y-m-d', strtotime($this->replied_date)));
+		if(isset($_GET['replied']))
+			$criteria->compare('t.replied_id',$_GET['replied']);
+		else
+			$criteria->compare('t.replied_id',$this->replied_id);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -195,11 +214,11 @@ class SupportFeedbacks extends CActiveRecord
 			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
 		
 		$criteria->compare('subject_title.message',$this->subject_i);
-		$criteria->compare('user.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('user.displayname',strtolower($this->user_search), true);
+		$criteria->compare('replied.displayname',strtolower($this->replied_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.view_condition',$this->view_search);
+		$criteria->compare('view.view_condition',$this->views_search);
 		$criteria->compare('view.reply_condition',$this->reply_search);
-		$criteria->compare('view.view_users',$this->user_search);
 			
 		if(!isset($_GET['SupportFeedbacks_sort']))
 			$criteria->order = 't.feedback_id DESC';
@@ -238,6 +257,9 @@ class SupportFeedbacks extends CActiveRecord
 			$this->defaultColumns[] = 'displayname';
 			$this->defaultColumns[] = 'phone';
 			$this->defaultColumns[] = 'message';
+			$this->defaultColumns[] = 'reply_message';
+			$this->defaultColumns[] = 'replied_date';
+			$this->defaultColumns[] = 'replied_id';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
@@ -296,7 +318,7 @@ class SupportFeedbacks extends CActiveRecord
 				), true),
 			);
 			$this->defaultColumns[] = array(
-				'name' => 'view_search',
+				'name' => 'views_search',
 				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl("o/views/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
 				'htmlOptions' => array(
 					'class' => 'center',
@@ -308,8 +330,17 @@ class SupportFeedbacks extends CActiveRecord
 				'type' => 'raw',
 			);
 			$this->defaultColumns[] = array(
+				'name' => 'users_search',
+				'value' => 'CHtml::link($data->view->view_users ? $data->view->view_users : \'0\', Yii::app()->controller->createUrl("o/user/manage",array(\'feedback\'=>$data->feedback_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>false,
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
 				'name' => 'reply_search',
-				'value' => '$data->view->reply_condition != 0 ? CHtml::link($data->view->replies, Yii::app()->controller->createUrl("o/reply/manage",array(\'feedback\'=>$data->feedback_id))) : CHtml::link(CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\'), Yii::app()->controller->createUrl("o/reply/add",array(\'feedback\'=>$data->feedback_id,\'hook\'=>\'feedback\')))',
+				'value' => '$data->view->reply_condition != 0 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::link(CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\'), Yii::app()->controller->createUrl(\'reply\',array(\'id\'=>$data->feedback_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -317,15 +348,6 @@ class SupportFeedbacks extends CActiveRecord
 					1=>Yii::t('phrase', 'Yes'),
 					0=>Yii::t('phrase', 'No'),
 				),
-				'type' => 'raw',
-			);
-			$this->defaultColumns[] = array(
-				'name' => 'user_search',
-				'value' => 'CHtml::link($data->view->view_users ? $data->view->view_users : \'0\', Yii::app()->controller->createUrl("o/user/manage",array(\'feedback\'=>$data->feedback_id)))',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter'=>false,
 				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {

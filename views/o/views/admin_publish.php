@@ -14,7 +14,7 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedback Replies'=>array('manage'),
+		'Support Feedback Views'=>array('manage'),
 		'Publish',
 	);
 ?>

@@ -10,6 +10,7 @@
  *	Index
  *	Manage
  *	Edit
+ *	Reply
  *	View
  *	RunAction
  *	Delete
@@ -71,7 +72,7 @@ class FeedbackController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','edit','view','runaction','delete','publish'),
+				'actions'=>array('index','manage','edit','reply','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'in_array($user->level, array(1,2))',
 			),
@@ -177,6 +178,61 @@ class FeedbackController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
+			'model'=>$model,
+		));
+	}
+	
+	/**
+	 * Updates a particular model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id the ID of the model to be updated
+	 */
+	public function actionReply($id) 
+	{
+		$model=$this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['SupportFeedbacks'])) {
+			$model->attributes=$_POST['SupportFeedbacks'];
+			$model->scenario = 'replyMessage';
+
+			$jsonError = CActiveForm::validate($model);
+			if(strlen($jsonError) > 2) {
+				echo $jsonError;
+				
+			} else {
+				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+					if(!Yii::app()->user->isGuest)
+						$model->replied_id = Yii::app()->user->id;
+						
+					if($model->save()) {
+						echo CJSON::encode(array (
+							'type' => 5,
+							'get' => Yii::app()->controller->createUrl('manage'),
+							'id' => 'partial-support-feedbacks',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success replied.').'</strong></div>',
+						));
+					} else {
+						print_r($model->getErrors());
+					}
+				}
+			}
+			Yii::app()->end();
+		}
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$pageTitle = Yii::t('phrase', 'Reply Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		if($model->user_id)
+			$pageTitle = Yii::t('phrase', 'Reply Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+		$this->pageTitle = $pageTitle;
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_reply',array(
 			'model'=>$model,
 		));
 	}
