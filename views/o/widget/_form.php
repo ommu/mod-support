@@ -30,7 +30,7 @@
 	<fieldset>
 
 		<?php 
-		if($model->cat->publish != 2) {
+		if($model->category->publish != 2) {
 			$category = SupportContactCategory::getCategory(1, 'widget');
 			if($category != null) {?>
 			<div class="form-group row">
@@ -44,7 +44,7 @@
 						else
 							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')), array('class'=>'form-control'));
 					} else {?>
-						<strong><?php echo $model->cat->title->message; ?></strong>
+						<strong><?php echo $model->category->title->message; ?></strong>
 					<?php }?>
 					<?php echo $form->error($model,'cat_id'); ?>
 				</div>

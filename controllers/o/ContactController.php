@@ -219,7 +219,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 		
-		$this->pageTitle = Yii::t('phrase', 'Update Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->cat->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -239,7 +239,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->cat->title->message));
+		$this->pageTitle = Yii::t('phrase', 'View Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -312,7 +312,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->cat->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -351,7 +351,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title Contact: $contact_name Category $category_name', array('$title'=>$title, '$contact_name'=>$model->contact_name, '$category_name'=>$model->cat->title->message));
+		$this->pageTitle = Yii::t('phrase', '$title Contact: $contact_name Category $category_name', array('$title'=>$title, '$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

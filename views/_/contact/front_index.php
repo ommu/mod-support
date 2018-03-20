@@ -53,10 +53,10 @@ EOP;
 	<div class="social-media">
 		<ul class="clearfix">
 			<?php foreach($contact as $key => $val) {
-				if($val->cat->icons == '') {
+				if($val->category->icons == '') {
 					$images = Yii::app()->request->baseUrl.'/public/support/default.png';
 				} else {
-					$images = Yii::app()->request->baseUrl.'/public/support/'.$val->cat->icons;
+					$images = Yii::app()->request->baseUrl.'/public/support/'.$val->category->icons;
 				}
 				if($val->cat_id == 3) {
 					$url = 'ymsgr:sendim?'.$val->value;
@@ -65,7 +65,7 @@ EOP;
 					$url = $val->value;
 					$target = 'target="_blank"';
 				}
-				echo '<li><a off_address="" href="'.$url.'" title="'.$val->cat->title->message.'" '.$target.'><img src="'.$images.'" alt="'.$val->cat->title->message.'"></a></li>';
+				echo '<li><a off_address="" href="'.$url.'" title="'.$val->category->title->message.'" '.$target.'><img src="'.$images.'" alt="'.$val->category->title->message.'"></a></li>';
 			}?>
 		</ul>
 	</div>

@@ -23,7 +23,7 @@
 	<fieldset>
 
 		<?php 
-		if($model->cat->publish != 2) {?>
+		if($model->category->publish != 2) {?>
 			<div class="form-group row">
 				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('cat_id');?> <span class="required">*</span></label>
 				<div class="col-lg-8 col-md-9 col-sm-12">
@@ -35,7 +35,7 @@
 						else
 							echo $form->dropDownList($model,'cat_id', array('prompt'=>Yii::t('phrase', 'No Parent')), array('class'=>'form-control'));
 					} else {?>
-						<strong><?php echo $model->cat->title->message; ?></strong>
+						<strong><?php echo $model->category->title->message; ?></strong>
 					<?php }?>
 					<?php echo $form->error($model,'cat_id'); ?>
 				</div>
@@ -43,10 +43,10 @@
 		<?php }?>
 
 		<div class="form-group row">
-			<?php if($model->cat->publish != '2') {?>
+			<?php if($model->category->publish != '2') {?>
 				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('contact_name');?> <span class="required">*</span></label>
 			<?php } else {?>
-				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->cat->title->message;?> <span class="required">*</span></label>
+				<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->category->title->message;?> <span class="required">*</span></label>
 			<?php }?>
 			<div class="col-lg-8 col-md-9 col-sm-12">
 				<?php echo $form->textArea($model,'contact_name',array('rows'=>6, 'cols'=>50, 'class'=>'form-control smaller')); ?>
@@ -54,7 +54,7 @@
 			</div>
 		</div>
 
-		<?php if($model->cat->publish != 2) {?>
+		<?php if($model->category->publish != 2) {?>
 		<div class="form-group row publish">
 			<?php echo $form->labelEx($model,'publish', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
 			<div class="col-lg-8 col-md-9 col-sm-12">

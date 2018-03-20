@@ -33,7 +33,7 @@
 			),
 			array(
 				'name'=>'cat_id',
-				'value'=>$model->cat->name ? $model->cat->title->message : '-',
+				'value'=>$model->category->name ? $model->category->title->message : '-',
 			),
 			array(
 				'name'=>'contact_name',

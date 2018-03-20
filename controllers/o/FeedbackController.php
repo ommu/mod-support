@@ -139,6 +139,7 @@ class FeedbackController extends Controller
 	public function actionEdit($id) 
 	{
 		$model=$this->loadModel($id);
+		SupportFeedbackView::insertView($model->feedback_id);
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
@@ -190,6 +191,7 @@ class FeedbackController extends Controller
 	public function actionReply($id) 
 	{
 		$model=$this->loadModel($id);
+		SupportFeedbackView::insertView($model->feedback_id);
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
