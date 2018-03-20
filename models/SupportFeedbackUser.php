@@ -6,18 +6,8 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 05:26 WIB
+ * @modified date 19 March 2018, 19:51 WIB
  * @link https://github.com/ommu/ommu-support
- *
- * This is the template for generating the model class of a specified table.
- * - $this: the ModelCode object
- * - $tableName: the table name for this class (prefix is already removed if necessary)
- * - $modelClass: the model class name
- * - $columns: list of table columns (name=>CDbColumnSchema)
- * - $labels: list of attribute labels (name=>label)
- * - $rules: list of validation rules
- * - $relations: list of relations (name=>relation declaration)
- *
- * --------------------------------------------------------------------------------------
  *
  * This is the model class for table "ommu_support_feedback_user".
  *
@@ -33,14 +23,15 @@
  *
  * The followings are the available model relations:
  * @property SupportFeedbacks $feedback
- * @property Users[] $user;
- * @property Users[] $modified;
+ * @property Users $user
+ * @property Users $modified
  */
-class SupportFeedbackUser extends CActiveRecord
-{
-	public $defaultColumns = array();
 
-	// Variable Search	
+class SupportFeedbackUser extends OActiveRecord
+{
+	public $gridForbiddenColumn = array('modified_date','modified_search','updated_date');
+
+	// Variable Search
 	public $subject_search;
 	public $user_search;
 	public $modified_search;
@@ -73,7 +64,7 @@ class SupportFeedbackUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('feedback_id, user_id', 'required'),
+			array('feedback_id', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('feedback_id, user_id, modified_id', 'length', 'max'=>11),
 			array('', 'safe'),
@@ -149,125 +140,88 @@ class SupportFeedbackUser extends CActiveRecord
 			),
 			'user' => array(
 				'alias'=>'user',
-				'select'=>'displayname'
+				'select'=>'displayname',
 			),
 			'modified' => array(
 				'alias'=>'modified',
-				'select'=>'displayname'
+				'select'=>'displayname',
 			),
 		);
-		
-		$criteria->compare('t.id',strtolower($this->id),true);
-		if(isset($_GET['type']) && $_GET['type'] == 'publish')
-			$criteria->compare('t.publish',1);
-		elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish')
-			$criteria->compare('t.publish',0);
-		elseif(isset($_GET['type']) && $_GET['type'] == 'trash')
-			$criteria->compare('t.publish',2);
+
+		$criteria->compare('t.id', $this->id);
+		if(Yii::app()->getRequest()->getParam('type') == 'publish')
+			$criteria->compare('t.publish', 1);
+		elseif(Yii::app()->getRequest()->getParam('type') == 'unpublish')
+			$criteria->compare('t.publish', 0);
+		elseif(Yii::app()->getRequest()->getParam('type') == 'trash')
+			$criteria->compare('t.publish', 2);
 		else {
-			$criteria->addInCondition('t.publish',array(0,1));
-			$criteria->compare('t.publish',$this->publish);
+			$criteria->addInCondition('t.publish', array(0,1));
+			$criteria->compare('t.publish', $this->publish);
 		}
-		if(isset($_GET['feedback']))
-			$criteria->compare('t.feedback_id',$_GET['feedback']);
-		else
-			$criteria->compare('t.feedback_id',$this->feedback_id);
-		if(isset($_GET['user']))
-			$criteria->compare('t.user_id',$_GET['user']);
-		else
-			$criteria->compare('t.user_id',$this->user_id);
-		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
-		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
-		if(isset($_GET['modified']))
-			$criteria->compare('t.modified_id',$_GET['modified']);
-		else
-			$criteria->compare('t.modified_id',$this->modified_id);
-		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
+		$criteria->compare('t.feedback_id', Yii::app()->getRequest()->getParam('feedback') ? Yii::app()->getRequest()->getParam('feedback') : $this->feedback_id);
+		$criteria->compare('t.user_id', Yii::app()->getRequest()->getParam('user') ? Yii::app()->getRequest()->getParam('user') : $this->user_id);
+		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.creation_date)', date('Y-m-d', strtotime($this->creation_date)));
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.modified_date)', date('Y-m-d', strtotime($this->modified_date)));
+		$criteria->compare('t.modified_id', Yii::app()->getRequest()->getParam('modified') ? Yii::app()->getRequest()->getParam('modified') : $this->modified_id);
+		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.updated_date)', date('Y-m-d', strtotime($this->updated_date)));
 
-		$criteria->compare('feedback_subject.message',strtolower($this->subject_search), true);
-		$criteria->compare('user.displayname',strtolower($this->user_search),true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search),true);
+		$criteria->compare('feedback_subject.message', strtolower($this->subject_search), true);
+		$criteria->compare('user.displayname', strtolower($this->user_search), true);
+		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
 
-		if(!isset($_GET['SupportFeedbackUser_sort']))
+		if(!Yii::app()->getRequest()->getParam('SupportFeedbackUser_sort'))
 			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>30,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
 			),
 		));
-	}
-
-
-	/**
-	 * Get column for CGrid View
-	 */
-	public function getGridColumn($columns=null) {
-		if($columns !== null) {
-			foreach($columns as $val) {
-				/*
-				if(trim($val) == 'enabled') {
-					$this->defaultColumns[] = array(
-						'name'  => 'enabled',
-						'value' => '$data->enabled == 1? "Ya": "Tidak"',
-					);
-				}
-				*/
-				$this->defaultColumns[] = $val;
-			}
-		} else {
-			//$this->defaultColumns[] = 'id';
-			$this->defaultColumns[] = 'publish';
-			$this->defaultColumns[] = 'feedback_id';
-			$this->defaultColumns[] = 'user_id';
-			$this->defaultColumns[] = 'creation_date';
-			$this->defaultColumns[] = 'modified_date';
-			$this->defaultColumns[] = 'modified_id';
-			$this->defaultColumns[] = 'updated_date';
-		}
-
-		return $this->defaultColumns;
 	}
 
 	/**
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			/*
-			$this->defaultColumns[] = array(
+		if(count($this->templateColumns) == 0) {
+			$this->templateColumns['_option'] = array(
 				'class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'selectableRows' => 2,
 				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
-			*/
-			$this->defaultColumns[] = array(
-				'header' => 'No',
-				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+			$this->templateColumns['_no'] = array(
+				'header' => Yii::t('app', 'No'),
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 			);
-			if(!isset($_GET['feedback'])) {
-				$this->defaultColumns[] = array(
+			if(!Yii::app()->getRequest()->getParam('feedback')) {
+				$this->templateColumns['subject_search'] = array(
 					'name' => 'subject_search',
 					'value' => '$data->feedback->subject->title->message',
 				);
 			}
-			if(!isset($_GET['user'])) {
-				$this->defaultColumns[] = array(
+			if(!Yii::app()->getRequest()->getParam('user')) {
+				$this->templateColumns['user_search'] = array(
 					'name' => 'user_search',
-					'value' => '$data->user->displayname',
+					'value' => '$data->user->displayname ? $data->user->displayname : \'-\'',
 				);
 			}
-			$this->defaultColumns[] = array(
+			$this->templateColumns['creation_date'] = array(
 				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
+				'value' => '!in_array($data->creation_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->creation_date) : \'-\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
+				'filter' => 'native-datepicker',
+				/*
 				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
@@ -276,6 +230,8 @@ class SupportFeedbackUser extends CActiveRecord
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
 					),
 					'options'=>array(
 						'showOn' => 'focus',
@@ -287,9 +243,78 @@ class SupportFeedbackUser extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+				*/
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
+			$this->templateColumns['modified_date'] = array(
+				'name' => 'modified_date',
+				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->modified_date) : \'-\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => 'native-datepicker',
+				/*
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'modified_date',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'modified_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+				*/
+			);
+			if(!Yii::app()->getRequest()->getParam('modified')) {
+				$this->templateColumns['modified_search'] = array(
+					'name' => 'modified_search',
+					'value' => '$data->modified->displayname ? $data->modified->displayname : \'-\'',
+				);
+			}
+			$this->templateColumns['updated_date'] = array(
+				'name' => 'updated_date',
+				'value' => '!in_array($data->updated_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->updated_date) : \'-\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => 'native-datepicker',
+				/*
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'updated_date',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'updated_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+				*/
+			);
+			if(!Yii::app()->getRequest()->getParam('type')) {
+				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
 					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->id)), $data->publish)',
 					'htmlOptions' => array(
@@ -330,7 +355,7 @@ class SupportFeedbackUser extends CActiveRecord
 	{
 		if(parent::beforeValidate()) {
 			if(!$this->isNewRecord)
-				$this->modified_id = Yii::app()->user->id;
+				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 		}
 		return true;
 	}

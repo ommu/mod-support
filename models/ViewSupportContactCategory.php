@@ -5,29 +5,20 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2015 Ommu Platform (opensource.ommu.co)
+ * @modified date 19 March 2018, 19:52 WIB
  * @link https://github.com/ommu/ommu-support
- *
- * This is the template for generating the model class of a specified table.
- * - $this: the ModelCode object
- * - $tableName: the table name for this class (prefix is already removed if necessary)
- * - $modelClass: the model class name
- * - $columns: list of table columns (name=>CDbColumnSchema)
- * - $labels: list of attribute labels (name=>label)
- * - $rules: list of validation rules
- * - $relations: list of relations (name=>relation declaration)
- *
- * --------------------------------------------------------------------------------------
  *
  * This is the model class for table "_support_contact_category".
  *
  * The followings are the available columns in table '_support_contact_category':
  * @property integer $cat_id
- * @property string $contact
- * @property string $widget
+ * @property integer $contact
+ * @property integer $widget
  */
-class ViewSupportContactCategory extends CActiveRecord
+
+class ViewSupportContactCategory extends OActiveRecord
 {
-	public $defaultColumns = array();
+	public $gridForbiddenColumn = array();
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -45,7 +36,8 @@ class ViewSupportContactCategory extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return '_support_contact_category';
+		preg_match("/dbname=([^;]+)/i", $this->dbConnection->connectionString, $matches);
+		return $matches[1].'._support_contact_category';
 	}
 
 	/**
@@ -64,8 +56,7 @@ class ViewSupportContactCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('cat_id', 'numerical', 'integerOnly'=>true),
-			array('contact, widget', 'safe'),
+			array('cat_id, contact, widget', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('cat_id, contact, widget', 'safe', 'on'=>'search'),
@@ -89,9 +80,9 @@ class ViewSupportContactCategory extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'cat_id' => Yii::t('attribute','Cat'),
-			'contact' => Yii::t('attribute','Contact'),
-			'widget' => Yii::t('attribute','Widget'),
+			'cat_id' => Yii::t('attribute', 'Category'),
+			'contact' => Yii::t('attribute', 'Contact'),
+			'widget' => Yii::t('attribute', 'Widget'),
 		);
 	}
 
@@ -113,59 +104,51 @@ class ViewSupportContactCategory extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.cat_id',$this->cat_id);
-		$criteria->compare('t.contact',$this->contact);
-		$criteria->compare('t.widget',$this->widget);
+		$criteria->compare('t.cat_id', $this->cat_id);
+		$criteria->compare('t.contact', $this->contact);
+		$criteria->compare('t.widget', $this->widget);
 
-		if(!isset($_GET['ViewSupportContactCategory_sort']))
+		if(!Yii::app()->getRequest()->getParam('ViewSupportContactCategory_sort'))
 			$criteria->order = 't.cat_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>30,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
 			),
 		));
-	}
-
-
-	/**
-	 * Get column for CGrid View
-	 */
-	public function getGridColumn($columns=null) {
-		if($columns !== null) {
-			foreach($columns as $val) {
-				/*
-				if(trim($val) == 'enabled') {
-					$this->defaultColumns[] = array(
-						'name'  => 'enabled',
-						'value' => '$data->enabled == 1? "Ya": "Tidak"',
-					);
-				}
-				*/
-				$this->defaultColumns[] = $val;
-			}
-		} else {
-			$this->defaultColumns[] = 'cat_id';
-			$this->defaultColumns[] = 'contact';
-			$this->defaultColumns[] = 'widget';
-		}
-
-		return $this->defaultColumns;
 	}
 
 	/**
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			$this->defaultColumns[] = array(
-				'header' => 'No',
-				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+		if(count($this->templateColumns) == 0) {
+			$this->templateColumns['_option'] = array(
+				'class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'selectableRows' => 2,
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
-			$this->defaultColumns[] = 'cat_id';
-			$this->defaultColumns[] = 'contact';
-			$this->defaultColumns[] = 'widget';
+			$this->templateColumns['_no'] = array(
+				'header' => Yii::t('app', 'No'),
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
+			$this->templateColumns['cat_id'] = array(
+				'name' => 'cat_id',
+				'value' => '$data->cat_id',
+			);
+			$this->templateColumns['contact'] = array(
+				'name' => 'contact',
+				'value' => '$data->contact',
+			);
+			$this->templateColumns['widget'] = array(
+				'name' => 'widget',
+				'value' => '$data->widget',
+			);
 		}
 		parent::afterConstruct();
 	}
@@ -183,7 +166,7 @@ class ViewSupportContactCategory extends CActiveRecord
 			
 		} else {
 			$model = self::model()->findByPk($id);
-			return $model;			
+			return $model;
 		}
 	}
 

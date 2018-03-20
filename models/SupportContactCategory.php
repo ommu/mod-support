@@ -5,40 +5,35 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @modified date 19 March 2018, 19:54 WIB
  * @link https://github.com/ommu/ommu-support
- *
- * This is the template for generating the model class of a specified table.
- * - $this: the ModelCode object
- * - $tableName: the table name for this class (prefix is already removed if necessary)
- * - $modelClass: the model class name
- * - $columns: list of table columns (name=>CDbColumnSchema)
- * - $labels: list of attribute labels (name=>label)
- * - $rules: list of validation rules
- * - $relations: list of relations (name=>relation declaration)
- *
- * --------------------------------------------------------------------------------------
  *
  * This is the model class for table "ommu_support_contact_category".
  *
  * The followings are the available columns in table 'ommu_support_contact_category':
  * @property integer $cat_id
  * @property integer $publish
- * @property integer $name
+ * @property string $name
  * @property string $cat_icon
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
  * @property string $modified_id
  * @property string $updated_date
+ * @property string $slug
  *
  * The followings are the available model relations:
- * @property SupportContacts[] $SupportContacts
+ * @property SupportContacts[] $contacts
+ * @property SupportWidget[] $widgets
+ * @property Users $creation
+ * @property Users $modified
  */
-class SupportContactCategory extends CActiveRecord
+
+class SupportContactCategory extends OActiveRecord
 {
-	public $defaultColumns = array();
+	public $gridForbiddenColumn = array('modified_date','modified_search','updated_date','slug');
 	public $name_i;
-	
+
 	// Variable Search
 	public $creation_search;
 	public $modified_search;
@@ -62,6 +57,7 @@ class SupportContactCategory extends CActiveRecord
 
 	/**
 	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
 	 * @return SupportContactCategory the static model class
 	 */
@@ -75,7 +71,8 @@ class SupportContactCategory extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'ommu_support_contact_category';
+		preg_match("/dbname=([^;]+)/i", $this->dbConnection->connectionString, $matches);
+		return $matches[1].'.ommu_support_contact_category';
 	}
 
 	/**
@@ -88,13 +85,14 @@ class SupportContactCategory extends CActiveRecord
 		return array(
 			array('
 				name_i', 'required'),
-			array('publish, name, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
-			array('
+			array('publish', 'numerical', 'integerOnly'=>true),
+			array('name, creation_id, modified_id', 'length', 'max'=>11),
+			array('slug,
 				name_i', 'length', 'max'=>32),
 			array('cat_icon', 'safe'),
 			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('cat_id, publish, name, creation_date, creation_id, modified_date, modified_id, updated_date,
+			// @todo Please remove those attributes that should not be searched.
+			array('cat_id, publish, name, cat_icon, creation_date, creation_id, modified_date, modified_id, updated_date, slug, 
 				name_i, creation_search, modified_search, contact_search, widget_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -108,10 +106,11 @@ class SupportContactCategory extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewSupportContactCategory', 'cat_id'),
+			'contacts' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
+			'widgets' => array(self::HAS_MANY, 'SupportWidget', 'cat_id'),
 			'title' => array(self::BELONGS_TO, 'SourceMessage', 'name'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
-			'contacts' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
 		);
 	}
 
@@ -130,25 +129,33 @@ class SupportContactCategory extends CActiveRecord
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
+			'slug' => Yii::t('attribute', 'Slug'),
 			'name_i' => Yii::t('attribute', 'Category'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 			'contact_search' => Yii::t('attribute', 'Contact'),
 			'widget_search' => Yii::t('attribute', 'Widget'),
 		);
 	}
-	
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-		
-		// Custom Search
+
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
@@ -168,111 +175,81 @@ class SupportContactCategory extends CActiveRecord
 			),
 		);
 
-		$criteria->compare('t.cat_id',$this->cat_id);
-		if(isset($_GET['type']) && $_GET['type'] == 'publish') {
-			$criteria->compare('t.publish',1);
-		} elseif(isset($_GET['type']) && $_GET['type'] == 'unpublish') {
-			$criteria->compare('t.publish',0);
-		} elseif(isset($_GET['type']) && $_GET['type'] == 'nopublish') {
-			$criteria->compare('t.publish',2);
-		} else {
-			$criteria->addInCondition('t.publish',array(0,1,2));
-			$criteria->compare('t.publish',$this->publish);
+		$criteria->compare('t.cat_id', $this->cat_id);
+		if(Yii::app()->getRequest()->getParam('type') == 'publish')
+			$criteria->compare('t.publish', 1);
+		elseif(Yii::app()->getRequest()->getParam('type') == 'unpublish')
+			$criteria->compare('t.publish', 0);
+		elseif(Yii::app()->getRequest()->getParam('type') == 'nopublish')
+			$criteria->compare('t.publish', 2);
+		else {
+			$criteria->addInCondition('t.publish', array(0,1,2));
+			$criteria->compare('t.publish', $this->publish);
 		}
 		$criteria->compare('t.name',$this->name);
-		$criteria->compare('t.cat_icon',strtolower($this->cat_icon), true);
-		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
-		if(isset($_GET['creation']))
-			$criteria->compare('t.creation_id',$_GET['creation']);
-		else
-			$criteria->compare('t.creation_id',$this->creation_id);
-		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
-		if(isset($_GET['modified']))
-			$criteria->compare('t.modified_id',$_GET['modified']);
-		else
-			$criteria->compare('t.modified_id',$this->modified_id);
-		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.updated_date)',date('Y-m-d', strtotime($this->updated_date)));
-		
+		$criteria->compare('t.cat_icon', strtolower($this->cat_icon), true);
+		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.creation_date)', date('Y-m-d', strtotime($this->creation_date)));
+		$criteria->compare('t.creation_id', Yii::app()->getRequest()->getParam('creation') ? Yii::app()->getRequest()->getParam('creation') : $this->creation_id);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.modified_date)', date('Y-m-d', strtotime($this->modified_date)));
+		$criteria->compare('t.modified_id', Yii::app()->getRequest()->getParam('modified') ? Yii::app()->getRequest()->getParam('modified') : $this->modified_id);
+		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.updated_date)', date('Y-m-d', strtotime($this->updated_date)));
+		$criteria->compare('t.slug', strtolower($this->slug), true);
+
 		$criteria->compare('title.message', strtolower($this->name_i), true);
-		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-		$criteria->compare('view.contact',$this->contact_search);
-		$criteria->compare('view.widget',$this->widget_search);
-		
-		if(!isset($_GET['SupportContactCategory_sort']))
+		$criteria->compare('creation.displayname', strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
+		$criteria->compare('view.contact', $this->contact_search);
+		$criteria->compare('view.widget', $this->widget_search);
+
+		if(!Yii::app()->getRequest()->getParam('SupportContactCategory_sort'))
 			$criteria->order = 't.cat_id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
 			),
 		));
-	}
-
-
-	/**
-	 * Get column for CGrid View
-	 */
-	public function getGridColumn($columns=null) {
-		if($columns !== null) {
-			foreach($columns as $val) {
-				/*
-				if(trim($val) == 'enabled') {
-					$this->defaultColumns[] = array(
-						'name'  => 'enabled',
-						'value' => '$data->enabled == 1? "Ya": "Tidak"',
-					);
-				}
-				*/
-				$this->defaultColumns[] = $val;
-			}
-		}else {
-			//$this->defaultColumns[] = 'cat_id';
-			$this->defaultColumns[] = 'publish';
-			$this->defaultColumns[] = 'name';
-			$this->defaultColumns[] = 'cat_icon';
-			$this->defaultColumns[] = 'creation_date';
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = 'modified_date';
-			$this->defaultColumns[] = 'modified_id';
-			$this->defaultColumns[] = 'updated_date';
-		}
-
-		return $this->defaultColumns;
 	}
 
 	/**
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			$this->defaultColumns[] = array(
-				'header' => 'No',
-				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+		if(count($this->templateColumns) == 0) {
+			$this->templateColumns['_option'] = array(
+				'class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'selectableRows' => 2,
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
-			$this->defaultColumns[] = array(
+			$this->templateColumns['_no'] = array(
+				'header' => Yii::t('app', 'No'),
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
+			$this->templateColumns['name_i'] = array(
 				'name' => 'name_i',
 				'value' => '$data->title->message',
 			);
-			$this->defaultColumns[] = array(
+			$this->templateColumns['cat_icon'] = array(
 				'name' => 'cat_icon',
 				'value' => '$data->cat_icon',
 				'type' => 'raw',
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'creation_search',
-				'value' => '$data->creation->displayname',
-			);
-			$this->defaultColumns[] = array(
+			$this->templateColumns['creation_date'] = array(
 				'name' => 'creation_date',
-				'value' => 'Utility::dateFormat($data->creation_date)',
+				'value' => '!in_array($data->creation_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->creation_date) : \'-\'',
 				'htmlOptions' => array(
 					//'class' => 'center',
 				),
+				'filter' => 'native-datepicker',
+				/*
 				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
@@ -281,6 +258,8 @@ class SupportContactCategory extends CActiveRecord
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
 					),
 					'options'=>array(
 						'showOn' => 'focus',
@@ -292,8 +271,87 @@ class SupportContactCategory extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+				*/
 			);
-			$this->defaultColumns[] = array(
+			if(!Yii::app()->getRequest()->getParam('creation')) {
+				$this->templateColumns['creation_search'] = array(
+					'name' => 'creation_search',
+					'value' => '$data->creation->displayname ? $data->creation->displayname : \'-\'',
+				);
+			}
+			$this->templateColumns['modified_date'] = array(
+				'name' => 'modified_date',
+				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->modified_date) : \'-\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => 'native-datepicker',
+				/*
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'modified_date',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'modified_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+				*/
+			);
+			if(!Yii::app()->getRequest()->getParam('modified')) {
+				$this->templateColumns['modified_search'] = array(
+					'name' => 'modified_search',
+					'value' => '$data->modified->displayname ? $data->modified->displayname : \'-\'',
+				);
+			}
+			$this->templateColumns['updated_date'] = array(
+				'name' => 'updated_date',
+				'value' => '!in_array($data->updated_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->updated_date) : \'-\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => 'native-datepicker',
+				/*
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'updated_date',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'updated_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+				*/
+			);
+			$this->templateColumns['slug'] = array(
+				'name' => 'slug',
+				'value' => '$data->slug',
+			);
+			$this->templateColumns['contact_search'] = array(
 				'name' => 'contact_search',
 				'value' => '$data->view->contact == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
@@ -305,7 +363,7 @@ class SupportContactCategory extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
-			$this->defaultColumns[] = array(
+			$this->templateColumns['widget_search'] = array(
 				'name' => 'widget_search',
 				'value' => '$data->view->widget == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
@@ -317,15 +375,20 @@ class SupportContactCategory extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'publish',
-				'value' => '$data->publish == 2 ? "-" : Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->cat_id)), $data->publish, 1) ',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'type' => 'raw',
-			);
-
+			if(!Yii::app()->getRequest()->getParam('type')) {
+				$this->templateColumns['publish'] = array(
+					'name' => 'publish',
+					'value' => '$data->publish == 2 ? \'-\' : Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->cat_id)), $data->publish)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
+					),
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
@@ -343,12 +406,12 @@ class SupportContactCategory extends CActiveRecord
 			
 		} else {
 			$model = self::model()->findByPk($id);
-			return $model;			
+			return $model;
 		}
 	}
 
 	/**
-	 * Get category
+	 * getCategory
 	 * 0 = unpublish
 	 * 1 = publish
 	 */
@@ -377,6 +440,7 @@ class SupportContactCategory extends CActiveRecord
 				$items[$val->cat_id] = $val->title->message;
 			}
 			return $items;
+
 		} else
 			return false;
 	}
@@ -394,12 +458,13 @@ class SupportContactCategory extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	protected function beforeValidate() {
+	protected function beforeValidate() 
+	{
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord)
-				$this->creation_id = Yii::app()->user->id;
+				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			else
-				$this->modified_id = Yii::app()->user->id;
+				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 		}
 		return true;
 	}
@@ -422,7 +487,7 @@ class SupportContactCategory extends CActiveRecord
 				$name->location = $location.'_title';
 				if($name->save())
 					$this->name = $name->id;
-				
+
 				$this->slug = Utility::getUrlTitle($this->name_i);
 				
 			} else {

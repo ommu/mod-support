@@ -5,18 +5,8 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @modified date 19 March 2018, 19:52 WIB
  * @link https://github.com/ommu/ommu-support
- *
- * This is the template for generating the model class of a specified table.
- * - $this: the ModelCode object
- * - $tableName: the table name for this class (prefix is already removed if necessary)
- * - $modelClass: the model class name
- * - $columns: list of table columns (name=>CDbColumnSchema)
- * - $labels: list of attribute labels (name=>label)
- * - $rules: list of validation rules
- * - $relations: list of relations (name=>relation declaration)
- *
- * --------------------------------------------------------------------------------------
  *
  * This is the model class for table "ommu_support_mail_setting".
  *
@@ -37,15 +27,17 @@
  * @property string $modified_date
  * @property string $modified_id
  */
-class SupportMailSetting extends CActiveRecord
+
+class SupportMailSetting extends OActiveRecord
 {
-	public $defaultColumns = array();
-	
+	public $gridForbiddenColumn = array();
+
 	// Variable Search
 	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
+	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
 	 * @return SupportMailSetting the static model class
 	 */
@@ -59,7 +51,8 @@ class SupportMailSetting extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'ommu_support_mail_setting';
+		preg_match("/dbname=([^;]+)/i", $this->dbConnection->connectionString, $matches);
+		return $matches[1].'.ommu_support_mail_setting';
 	}
 
 	/**
@@ -71,12 +64,13 @@ class SupportMailSetting extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('mail_contact, mail_name, mail_from, mail_count', 'required'),
-			array('id, mail_count, mail_queueing, mail_smtp, smtp_authentication, smtp_ssl, modified_id', 'numerical', 'integerOnly'=>true),
+			array('mail_count, mail_queueing, mail_smtp, smtp_authentication, smtp_ssl, modified_id', 'numerical', 'integerOnly'=>true),
 			array('mail_contact, mail_name, mail_from, smtp_address, smtp_username, smtp_password', 'length', 'max'=>32),
 			array('smtp_port', 'length', 'max'=>16),
+			array('modified_id', 'length', 'max'=>11),
 			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, mail_contact, mail_name, mail_from, mail_count, mail_queueing, mail_smtp, smtp_address, smtp_port, smtp_authentication, smtp_username, smtp_password, smtp_ssl, modified_date, modified_id,
+			// @todo Please remove those attributes that should not be searched.
+			array('mail_contact, mail_name, mail_from, mail_count, mail_queueing, mail_smtp, smtp_address, smtp_port, smtp_authentication, smtp_username, smtp_password, smtp_ssl, modified_date, modified_id, 
 				modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -99,7 +93,7 @@ class SupportMailSetting extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
+			'id' => Yii::t('attribute', 'ID'),
 			'mail_contact' => Yii::t('attribute', 'Contact Form Email'),
 			'mail_name' => Yii::t('attribute', 'From Name'),
 			'mail_from' => Yii::t('attribute', 'From Address'),
@@ -113,39 +107,29 @@ class SupportMailSetting extends CActiveRecord
 			'smtp_password' => Yii::t('attribute', 'SMTP Password'),
 			'smtp_ssl' => Yii::t('attribute', 'Use SSL or TLS?'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
-			'modified_id' => Yii::t('attribute', 'Modified ID'),
+			'modified_id' => Yii::t('attribute', 'Modified'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 	}
-	
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 *
+	 * Typical usecase:
+	 * - Initialize the model fields with values from filter form.
+	 * - Execute this method to get CActiveDataProvider instance which will filter
+	 * models according to data in model fields.
+	 * - Pass data provider to CGridView, CListView or any similar widget.
+	 *
+	 * @return CActiveDataProvider the data provider that can return the models
+	 * based on the search/filter conditions.
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('t.id',$this->id);
-		$criteria->compare('t.mail_contact',$this->mail_contact,true);
-		$criteria->compare('t.mail_name',$this->mail_name,true);
-		$criteria->compare('t.mail_from',$this->mail_from,true);
-		$criteria->compare('t.mail_count',$this->mail_count);
-		$criteria->compare('t.mail_queueing',$this->mail_queueing);
-		$criteria->compare('t.mail_smtp',$this->mail_smtp);
-		$criteria->compare('t.smtp_address',$this->smtp_address,true);
-		$criteria->compare('t.smtp_port',$this->smtp_port,true);
-		$criteria->compare('t.smtp_authentication',$this->smtp_authentication);
-		$criteria->compare('t.smtp_username',$this->smtp_username,true);
-		$criteria->compare('t.smtp_password',$this->smtp_password,true);
-		$criteria->compare('t.smtp_ssl',$this->smtp_ssl);
-		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
-		$criteria->compare('t.modified_id',$this->modified_id);
-		
 		// Custom Search
 		$criteria->with = array(
 			'modified' => array(
@@ -153,82 +137,172 @@ class SupportMailSetting extends CActiveRecord
 				'select'=>'displayname',
 			),
 		);
-		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
-			
-		if(!isset($_GET['SupportMailSetting_sort']))
+
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.mail_contact', strtolower($this->mail_contact), true);
+		$criteria->compare('t.mail_name', strtolower($this->mail_name), true);
+		$criteria->compare('t.mail_from', strtolower($this->mail_from), true);
+		$criteria->compare('t.mail_count', $this->mail_count);
+		$criteria->compare('t.mail_queueing', $this->mail_queueing);
+		$criteria->compare('t.mail_smtp', $this->mail_smtp);
+		$criteria->compare('t.smtp_address', strtolower($this->smtp_address), true);
+		$criteria->compare('t.smtp_port', strtolower($this->smtp_port), true);
+		$criteria->compare('t.smtp_authentication', $this->smtp_authentication);
+		$criteria->compare('t.smtp_username', strtolower($this->smtp_username), true);
+		$criteria->compare('t.smtp_password', strtolower($this->smtp_password), true);
+		$criteria->compare('t.smtp_ssl', $this->smtp_ssl);
+		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.modified_date)', date('Y-m-d', strtotime($this->modified_date)));
+		$criteria->compare('t.modified_id', Yii::app()->getRequest()->getParam('modified') ? Yii::app()->getRequest()->getParam('modified') : $this->modified_id);
+
+		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
+
+		if(!Yii::app()->getRequest()->getParam('SupportMailSetting_sort'))
 			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+			'pagination'=>array(
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+			),
 		));
-	}
-
-
-	/**
-	 * Get column for CGrid View
-	 */
-	public function getGridColumn($columns=null) {
-		if($columns !== null) {
-			foreach($columns as $val) {
-				/*
-				if(trim($val) == 'enabled') {
-					$this->defaultColumns[] = array(
-						'name'  => 'enabled',
-						'value' => '$data->enabled == 1? "Ya": "Tidak"',
-					);
-				}
-				*/
-				$this->defaultColumns[] = $val;
-			}
-		}else {
-			//$this->defaultColumns[] = 'id';
-			$this->defaultColumns[] = 'mail_contact';
-			$this->defaultColumns[] = 'mail_name';
-			$this->defaultColumns[] = 'mail_from';
-			$this->defaultColumns[] = 'mail_count';
-			$this->defaultColumns[] = 'mail_queueing';
-			$this->defaultColumns[] = 'mail_smtp';
-			$this->defaultColumns[] = 'smtp_address';
-			$this->defaultColumns[] = 'smtp_port';
-			$this->defaultColumns[] = 'smtp_authentication';
-			$this->defaultColumns[] = 'smtp_username';
-			$this->defaultColumns[] = 'smtp_password';
-			$this->defaultColumns[] = 'smtp_ssl';
-			$this->defaultColumns[] = 'modified_date';
-			$this->defaultColumns[] = 'modified_id';
-		}
-
-		return $this->defaultColumns;
 	}
 
 	/**
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			$this->defaultColumns[] = array(
-				'header' => 'No',
-				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+		if(count($this->templateColumns) == 0) {
+			$this->templateColumns['_option'] = array(
+				'class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'selectableRows' => 2,
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
-			$this->defaultColumns[] = 'mail_contact';
-			$this->defaultColumns[] = 'mail_name';
-			$this->defaultColumns[] = 'mail_from';
-			$this->defaultColumns[] = 'mail_count';
-			$this->defaultColumns[] = 'mail_queueing';
-			$this->defaultColumns[] = 'mail_smtp';
-			$this->defaultColumns[] = 'smtp_address';
-			$this->defaultColumns[] = 'smtp_port';
-			$this->defaultColumns[] = 'smtp_authentication';
-			$this->defaultColumns[] = 'smtp_username';
-			$this->defaultColumns[] = 'smtp_password';
-			$this->defaultColumns[] = 'smtp_ssl';
-			$this->defaultColumns[] = 'modified_date';
-			$this->defaultColumns[] = 'modified_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_search',
-				'value' => '$data->modified->displayname',
+			$this->templateColumns['_no'] = array(
+				'header' => Yii::t('app', 'No'),
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 			);
-
+			$this->templateColumns['mail_contact'] = array(
+				'name' => 'mail_contact',
+				'value' => '$data->mail_contact',
+			);
+			$this->templateColumns['mail_name'] = array(
+				'name' => 'mail_name',
+				'value' => '$data->mail_name',
+			);
+			$this->templateColumns['mail_from'] = array(
+				'name' => 'mail_from',
+				'value' => '$data->mail_from',
+			);
+			$this->templateColumns['mail_count'] = array(
+				'name' => 'mail_count',
+				'value' => '$data->mail_count',
+			);
+			$this->templateColumns['smtp_address'] = array(
+				'name' => 'smtp_address',
+				'value' => '$data->smtp_address',
+			);
+			$this->templateColumns['smtp_port'] = array(
+				'name' => 'smtp_port',
+				'value' => '$data->smtp_port',
+			);
+			$this->templateColumns['smtp_username'] = array(
+				'name' => 'smtp_username',
+				'value' => '$data->smtp_username',
+			);
+			$this->templateColumns['smtp_password'] = array(
+				'name' => 'smtp_password',
+				'value' => '$data->smtp_password',
+			);
+			$this->templateColumns['modified_date'] = array(
+				'name' => 'modified_date',
+				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->modified_date) : \'-\'',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => 'native-datepicker',
+				/*
+				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'modified_date',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'modified_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
+				*/
+			);
+			if(!Yii::app()->getRequest()->getParam('modified')) {
+				$this->templateColumns['modified_search'] = array(
+					'name' => 'modified_search',
+					'value' => '$data->modified->displayname ? $data->modified->displayname : \'-\'',
+				);
+			}
+			$this->templateColumns['mail_queueing'] = array(
+				'name' => 'mail_queueing',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_queueing\',array(\'id\'=>$data->id)), $data->mail_queueing)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yes'),
+					0=>Yii::t('phrase', 'No'),
+				),
+				'type' => 'raw',
+			);
+			$this->templateColumns['mail_smtp'] = array(
+				'name' => 'mail_smtp',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_smtp\',array(\'id\'=>$data->id)), $data->mail_smtp)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yes'),
+					0=>Yii::t('phrase', 'No'),
+				),
+				'type' => 'raw',
+			);
+			$this->templateColumns['smtp_authentication'] = array(
+				'name' => 'smtp_authentication',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_authentication\',array(\'id\'=>$data->id)), $data->smtp_authentication)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yes'),
+					0=>Yii::t('phrase', 'No'),
+				),
+				'type' => 'raw',
+			);
+			$this->templateColumns['smtp_ssl'] = array(
+				'name' => 'smtp_ssl',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_ssl\',array(\'id\'=>$data->id)), $data->smtp_ssl)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>Yii::t('phrase', 'Yes'),
+					0=>Yii::t('phrase', 'No'),
+				),
+				'type' => 'raw',
+			);
 		}
 		parent::afterConstruct();
 	}
@@ -253,7 +327,8 @@ class SupportMailSetting extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	protected function beforeValidate() {
+	protected function beforeValidate() 
+	{
 		if(parent::beforeValidate()) {
 			if($this->mail_smtp == '1') {
 				if($this->smtp_address == '')
@@ -270,7 +345,7 @@ class SupportMailSetting extends CActiveRecord
 				}
 			}
 
-			$this->modified_id = Yii::app()->user->id;
+			$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 		}
 		return true;
 	}

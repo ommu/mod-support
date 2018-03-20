@@ -6,18 +6,8 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 17:19 WIB
+ * @modified date 19 March 2018, 19:51 WIB
  * @link https://github.com/ommu/ommu-support
- *
- * This is the template for generating the model class of a specified table.
- * - $this: the ModelCode object
- * - $tableName: the table name for this class (prefix is already removed if necessary)
- * - $modelClass: the model class name
- * - $columns: list of table columns (name=>CDbColumnSchema)
- * - $labels: list of attribute labels (name=>label)
- * - $rules: list of validation rules
- * - $relations: list of relations (name=>relation declaration)
- *
- * --------------------------------------------------------------------------------------
  *
  * This is the model class for table "ommu_support_feedback_view_history".
  *
@@ -30,9 +20,10 @@
  * The followings are the available model relations:
  * @property SupportFeedbackView $view
  */
-class SupportFeedbackViewHistory extends CActiveRecord
+
+class SupportFeedbackViewHistory extends OActiveRecord
 {
-	public $defaultColumns = array();
+	public $gridForbiddenColumn = array();
 
 	// Variable Search	
 	public $subject_search;
@@ -140,90 +131,63 @@ class SupportFeedbackViewHistory extends CActiveRecord
 				'select'=>'displayname'
 			),
 		);
-		
-		$criteria->compare('t.id',strtolower($this->id),true);
-		if(isset($_GET['view']))
-			$criteria->compare('t.view_id',$_GET['view']);
-		else
-			$criteria->compare('t.view_id',$this->view_id);
-		if($this->view_date != null && !in_array($this->view_date, array('0000-00-00 00:00:00', '0000-00-00')))
-			$criteria->compare('date(t.view_date)',date('Y-m-d', strtotime($this->view_date)));
-		$criteria->compare('t.view_ip',strtolower($this->view_ip),true);
+
+		$criteria->compare('t.id', $this->id);
+		$criteria->compare('t.view_id', Yii::app()->getRequest()->getParam('view') ? Yii::app()->getRequest()->getParam('view') : $this->view_id);
+		if($this->view_date != null && !in_array($this->view_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
+			$criteria->compare('date(t.view_date)', date('Y-m-d', strtotime($this->view_date)));
+		$criteria->compare('t.view_ip', strtolower($this->view_ip), true);
 
 		$criteria->compare('view_feedback_subject.message',strtolower($this->subject_search), true);
 		$criteria->compare('view_user.displayname',strtolower($this->user_search),true);
 
-		if(!isset($_GET['SupportFeedbackViewHistory_sort']))
+		if(!Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory_sort'))
 			$criteria->order = 't.id DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>30,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
 			),
 		));
-	}
-
-
-	/**
-	 * Get column for CGrid View
-	 */
-	public function getGridColumn($columns=null) {
-		if($columns !== null) {
-			foreach($columns as $val) {
-				/*
-				if(trim($val) == 'enabled') {
-					$this->defaultColumns[] = array(
-						'name'  => 'enabled',
-						'value' => '$data->enabled == 1? "Ya": "Tidak"',
-					);
-				}
-				*/
-				$this->defaultColumns[] = $val;
-			}
-		} else {
-			//$this->defaultColumns[] = 'id';
-			$this->defaultColumns[] = 'view_id';
-			$this->defaultColumns[] = 'view_date';
-			$this->defaultColumns[] = 'view_ip';
-		}
-
-		return $this->defaultColumns;
 	}
 
 	/**
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			/*
-			$this->defaultColumns[] = array(
+		if(count($this->templateColumns) == 0) {
+			$this->templateColumns['_option'] = array(
 				'class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'selectableRows' => 2,
 				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
-			*/
-			$this->defaultColumns[] = array(
-				'header' => 'No',
-				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+			$this->templateColumns['_no'] = array(
+				'header' => Yii::t('app', 'No'),
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 			);
-			if(!isset($_GET['view'])) {
-				$this->defaultColumns[] = array(
+			if(!Yii::app()->getRequest()->getParam('view')) {
+				$this->templateColumns['subject_search'] = array(
 					'name' => 'subject_search',
 					'value' => '$data->view->feedback->subject->title->message',
 				);
-				$this->defaultColumns[] = array(
+				$this->templateColumns['user_search'] = array(
 					'name' => 'user_search',
 					'value' => '$data->view->user->displayname',
 				);
 			}
-			$this->defaultColumns[] = array(
+			$this->templateColumns['view_date'] = array(
 				'name' => 'view_date',
-				'value' => 'Utility::dateFormat($data->view_date, true)',
+				'value' => '!in_array($data->view_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\')) ? Utility::dateFormat($data->view_date) : \'-\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
+				'filter' => 'native-datepicker',
+				/*
 				'filter' => Yii::app()->controller->widget('application.libraries.core.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'view_date',
@@ -232,6 +196,8 @@ class SupportFeedbackViewHistory extends CActiveRecord
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'view_date_filter',
+						'on_datepicker' => 'on',
+						'placeholder' => Yii::t('phrase', 'filter'),
 					),
 					'options'=>array(
 						'showOn' => 'focus',
@@ -243,8 +209,9 @@ class SupportFeedbackViewHistory extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+				*/
 			);
-			$this->defaultColumns[] = array(
+			$this->templateColumns['view_ip'] = array(
 				'name' => 'view_ip',
 				'value' => '$data->view_ip',
 			);
@@ -265,7 +232,7 @@ class SupportFeedbackViewHistory extends CActiveRecord
 			
 		} else {
 			$model = self::model()->findByPk($id);
-			return $model;			
+			return $model;
 		}
 	}
 

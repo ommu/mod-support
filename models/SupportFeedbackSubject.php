@@ -6,6 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (opensource.ommu.co)
  * @created date 15 March 2018, 13:59 WIB
+ * @modified date 20 March 2018, 07:04 WIB
  * @link https://github.com/ommu/ommu-support
  *
  * This is the model class for table "ommu_support_feedback_subject".
@@ -20,6 +21,12 @@
  * @property string $modified_date
  * @property string $modified_id
  * @property string $updated_date
+ * @property string $slug
+ *
+ * The followings are the available model relations:
+ * @property SupportFeedbacks[] $feedbacks
+ * @property Users $creation
+ * @property Users $modified
  */
 
 class SupportFeedbackSubject extends OActiveRecord
@@ -69,7 +76,7 @@ class SupportFeedbackSubject extends OActiveRecord
 			array('subject_name_i', 'length', 'max'=>64),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, 
+			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, slug, 
 				subject_name_i, parent_search, creation_search, modified_search, feedback_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -83,6 +90,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewSupportFeedbackSubject', 'subject_id'),
+			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'subject_id'),
 			'title' => array(self::BELONGS_TO, 'SourceMessage', 'subject_name'),
 			'parent' => array(self::BELONGS_TO, 'SupportFeedbackSubject', 'parent_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
@@ -105,6 +113,7 @@ class SupportFeedbackSubject extends OActiveRecord
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
+			'slug' => Yii::t('attribute', 'Slug'),
 			'subject_name_i' => Yii::t('attribute', 'Subject'),
 			'parent_search' => Yii::t('attribute', 'Parent'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
@@ -179,6 +188,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		$criteria->compare('t.modified_id', Yii::app()->getRequest()->getParam('modified') ? Yii::app()->getRequest()->getParam('modified') : $this->modified_id);
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00', '1970-01-01 00:00:00')))
 			$criteria->compare('date(t.updated_date)', date('Y-m-d', strtotime($this->updated_date)));
+		$criteria->compare('t.slug', strtolower($this->slug), true);
 
 		$criteria->compare('title.message', strtolower($this->subject_name_i), true);
 		$criteria->compare('parent_title.message', strtolower($this->parent_search), true);
@@ -336,6 +346,10 @@ class SupportFeedbackSubject extends OActiveRecord
 				), true),
 				*/
 			);
+			$this->templateColumns['slug'] = array(
+				'name' => 'slug',
+				'value' => '$data->slug',
+			);
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
@@ -414,10 +428,9 @@ class SupportFeedbackSubject extends OActiveRecord
 	{
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord)
-				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			else
-				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-			// Create action
+				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 		}
 		return true;
 	}
