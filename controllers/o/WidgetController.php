@@ -232,7 +232,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(

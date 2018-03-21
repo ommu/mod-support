@@ -233,7 +233,7 @@ class SubjectController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Feedback Subject: {subject_name}', array('{subject_name}'=>$model->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Feedback Subject: {subject_name}', array('{subject_name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(

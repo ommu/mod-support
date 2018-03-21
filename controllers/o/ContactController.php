@@ -192,7 +192,6 @@ class ContactController extends Controller
 
 		if(isset($_POST['SupportContacts'])) {
 			$model->attributes=$_POST['SupportContacts'];
-			$model->scenario = 'default';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -238,7 +237,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
