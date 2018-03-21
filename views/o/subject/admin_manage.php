@@ -71,7 +71,7 @@
 				'class'=>'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'View Feedback Subject'),
+						'label' => Yii::t('phrase', 'Detail Feedback Subject'),
 						'imageUrl' => false,
 						'options' => array(
 							'class' => 'view',
