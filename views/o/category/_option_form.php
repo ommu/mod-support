@@ -1,15 +1,15 @@
 <?php
 /**
- * Support Widgets (support-widget)
- * @var $this WidgetController
- * @var $model SupportWidget
+ * Support Contact Categories (support-contact-category)
+ * @var $this CategoryController
+ * @var $model SupportContactCategory
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
- * @created date 3 February 2016, 12:26 WIB
- * @modified date 20 March 2018, 14:30 WIB
+ * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
+ * @created date 23 August 2017, 07:32 WIB
+ * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
@@ -22,7 +22,7 @@ $js=<<<EOP
 			url: url,
 			data: $('form[name="gridoption"] :checked').serialize(),
 			success: function(response) {
-				$.fn.yiiGridView.update('support-widget-grid', {
+				$.fn.yiiGridView.update('support-contact-category-grid', {
 					data: $('form[name="gridoption"]').serialize()
 				});
 				return false;

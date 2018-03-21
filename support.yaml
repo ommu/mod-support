@@ -58,7 +58,7 @@ content_menu	:
 		urlPath: {url: add, attr: -, icon: -}
 	- urlTitle: Categories
 		urlRules: {support, o/contact, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/contactcategory/manage, attr: -, icon: -}
+		urlPath: {url: o/category/manage, attr: -, icon: -}
 	- urlTitle: Widgets
 		urlRules: {support, o/contact, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/widget/manage, attr: -, icon: -}
@@ -69,12 +69,12 @@ content_menu	:
 		urlRules: {support, o/contact, setting, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/contact/manage, attr: -, icon: -}
 		
-# controller o/contactcategory
+# controller o/category
 	- urlTitle: Back to Contacts
-		urlRules: {support, o/contactcategory, manage, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {support, o/category, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/contact/manage, attr: -, icon: -}
 	- urlTitle: Add Category
-		urlRules: {support, o/contactcategory, manage, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {support, o/category, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: add, attr: -, icon: -}
 		
 # controller o/widget

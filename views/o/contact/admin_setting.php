@@ -1,8 +1,8 @@
 <?php
 /**
  * Support Contacts (support-contacts)
- * @var $this ContactsController
- * @var $model SupportContacts
+ * @var $this ContactController
+ * @var $model OmmuMeta
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
@@ -13,9 +13,8 @@
  */
  
 	$this->breadcrumbs=array(
-		'Ommu Metas'=>array('manage'),
-		$model->id=>array('view','id'=>$model->id),
-		'Update',
+		'Support Contacts'=>array('manage'),
+		'Address Settings',
 	);
 ?>
 
@@ -24,7 +23,15 @@
 	<?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
 	'id'=>'support-contacts-form',
 		'enableAjaxValidation'=>true,
-		//'htmlOptions' => array('enctype' => 'multipart/form-data')
+		/*
+		'enableClientValidation'=>true,
+		'clientOptions'=>array(
+			'validateOnSubmit'=>true,
+		),
+		'htmlOptions' => array(
+			'enctype' => 'multipart/form-data',
+		),
+		*/
 	)); ?>
 
 	<?php //begin.Messages ?>

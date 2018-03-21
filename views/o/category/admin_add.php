@@ -1,8 +1,8 @@
 <?php
 /**
- * Support Contacts (support-contacts)
- * @var $this ContactController
- * @var $model SupportContacts
+ * Support Contact Categories (support-contact-category)
+ * @var $this CategoryController
+ * @var $model SupportContactCategory
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
@@ -14,9 +14,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Contacts'=>array('manage'),
-		$model->contact_name=>array('view','id'=>$model->id),
-		'Update',
+		'Support Contact Categories'=>array('manage'),
+		'Create',
 	);
 ?>
 

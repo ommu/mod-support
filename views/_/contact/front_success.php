@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Contacts (support-contacts)
- * @var $this ContactsController
+ * @var $this ContactController
  * @var $model SupportContacts
  * @var $form CActiveForm
  *

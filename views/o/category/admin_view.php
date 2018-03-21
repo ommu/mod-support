@@ -1,20 +1,21 @@
 <?php
 /**
- * Support Contact Category (support-contact-category)
- * @var $this ContactcategoryController
+ * Support Contact Categories (support-contact-category)
+ * @var $this CategoryController
  * @var $model SupportContactCategory
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 08:12 WIB
+ * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
 		'Support Contact Categories'=>array('manage'),
-		$model->cat_id,
+		$model->title->message,
 	);
 ?>
 
@@ -55,7 +56,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation->displayname ? $model->creation->displayname : '-',
+				'value'=>$model->creation_id ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -63,11 +64,15 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified->displayname ? $model->modified->displayname : '-',
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 			array(
 				'name'=>'updated_date',
 				'value'=>!in_array($model->updated_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->updated_date, true) : '-',
+			),
+			array(
+				'name'=>'slug',
+				'value'=>$model->slug ? $model->slug : '-',
 			),
 		),
 	)); ?>

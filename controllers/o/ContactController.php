@@ -23,6 +23,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -106,12 +107,12 @@ class ContactController extends Controller
 			$model->attributes=$_GET['SupportContacts'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
@@ -119,7 +120,7 @@ class ContactController extends Controller
 		$pageTitle = Yii::t('phrase', 'Contacts');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Contacts: Category $category_name', array ('$category_name'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Contacts: Category {category_name}', array ('{category_name}'=>$data->title->message));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -158,9 +159,8 @@ class ContactController extends Controller
 							'id' => 'partial-support-contacts',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success created.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -207,9 +207,8 @@ class ContactController extends Controller
 							'id' => 'partial-support-contacts',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success updated.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -218,8 +217,8 @@ class ContactController extends Controller
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
-		
-		$this->pageTitle = Yii::t('phrase', 'Update Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
+
+		$this->pageTitle = Yii::t('phrase', 'Update Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -239,14 +238,14 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'View Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));
 	}
- 
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -262,15 +261,15 @@ class ContactController extends Controller
 
 			if($actions == 'publish') {
 				SupportContacts::model()->updateAll(array(
-					'published' => 1,
+					'publish' => 1,
 				),$criteria);
 			} elseif($actions == 'unpublish') {
 				SupportContacts::model()->updateAll(array(
-					'published' => 0,
+					'publish' => 0,
 				),$criteria);
 			} elseif($actions == 'trash') {
 				SupportContacts::model()->updateAll(array(
-					'published' => 2,
+					'publish' => 2,
 				),$criteria);
 			} elseif($actions == 'delete') {
 				SupportContacts::model()->deleteAll($criteria);
@@ -295,8 +294,8 @@ class ContactController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+			
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
@@ -312,7 +311,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Contact: $contact_name Category $category_name', array('$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -334,7 +333,7 @@ class ContactController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 
 			if($model->update()) {
 				echo CJSON::encode(array(
@@ -351,7 +350,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title Contact: $contact_name Category $category_name', array('$title'=>$title, '$contact_name'=>$model->contact_name, '$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', '$title Contact: {contact_name} Category {category_name}', array('$title'=>$title, '{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(
@@ -440,5 +439,4 @@ class ContactController extends Controller
 			Yii::app()->end();
 		}
 	}
-
 }

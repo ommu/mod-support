@@ -23,6 +23,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
+ * @modified date 20 March 2018, 14:30 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -101,20 +102,20 @@ class WidgetController extends Controller
 			$model->attributes=$_GET['SupportWidget'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$pageTitle = Yii::t('phrase', 'Widgets Manage');
+		$pageTitle = Yii::t('phrase', 'Widgets');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Widgets: Category $category_name', array ('$category_name'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Widgets: Category {category_name}', array ('{category_name}'=>$data->title->message));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -139,7 +140,7 @@ class WidgetController extends Controller
 
 		if(isset($_POST['SupportWidget'])) {
 			$model->attributes=$_POST['SupportWidget'];
-			
+
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
@@ -153,9 +154,8 @@ class WidgetController extends Controller
 							'id' => 'partial-support-widget',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success created.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -163,7 +163,7 @@ class WidgetController extends Controller
 		
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 550;
+		$this->dialogWidth = 600;
 
 		$this->pageTitle = Yii::t('phrase', 'Create Widget');
 		$this->pageDescription = '';
@@ -187,7 +187,7 @@ class WidgetController extends Controller
 
 		if(isset($_POST['SupportWidget'])) {
 			$model->attributes=$_POST['SupportWidget'];
-			
+
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
@@ -201,9 +201,8 @@ class WidgetController extends Controller
 							'id' => 'partial-support-widget',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success updated.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -211,9 +210,9 @@ class WidgetController extends Controller
 		
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 550;
+		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Widget: $category_name', array('$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -233,7 +232,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Widget: $category_name', array('$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'View Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -252,7 +251,7 @@ class WidgetController extends Controller
 
 		if(count($id) > 0) {
 			$criteria = new CDbCriteria;
-			$criteria->addInCondition('id', $id);
+			$criteria->addInCondition('widget_id', $id);
 
 			if($actions == 'publish') {
 				SupportWidget::model()->updateAll(array(
@@ -289,7 +288,7 @@ class WidgetController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			
 			if($model->update()) {
 				echo CJSON::encode(array(
@@ -306,7 +305,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Widget: $category_name', array('$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -328,8 +327,8 @@ class WidgetController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-			
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
@@ -345,7 +344,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title Widget: $category_name', array('$title'=>$title, '$category_name'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} Widget: {category_name}', array('{title}'=>$title, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

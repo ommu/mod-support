@@ -1,15 +1,15 @@
 <?php
 /**
- * Support Widgets (support-widget)
- * @var $this WidgetController
- * @var $model SupportWidget
+ * Support Contact Categories (support-contact-category)
+ * @var $this CategoryController
+ * @var $model SupportContactCategory
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
- * @created date 3 February 2016, 12:26 WIB
- * @modified date 20 March 2018, 14:30 WIB
+ * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
+ * @created date 23 August 2017, 07:32 WIB
+ * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
@@ -21,14 +21,13 @@
 )); ?>
 	<ul>
 		<li>
-			<?php echo $model->getAttributeLabel('cat_id'); ?>
-			<?php $category = SupportContactCategory::getCategory();
-			echo $form->dropDownList($model, 'cat_id', $category, array('prompt'=>'', 'class'=>'form-control')); ?>
+			<?php echo $model->getAttributeLabel('name_i'); ?>
+			<?php echo $form->textField($model, 'name_i', array('class'=>'form-control')); ?>
 		</li>
 
 		<li>
-			<?php echo $model->getAttributeLabel('widget_source'); ?>
-			<?php echo $form->textField($model, 'widget_source', array('class'=>'form-control')); ?>
+			<?php echo $model->getAttributeLabel('cat_icon'); ?>
+			<?php echo $form->textField($model, 'cat_icon', array('class'=>'form-control')); ?>
 		</li>
 
 		<li>
@@ -87,6 +86,11 @@
 				 ),
 			)); */
 			echo $form->dateField($model, 'updated_date', array('class'=>'form-control')); ?>
+		</li>
+
+		<li>
+			<?php echo $model->getAttributeLabel('slug'); ?>
+			<?php echo $form->textField($model, 'slug', array('class'=>'form-control')); ?>
 		</li>
 
 		<li>

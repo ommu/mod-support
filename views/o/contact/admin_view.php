@@ -1,20 +1,21 @@
 <?php
 /**
  * Support Contacts (support-contacts)
- * @var $this ContactsController
+ * @var $this ContactController
  * @var $model SupportContacts
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 08:21 WIB
+ * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
 		'Support Contacts'=>array('manage'),
-		$model->id,
+		$model->contact_name,
 	);
 ?>
 
@@ -33,7 +34,7 @@
 			),
 			array(
 				'name'=>'cat_id',
-				'value'=>$model->category->name ? $model->category->title->message : '-',
+				'value'=>$model->cat_id ? $model->category->title->message : '-',
 			),
 			array(
 				'name'=>'contact_name',
@@ -45,7 +46,7 @@
 			),
 			array(
 				'name'=>'creation_id',
-				'value'=>$model->creation->displayname ? $model->creation->displayname : '-',
+				'value'=>$model->creation_id ? $model->creation->displayname : '-',
 			),
 			array(
 				'name'=>'modified_date',
@@ -53,7 +54,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified->displayname ? $model->modified->displayname : '-',
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 			array(
 				'name'=>'updated_date',
