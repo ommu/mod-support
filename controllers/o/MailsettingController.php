@@ -9,6 +9,7 @@
  * TOC :
  *	Index
  *	Edit
+ *	Delete
  *
  *	LoadModel
  *	performAjaxValidation
@@ -16,6 +17,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @modified date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -105,8 +107,8 @@ class MailsettingController extends Controller
 				$errors = $model->getErrors();
 				$summary['msg'] = "<div class='errorSummary'><strong>".Yii::t('phrase', 'Please fix the following input errors:')."</strong>";
 				$summary['msg'] .= "<ul>";
-				foreach($errors as $key => $val) {
-					$summary['msg'] .= "<li>{$val[0]}</li>";
+				foreach($errors as $key => $value) {
+					$summary['msg'] .= "<li>{$value[0]}</li>";
 				}
 				$summary['msg'] .= "</ul></div>";
 
@@ -121,20 +123,51 @@ class MailsettingController extends Controller
 							'type' => 0,
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Mail Setting success updated.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
 		}
-		
+
 		$this->pageTitle = Yii::t('phrase', 'Mail Settings');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('/o/mail_setting/admin_edit',array(
 			'model'=>$model,
 		));
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionDelete($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		if(Yii::app()->request->isPostRequest) {
+			// we only allow deletion via POST request
+			if($model->delete()) {
+				echo CJSON::encode(array(
+					'type' => 5,
+					'get' => Yii::app()->controller->createUrl('edit'),
+					'id' => 'partial-support-mail-setting',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Mail setting success deleted.').'</strong></div>',
+				));
+			}
+			Yii::app()->end();
+		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', 'Delete Support Mail Setting: {mail_name}', array('{mail_name}'=>$model->mail_name));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/mail_setting/admin_delete');
 	}
 
 	/**

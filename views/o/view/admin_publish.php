@@ -1,21 +1,21 @@
 <?php
 /**
  * Support Feedback Views (support-feedback-view)
- * @var $this ViewsController
+ * @var $this ViewController
  * @var $model SupportFeedbackView
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
- * @created date 11 May 2017, 23:13 WIB
+ * @created date 23 August 2017, 09:41 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
 		'Support Feedback Views'=>array('manage'),
-		'Delete',
+		'Publish',
 	);
 ?>
 
@@ -26,10 +26,10 @@
 )); ?>
 
 	<div class="dialog-content">
-		<?php echo Yii::t('phrase', 'Are you sure you want to delete this item?');?>
+		<?php echo $model->publish == 1 ? Yii::t('phrase', 'Are you sure you want to unpublish this item?') : Yii::t('phrase', 'Are you sure you want to publish this item?')?>
 	</div>
 	<div class="dialog-submit">
-		<?php echo CHtml::submitButton(Yii::t('phrase', 'Delete'), array('onclick' => 'setEnableSave()')); ?>
+		<?php echo CHtml::submitButton($title, array('onclick' => 'setEnableSave()')); ?>
 		<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 	</div>
 	

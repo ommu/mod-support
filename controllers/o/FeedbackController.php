@@ -15,7 +15,6 @@
  *	RunAction
  *	Delete
  *	Publish
- *	Setting
  *
  *	LoadModel
  *	performAjaxValidation
@@ -23,6 +22,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @created date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -76,11 +76,6 @@ class FeedbackController extends Controller
 				'users'=>array('@'),
 				'expression'=>'in_array($user->level, array(1,2))',
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('setting'),
-				'users'=>array('@'),
-				'expression'=>'$user->level == 1',
-			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -106,12 +101,12 @@ class FeedbackController extends Controller
 			$model->attributes=$_GET['SupportFeedbacks'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
@@ -119,7 +114,7 @@ class FeedbackController extends Controller
 		$pageTitle = Yii::t('phrase', 'Feedbacks');
 		if($user != null && $user != '0') {
 			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback: User $user_displayname', array ('$user_displayname'=>$data->displayname));
+			$pageTitle = Yii::t('phrase', 'Feedback: User {displayname}', array ('{displayname}'=>$data->displayname));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -130,7 +125,7 @@ class FeedbackController extends Controller
 			'columns' => $columns,
 		));
 	}
-	
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -150,19 +145,18 @@ class FeedbackController extends Controller
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
-				
+
 			} else {
 				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 					if($model->save()) {
-						echo CJSON::encode(array (
+						echo CJSON::encode(array(
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-feedbacks',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success updated.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -172,9 +166,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Update Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Edit Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Update Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -216,9 +211,8 @@ class FeedbackController extends Controller
 							'id' => 'partial-support-feedbacks',
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success replied.').'</strong></div>',
 						));
-					} else {
+					} else
 						print_r($model->getErrors());
-					}
 				}
 			}
 			Yii::app()->end();
@@ -228,9 +222,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Reply Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Reply Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Reply Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Reply Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -252,9 +247,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Detail Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'View Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Detail Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
+			
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -263,7 +259,6 @@ class FeedbackController extends Controller
 		));
 	}
 
-	
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -278,19 +273,19 @@ class FeedbackController extends Controller
 			$criteria->addInCondition('feedback_id', $id);
 
 			if($actions == 'publish') {
-				SSupportFeedbacks::model()->updateAll(array(
+				SupportFeedbacks::model()->updateAll(array(
 					'publish' => 1,
 				),$criteria);
 			} elseif($actions == 'unpublish') {
-				SSupportFeedbacks::model()->updateAll(array(
+				SupportFeedbacks::model()->updateAll(array(
 					'publish' => 0,
 				),$criteria);
 			} elseif($actions == 'trash') {
-				SSupportFeedbacks::model()->updateAll(array(
+				SupportFeedbacks::model()->updateAll(array(
 					'publish' => 2,
 				),$criteria);
 			} elseif($actions == 'delete') {
-				SSupportFeedbacks::model()->deleteAll($criteria);
+				SupportFeedbacks::model()->deleteAll($criteria);
 			}
 		}
 
@@ -299,6 +294,7 @@ class FeedbackController extends Controller
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -311,7 +307,7 @@ class FeedbackController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			
 			if($model->update()) {
 				echo CJSON::encode(array(
@@ -328,9 +324,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', 'Delete Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Delete Feedback: $subject by $displayname', array('$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', 'Delete Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -353,8 +350,8 @@ class FeedbackController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-			
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
@@ -370,9 +367,10 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject->title->message, '$displayname'=>$model->displayname));
+		$pageTitle = Yii::t('phrase', '{title} Feedback: {subject} by {displayname}', array('{title}'=>$title, '{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		if($model->user_id)
-			$pageTitle = Yii::t('phrase', '$title Feedback: $subject by $displayname', array('$title'=>$title, '$subject'=>$model->subject->title->message, '$displayname'=>$model->user->displayname));
+			$pageTitle = Yii::t('phrase', '{title} Feedback: {subject} by {displayname}', array('{title}'=>$title, '{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
+			
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -381,7 +379,7 @@ class FeedbackController extends Controller
 			'model'=>$model,
 		));
 	}
-	
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.

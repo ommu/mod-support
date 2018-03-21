@@ -1,7 +1,7 @@
 <?php
 /**
- * ViewsController
- * @var $this ViewsController
+ * ViewController
+ * @var $this ViewController
  * @var $model SupportFeedbackView
  * @var $form CActiveForm
  *
@@ -21,12 +21,13 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 11 May 2017, 23:13 WIB
+ * @modified date 21 March 2018, 08:46 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
  */
 
-class ViewsController extends Controller
+class ViewController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -99,12 +100,12 @@ class ViewsController extends Controller
 			$model->attributes=$_GET['SupportFeedbackView'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
@@ -112,11 +113,11 @@ class ViewsController extends Controller
 		$pageTitle = Yii::t('phrase', 'Feedback Views');
 		if($feedback != null) {
 			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback View: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject->title->message));
+			$pageTitle = Yii::t('phrase', 'Feedback View: Subject {feedback_subject}', array ('{feedback_subject}'=>$data->subject->title->message));
 		}
 		if($user != null) {
 			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback View: User $user_displayname', array ('$user_displayname'=>$data->displayname));
+			$pageTitle = Yii::t('phrase', 'Feedback View: User {user_displayname}', array ('{user_displayname}'=>$data->displayname));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -140,7 +141,7 @@ class ViewsController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View Views: by $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail View: by {user_displayname} Feedback {feedback_subject}', array('{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
@@ -196,14 +197,14 @@ class ViewsController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-view',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback View success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback view success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -213,7 +214,7 @@ class ViewsController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete View: by $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete View: by {user_displayname} Feedback {feedback_subject}', array('{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -235,14 +236,14 @@ class ViewsController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-			
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-view',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback View success updated.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback view success updated.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -252,7 +253,7 @@ class ViewsController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title View: by $user_displayname Feedback $feedback_subject', array('$title'=>$title, '$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} View: by {user_displayname} Feedback {feedback_subject}', array('{title}'=>$title, '{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

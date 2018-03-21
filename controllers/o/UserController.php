@@ -21,6 +21,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 05:42 WIB
+ * @modified date 21 March 2018, 08:46 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -99,12 +100,12 @@ class UserController extends Controller
 			$model->attributes=$_GET['SupportFeedbackUser'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
@@ -112,11 +113,11 @@ class UserController extends Controller
 		$pageTitle = Yii::t('phrase', 'Feedback Users');
 		if($feedback != null) {
 			$data = SupportFeedbacks::model()->findByPk($feedback);
-			$pageTitle = Yii::t('phrase', 'Feedback User: Subject $feedback_subject', array ('$feedback_subject'=>$data->subject->title->message));
+			$pageTitle = Yii::t('phrase', 'Feedback User: Subject {feedback_subject}', array ('{feedback_subject}'=>$data->subject->title->message));
 		}
 		if($user != null) {
 			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback User: $user_displayname', array ('$user_displayname'=>$data->displayname));
+			$pageTitle = Yii::t('phrase', 'Feedback User: {user_displayname}', array ('{user_displayname}'=>$data->displayname));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -140,14 +141,14 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'View User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail User: {user_displayname} Feedback {feedback_subject}', array('{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view',array(
 			'model'=>$model,
 		));
 	}
-	
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -196,14 +197,14 @@ class UserController extends Controller
 		if(Yii::app()->request->isPostRequest) {
 			// we only allow deletion via POST request
 			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-user',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support Feedback Users success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback user success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -213,7 +214,7 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete User: $user_displayname Feedback $feedback_subject', array('$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete User: {user_displayname} Feedback {feedback_subject}', array('{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -235,14 +236,14 @@ class UserController extends Controller
 			// we only allow deletion via POST request
 			//change value active or publish
 			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
-			
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
 			if($model->update()) {
 				echo CJSON::encode(array(
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-user',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support Feedback Users success updated.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback user success updated.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -252,7 +253,7 @@ class UserController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title User: $user_displayname Feedback $feedback_subject', array('$title'=>$title, '$user_displayname'=>$model->user->displayname, '$feedback_subject'=>$model->feedback->subject->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} User: {user_displayname} Feedback {feedback_subject}', array('{title}'=>$title, '{user_displayname}'=>$model->user->displayname, '{feedback_subject}'=>$model->feedback->subject->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish',array(

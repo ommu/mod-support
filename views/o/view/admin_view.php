@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Feedback Views (support-feedback-view)
- * @var $this ViewsController
+ * @var $this ViewController
  * @var $model SupportFeedbackView
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
