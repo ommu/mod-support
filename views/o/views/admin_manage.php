@@ -1,30 +1,30 @@
 <?php
 /**
- * Support Feedbacks (support-feedbacks)
- * @var $this FeedbackController
- * @var $model SupportFeedbacks
+ * Support Feedback Views (support-feedback-view)
+ * @var $this ViewController
+ * @var $model SupportFeedbackView
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
- * @modified date 21 March 2018, 08:48 WIB
+ * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
+ * @created date 11 May 2017, 23:13 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedbacks'=>array('manage'),
+		'Feedback Views'=>array('manage'),
 		'Manage',
 	);
 	$this->menu=array(
 		array(
-			'label' => Yii::t('phrase', 'Filter'),
+			'label' => Yii::t('phrase', 'Filter'), 
 			'url' => array('javascript:void(0);'),
 			'itemOptions' => array('class' => 'search-button'),
 			'linkOptions' => array('title' => Yii::t('phrase', 'Filter')),
 		),
 		array(
-			'label' => Yii::t('phrase', 'Grid Options'),
+			'label' => Yii::t('phrase', 'Grid Options'), 
 			'url' => array('javascript:void(0);'),
 			'itemOptions' => array('class' => 'grid-button'),
 			'linkOptions' => array('title' => Yii::t('phrase', 'Grid Options')),
@@ -45,12 +45,11 @@
 <div class="grid-form">
 <?php $this->renderPartial('_option_form',array(
 	'model'=>$model,
-	'gridColumns'=>Utility::getActiveDefaultColumns($columns),
 )); ?>
 </div>
 <?php //end.Grid Option ?>
 
-<div id="partial-support-feedbacks">
+<div id="partial-support-feedback-view">
 	<?php //begin.Messages ?>
 	<div id="ajax-message">
 	<?php
@@ -71,32 +70,32 @@
 				'class'=>'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'Detail Support Feedback'),
+						'label' => 'view',
 						'imageUrl' => false,
 						'options' => array(
 							'class' => 'view',
 						),
-						'url' => 'Yii::app()->controller->createUrl(\'view\',array(\'id\'=>$data->primaryKey))'),
+						'url' => 'Yii::app()->controller->createUrl("view",array("id"=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Support Feedback'),
+						'label' => 'update',
 						'imageUrl' => false,
 						'options' => array(
-							'class' => 'update',
+							'class' => 'update'
 						),
-						'url' => 'Yii::app()->controller->createUrl(\'edit\',array(\'id\'=>$data->primaryKey))'),
+						'url' => 'Yii::app()->controller->createUrl("edit",array("id"=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Support Feedback'),
+						'label' => 'delete',
 						'imageUrl' => false,
 						'options' => array(
-							'class' => 'delete',
+							'class' => 'delete'
 						),
-						'url' => 'Yii::app()->controller->createUrl(\'delete\',array(\'id\'=>$data->primaryKey))'),
+						'url' => 'Yii::app()->controller->createUrl("delete",array("id"=>$data->primaryKey))')
 				),
-				'template' => '{view}|{update}|{delete}',
+				'template' => '{view}|{delete}',
 			));
 
 			$this->widget('application.libraries.core.components.system.OGridView', array(
-				'id'=>'support-feedbacks-grid',
+				'id'=>'support-feedback-view-grid',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,
 				'afterAjaxUpdate' => 'reinstallDatePicker',

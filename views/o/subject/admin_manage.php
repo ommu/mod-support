@@ -13,7 +13,7 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedback Subjects'=>array('manage'),
+		'Feedback Subjects'=>array('manage'),
 		'Manage',
 	);
 	$this->menu=array(
@@ -71,21 +71,21 @@
 				'class'=>'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'View Support Feedback Subject'),
+						'label' => Yii::t('phrase', 'View Feedback Subject'),
 						'imageUrl' => false,
 						'options' => array(
 							'class' => 'view',
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\',array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Support Feedback Subject'),
+						'label' => Yii::t('phrase', 'Update Feedback Subject'),
 						'imageUrl' => false,
 						'options' => array(
 							'class' => 'update',
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\',array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Support Feedback Subject'),
+						'label' => Yii::t('phrase', 'Delete Feedback Subject'),
 						'imageUrl' => false,
 						'options' => array(
 							'class' => 'delete',

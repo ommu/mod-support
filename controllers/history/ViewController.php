@@ -18,6 +18,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 17:21 WIB
+ * @modified date 21 March 2018, 12:35 WIB
  * @link https://github.com/ommu/ommu-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -96,17 +97,17 @@ class ViewController extends Controller
 			$model->attributes=$_GET['SupportFeedbackViewHistory'];
 		}
 
+		$gridColumn = $_GET['GridColumn'];
 		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
+		if(isset($gridColumn)) {
+			foreach($gridColumn as $key => $val) {
+				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
-				}
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = Yii::t('phrase', 'Support Feedback View Histories');
+		$this->pageTitle = Yii::t('phrase', 'Feedback View Histories');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -131,7 +132,7 @@ class ViewController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-view-history',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support Feedback View Histories success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback view history success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -141,7 +142,7 @@ class ViewController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Support Feedback View Histories');
+		$this->pageTitle = Yii::t('phrase', 'Delete Feedback View History: {id}', array('{id}'=>$model->id));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');

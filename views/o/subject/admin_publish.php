@@ -14,7 +14,7 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedback Subjects'=>array('manage'),
+		'Feedback Subjects'=>array('manage'),
 		'Publish',
 	);
 ?>

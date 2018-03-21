@@ -8,12 +8,13 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 11 May 2017, 23:13 WIB
+ * @modified date 21 March 2018, 08:46 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedback Views'=>array('manage'),
+		'Feedback Views'=>array('manage'),
 		$model->view_id,
 	);
 ?>
@@ -41,7 +42,11 @@
 			),
 			array(
 				'name'=>'user_id',
-				'value'=>$model->user_id != 0 ? $model->user->displayname : '-',
+				'value'=>$model->user_id ? $model->user->displayname : '-',
+			),
+			array(
+				'name'=>'views',
+				'value'=>$model->views ? $model->views : '-',
 			),
 			array(
 				'name'=>'view_date',
@@ -57,7 +62,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
+				'value'=>$model->modified_id ? $model->modified->displayname : '-',
 			),
 			array(
 				'name'=>'updated_date',

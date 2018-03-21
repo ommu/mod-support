@@ -2,7 +2,6 @@
 /**
  * SettingController
  * @var $this SettingController
- * @var $model SupportSetting
  * @var $form CActiveForm
  *
  * Reference start
@@ -65,11 +64,6 @@ class SettingController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('edit'),
-				'users'=>array('@'),
-				'expression'=>'$user->level == 1',
-			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('index','manual'),
 				'users'=>array('@'),
 				'expression'=>'in_array($user->level, array(1,2))',
@@ -85,7 +79,6 @@ class SettingController extends Controller
 	 */
 	public function actionIndex() 
 	{
-		//$this->redirect(array('edit'));
 		$this->redirect(Yii::app()->createUrl('site/login'));
 	}
 	
@@ -104,32 +97,7 @@ class SettingController extends Controller
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manual', array(
-			'manual_path'=>$manual_path,			
+			'manual_path'=>$manual_path,
 		));
-	}
-
-	/**
-	 * Returns the data model based on the primary key given in the GET variable.
-	 * If the data model is not found, an HTTP exception will be raised.
-	 * @param integer the ID of the model to be loaded
-	 */
-	public function loadModel($id) 
-	{
-		$model = SupportSetting::model()->findByPk($id);
-		if($model===null)
-			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
-		return $model;
-	}
-
-	/**
-	 * Performs the AJAX validation.
-	 * @param CModel the model to be validated
-	 */
-	protected function performAjaxValidation($model) 
-	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='article-setting-form') {
-			echo CActiveForm::validate($model);
-			Yii::app()->end();
-		}
 	}
 }

@@ -8,13 +8,14 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @modified date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
 		'Support Feedbacks'=>array('manage'),
-		$model->feedback_id=>array('view','id'=>$model->feedback_id),
+		$model->displayname=>array('view','id'=>$model->feedback_id),
 		'Update',
 	);
 ?>

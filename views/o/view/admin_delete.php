@@ -9,12 +9,13 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 11 May 2017, 23:13 WIB
+ * @modified date 21 March 2018, 08:46 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedback Views'=>array('manage'),
+		'Feedback Views'=>array('manage'),
 		'Delete',
 	);
 ?>

@@ -2,7 +2,6 @@
 /**
  * Support Setting (support-setting)
  * @var $this SettingController
- * @var $model SupportSetting
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114

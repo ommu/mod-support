@@ -1,26 +1,26 @@
 <?php
 /**
- * Support Feedbacks (support-feedbacks)
- * @var $this FeedbackController
- * @var $model SupportFeedbacks
+ * Support Mail Settings (support-mail-setting)
+ * @var $this MailsettingController
+ * @var $model SupportMailSetting
  * @var $form CActiveForm
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
- * @modified date 21 March 2018, 08:48 WIB
+ * @copyright Copyright (c) 2018 Ommu Platform (opensource.ommu.co)
+ * @created date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedbacks'=>array('manage'),
+		'Support Mail Settings'=>array('manage'),
 		'Delete',
 	);
 ?>
 
 <?php $form=$this->beginWidget('application.libraries.core.components.system.OActiveForm', array(
-	'id'=>'support-feedbacks-form',
+	'id'=>'support-mail-setting-form',
 	'enableAjaxValidation'=>true,
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')
 )); ?>

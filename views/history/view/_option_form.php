@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 23 August 2017, 17:21 WIB
+ * @modified date 21 March 2018, 12:35 WIB
  * @link https://github.com/ommu/ommu-support
  *
  */
@@ -36,18 +37,17 @@ EOP;
 	'name' => 'gridoption',
 ));
 $columns   = array();
-$exception = array('id');
-foreach($model->metaData->columns as $key => $val) {
-	if(!in_array($key, $exception)) {
+$exception = array('_option','_no','id');
+foreach($model->templateColumns as $key => $val) {
+	if(!in_array($key, $exception))
 		$columns[$key] = $key;
-	}
 }
 ?>
 <ul>
-	<?php foreach($columns as $val): ?>
+	<?php foreach($columns as $key => $val): ?>
 	<li>
-		<?php echo CHtml::checkBox('GridColumn['.$val.']'); ?>
-		<?php echo CHtml::label($val, 'GridColumn_'.$val); ?>
+		<?php echo CHtml::checkBox('GridColumn['.$val.']', in_array($key, $gridColumns) ? true : false); ?>
+		<?php echo CHtml::label($model->getAttributeLabel($val), 'GridColumn_'.$val); ?>
 	</li>
 	<?php endforeach; ?>
 </ul>
