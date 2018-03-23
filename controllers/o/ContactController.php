@@ -103,13 +103,13 @@ class ContactController extends Controller
 	{
 		$model=new SupportContacts('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['SupportContacts'])) {
-			$model->attributes=$_GET['SupportContacts'];
+		if(Yii::app()->getRequest()->getParam('SupportContacts')) {
+			$model->attributes=Yii::app()->getRequest()->getParam('SupportContacts');
 		}
 
-		$gridColumn = $_GET['GridColumn'];
+		$gridColumn = Yii::app()->getRequest()->getParam('GridColumn');
 		$columnTemp = array();
-		if(isset($gridColumn)) {
+		if($gridColumn) {
 			foreach($gridColumn as $key => $val) {
 				if($gridColumn[$key] == 1)
 					$columnTemp[] = $key;
@@ -151,7 +151,7 @@ class ContactController extends Controller
 				echo $jsonError;
 				
 			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 5,
@@ -198,7 +198,7 @@ class ContactController extends Controller
 				echo $jsonError;
 
 			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 5,
@@ -252,7 +252,7 @@ class ContactController extends Controller
 	public function actionRunAction() {
 		$id       = $_POST['trash_id'];
 		$criteria = null;
-		$actions  = $_GET['action'];
+		$actions  = Yii::app()->getRequest()->getParam('action');
 
 		if(count($id) > 0) {
 			$criteria = new CDbCriteria;
@@ -276,7 +276,7 @@ class ContactController extends Controller
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax'])) {
+		if(!(Yii::app()->getRequest()->getParam('action'))) {
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
@@ -392,7 +392,7 @@ class ContactController extends Controller
 				echo $encode;
 
 			} else {
-				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 0,
