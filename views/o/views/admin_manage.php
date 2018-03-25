@@ -98,7 +98,6 @@
 				'id'=>'support-feedback-view-grid',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,
-				'afterAjaxUpdate' => 'reinstallDatePicker',
 				'columns' => $columnData,
 				'pager' => array('header' => ''),
 			));
