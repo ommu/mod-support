@@ -45,7 +45,7 @@ Untuk komentar yang bersifat keluhan atau pertanyaan dan memerlukan jawaban, aka
 		echo $form->hiddenField($model,'user_id');
 		?>
 		
-		<?php if(Yii::app()->user->isGuest) {?>	
+		<?php if(Yii::app()->user->isGuest) {?>
 			<div class="clearfix">
 				<?php echo $form->textField($model,'displayname',array('maxlength'=>32, 'class'=>'span-6', 'placeholder'=>$model->getAttributeLabel('displayname'))); ?>
 				<?php echo $form->error($model,'displayname'); ?>

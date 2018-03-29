@@ -44,7 +44,7 @@ EOP;
 		<?php echo $model->office_phone != '' ? $model->getAttributeLabel('office_phone').': '.$model->office_phone.'<br/>' : ''?>
 		<?php echo $model->office_fax != '' ? $model->getAttributeLabel('office_fax').': '.$model->office_fax.'<br/>' : ''?>
 		<?php echo $model->office_hotline != '' ? $model->getAttributeLabel('office_hotline').': '.$model->office_hotline.'<br/>' : ''?>
-		<?php echo $model->office_email != '' ? $model->getAttributeLabel('office_email').': <a off_address="" href="mailto:'.$model->office_email.'" title="'.$model->office_email.'">'.$model->office_email.'</a>' : ''?>		
+		<?php echo $model->office_email != '' ? $model->getAttributeLabel('office_email').': <a off_address="" href="mailto:'.$model->office_email.'" title="'.$model->office_email.'">'.$model->office_email.'</a>' : ''?>
 	</div>
 	<?php }?>
 	
