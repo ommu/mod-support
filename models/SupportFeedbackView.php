@@ -71,6 +71,7 @@ class SupportFeedbackView extends OActiveRecord
 			array('publish, views', 'numerical', 'integerOnly'=>true),
 			array('feedback_id, user_id, modified_id', 'length', 'max'=>11),
 			array('view_ip', 'length', 'max'=>20),
+			array('publish, user_id', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('view_id, publish, feedback_id, user_id, views, view_date, view_ip, modified_date, modified_id, updated_date, 
@@ -380,7 +381,10 @@ class SupportFeedbackView extends OActiveRecord
 		$criteria->select = 'view_id, feedback_id, user_id, views';
 		$criteria->compare('publish', 1);
 		$criteria->compare('feedback_id', $feedback_id);
-		$criteria->compare('user_id', Yii::app()->user->id);
+		if(!Yii::app()->user->isGuest)
+			$criteria->compare('user_id', Yii::app()->user->id);
+		else
+			$criteria->addCondition('user_id IS NULL');
 		$findView = self::model()->find($criteria);
 		
 		if($findView != null)
