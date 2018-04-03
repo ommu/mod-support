@@ -67,7 +67,7 @@ class SupportFeedbackUser extends OActiveRecord
 			array('feedback_id', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('feedback_id, user_id, modified_id', 'length', 'max'=>11),
-			array('', 'safe'),
+			array('user_id', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, publish, feedback_id, user_id, creation_date, modified_date, modified_id, updated_date, 
