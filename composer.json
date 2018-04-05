@@ -1,24 +1,26 @@
 {
 	"name": "ommu/support",
-	"description": "Support and Feedback Module for Ommu Platform",
+	"description": "Support Module from Ommu Platform",
 	"keywords": [
 		"module",
 		"support",
+		"feedback",
+		"social media",
+		"contact",
 		"ommu",
-		"platform",
 		"ommu platform"
 	],
-	"homepage": "https://github.com/ommu/ommu-support",
+	"homepage": "https://github.com/ommu/mod-support",
 	"type": "ommu-module",
 	"license": "Apache-2.0",
 	"support": {
-		"issues": "https://github.com/ommu/ommu-support/issues",
-		"wiki": "https://github.com/ommu/ommu-support/wiki",
-		"source": "https://github.com/ommu/ommu-support"
+		"issues": "https://github.com/ommu/mod-support/issues",
+		"wiki": "https://github.com/ommu/mod-support/wiki",
+		"source": "https://github.com/ommu/mod-support"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/ommu/ommu-support.git"
+		"url": "https://github.com/ommu/mod-support.git"
 	},
 	"authors": [
 		{
