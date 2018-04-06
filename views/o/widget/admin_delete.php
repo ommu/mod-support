@@ -10,7 +10,7 @@
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
  * @modified date 20 March 2018, 14:30 WIB
- * @link https://github.com/ommu/ommu-support
+ * @link https://github.com/ommu/mod-support
  *
  */
 

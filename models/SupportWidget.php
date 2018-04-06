@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 3 February 2016, 12:24 WIB
  * @modified date 19 March 2018, 19:52 WIB
- * @link https://github.com/ommu/ommu-support
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_widget".
  *

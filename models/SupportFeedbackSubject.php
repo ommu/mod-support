@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2018 Ommu Platform (opensource.ommu.co)
  * @created date 15 March 2018, 13:59 WIB
  * @modified date 20 March 2018, 07:04 WIB
- * @link https://github.com/ommu/ommu-support
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_subject".
  *
