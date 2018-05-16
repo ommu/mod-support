@@ -43,8 +43,8 @@ use app\modules\user\models\Users;
 
 class SupportFeedbackSubject extends \app\components\ActiveRecord
 {
+	use \ommu\traits\UtilityTrait;
 	use \ommu\traits\GridViewTrait;
-	use \ommu\traits\FileTrait;
 
 	public $gridForbiddenColumn = [];
 	public $subject_name_i;
@@ -308,7 +308,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		$location = $this->urlTitle($module.' '.$controller);
 
 		if(parent::beforeSave($insert)) {
-
 			if($insert || (!$insert && !$this->subject_name)) {
 				$subject_name = new SourceMessage();
 				$subject_name->location = $location.'_title';
