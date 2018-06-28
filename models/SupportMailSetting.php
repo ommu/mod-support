@@ -98,7 +98,7 @@ class SupportMailSetting extends OActiveRecord
 			'mail_name' => Yii::t('attribute', 'From Name'),
 			'mail_from' => Yii::t('attribute', 'From Address'),
 			'mail_count' => Yii::t('attribute', 'Mail Count'),
-			'mail_queueing' => Yii::t('attribute', 'Email Queue'),
+			'mail_queueing' => Yii::t('app', 'Mail Queueing'),
 			'mail_smtp' => Yii::t('attribute', 'Send through SMTP'),
 			'smtp_address' => Yii::t('attribute', 'SMTP Server Address'),
 			'smtp_port' => Yii::t('attribute', 'SMTP Server Port'),
@@ -314,9 +314,12 @@ class SupportMailSetting extends OActiveRecord
 	{
 		if($column != null) {
 			$model = self::model()->findByPk(1,array(
-				'select' => $column
+				'select' => $column,
 			));
-			return $model->$column;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk(1);

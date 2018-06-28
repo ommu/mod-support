@@ -2,13 +2,14 @@
 	"name": "ommu/support",
 	"description": "Support Module from Ommu Platform",
 	"keywords": [
+		"yii",
 		"module",
 		"support",
 		"feedback",
 		"social media",
 		"contact",
 		"ommu",
-		"ommu platform"
+		"ommu-platform"
 	],
 	"homepage": "https://github.com/ommu/mod-support",
 	"type": "ommu-module",
@@ -37,7 +38,5 @@
 		"yiiext/imperavi-redactor-widget": "^1.3.10",
 		"ommu/yii-behavior-sluggable": "~1.0",
 		"ommu/phpmailer": "~0.1"
-	},
-	"require-dev": {
 	}
 }
