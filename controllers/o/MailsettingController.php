@@ -16,7 +16,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -133,7 +133,7 @@ class MailsettingController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Mail Settings');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('/o/mail_setting/admin_edit',array(
+		$this->render('/o/mail_setting/admin_edit', array(
 			'model'=>$model,
 		));
 	}

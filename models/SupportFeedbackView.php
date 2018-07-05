@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 11 May 2017, 23:12 WIB
  * @modified date 19 March 2018, 19:51 WIB
  * @link https://github.com/ommu/mod-support
@@ -178,7 +178,7 @@ class SupportFeedbackView extends OActiveRecord
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')))
 			$criteria->compare('date(t.updated_date)', date('Y-m-d', strtotime($this->updated_date)));
 
-		$criteria->compare('feedback_subject.message',strtolower($this->subject_search), true);
+		$criteria->compare('feedback_subject.message', strtolower($this->subject_search), true);
 		$criteria->compare('user.displayname', strtolower($this->user_search), true);
 		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
 
@@ -244,7 +244,7 @@ class SupportFeedbackView extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -282,7 +282,7 @@ class SupportFeedbackView extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -319,7 +319,7 @@ class SupportFeedbackView extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -331,7 +331,7 @@ class SupportFeedbackView extends OActiveRecord
 			);
 			$this->templateColumns['views'] = array(
 				'name' => 'views',
-				'value' => '$data->views ? CHtml::link($data->views, Yii::app()->controller->createUrl("history/view/manage",array(\'view\'=>$data->view_id))) : \'0\'',
+				'value' => '$data->views ? CHtml::link($data->views, Yii::app()->controller->createUrl("history/view/manage", array(\'view\'=>$data->view_id))) : \'0\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -340,7 +340,7 @@ class SupportFeedbackView extends OActiveRecord
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->view_id)), $data->publish)',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->view_id)), $data->publish)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
@@ -361,7 +361,7 @@ class SupportFeedbackView extends OActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)

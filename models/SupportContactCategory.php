@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 19 March 2018, 19:54 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -47,7 +47,7 @@ class SupportContactCategory extends OActiveRecord
 	{
 		return array(
 			'sluggable' => array(
-				'class'=>'ext.yii-behavior-sluggable.SluggableBehavior',
+				'class'=>'ext.yii-sluggable.SluggableBehavior',
 				'columns' => array('title.message'),
 				'unique' => true,
 				'update' => true,
@@ -186,7 +186,7 @@ class SupportContactCategory extends OActiveRecord
 			$criteria->addInCondition('t.publish', array(0,1,2));
 			$criteria->compare('t.publish', $this->publish);
 		}
-		$criteria->compare('t.name',$this->name);
+		$criteria->compare('t.name', $this->name);
 		$criteria->compare('t.cat_icon', strtolower($this->cat_icon), true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')))
 			$criteria->compare('date(t.creation_date)', date('Y-m-d', strtotime($this->creation_date)));
@@ -263,7 +263,7 @@ class SupportContactCategory extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -300,7 +300,7 @@ class SupportContactCategory extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -337,7 +337,7 @@ class SupportContactCategory extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -378,7 +378,7 @@ class SupportContactCategory extends OActiveRecord
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
-					'value' => '$data->publish == 2 ? \'-\' : Utility::getPublish(Yii::app()->controller->createUrl(\'publish\',array(\'id\'=>$data->cat_id)), $data->publish)',
+					'value' => '$data->publish == 2 ? \'-\' : Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->cat_id)), $data->publish)',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
@@ -399,7 +399,7 @@ class SupportContactCategory extends OActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)

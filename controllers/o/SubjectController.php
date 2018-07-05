@@ -21,7 +21,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2018 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -114,7 +114,7 @@ class SubjectController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Feedback Subjects');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
+		$this->render('admin_manage', array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
@@ -165,7 +165,7 @@ class SubjectController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Create Feedback Subject');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_add',array(
+		$this->render('admin_add', array(
 			'model'=>$model,
 		));
 	}
@@ -216,7 +216,7 @@ class SubjectController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Update Feedback Subject: {subject_name}', array('{subject_name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_edit',array(
+		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
@@ -236,7 +236,7 @@ class SubjectController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Detail Feedback Subject: {subject_name}', array('{subject_name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_view',array(
+		$this->render('admin_view', array(
 			'model'=>$model,
 		));
 	}
@@ -272,7 +272,7 @@ class SubjectController extends Controller
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!(Yii::app()->getRequest()->getParam('action'))) {
+		if(!Yii::app()->getRequest()->getParam('ajax')) {
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
@@ -356,7 +356,7 @@ class SubjectController extends Controller
 		$this->pageTitle = Yii::t('phrase', '{title} Feedback Subject: {subject_name}', array('{title}'=>$title, '{subject_name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_publish',array(
+		$this->render('admin_publish', array(
 			'title'=>$title,
 			'model'=>$model,
 		));

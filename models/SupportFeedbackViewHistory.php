@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 17:19 WIB
  * @modified date 19 March 2018, 19:51 WIB
  * @link https://github.com/ommu/mod-support
@@ -138,8 +138,8 @@ class SupportFeedbackViewHistory extends OActiveRecord
 			$criteria->compare('date(t.view_date)', date('Y-m-d', strtotime($this->view_date)));
 		$criteria->compare('t.view_ip', strtolower($this->view_ip), true);
 
-		$criteria->compare('view_feedback_subject.message',strtolower($this->subject_search), true);
-		$criteria->compare('view_user.displayname',strtolower($this->user_search),true);
+		$criteria->compare('view_feedback_subject.message', strtolower($this->subject_search), true);
+		$criteria->compare('view_user.displayname', strtolower($this->user_search), true);
 
 		if(!Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory_sort'))
 			$criteria->order = 't.id DESC';
@@ -201,7 +201,7 @@ class SupportFeedbackViewHistory extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -225,7 +225,7 @@ class SupportFeedbackViewHistory extends OActiveRecord
 	public static function getInfo($id, $column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk($id,array(
+			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
  			if(count(explode(',', $column)) == 1)

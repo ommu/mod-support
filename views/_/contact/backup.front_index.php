@@ -6,7 +6,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -52,8 +52,8 @@ EOP;
 	<h3 class="title-line"><span><?php echo Yii::t('phrase', 'Hallo');?></span></h3>
 	<?php echo Yii::t('phrase', 'Contact our team for any sales, support or general questions, or just say Hi!');?>
 
-	<?php if(Yii::app()->user->hasFlash('success') || isset($_GET['name'])) {
-		echo '<div class="notifier success"><strong>'.Yii::t('phrase', 'Hallo').', '.$_GET['name'].'</strong><br/>'.Yii::t('phrase', 'Your message was sent. Thank you!').'</div>';
+	<?php if(Yii::app()->user->hasFlash('success') || Yii::app()->getRequest()->getParam('name')) {
+		echo '<div class="notifier success"><strong>'.Yii::t('phrase', 'Hallo').', '.Yii::app()->getRequest()->getParam('name').'</strong><br/>'.Yii::t('phrase', 'Your message was sent. Thank you!').'</div>';
 
 	} else { ?>
 		<div class="form">
@@ -75,7 +75,7 @@ EOP;
 					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php 
 						$model->displayname = $user->displayname;
-						echo $form->textField($model,'displayname',array('maxlength'=>32)); ?>
+						echo $form->textField($model,'displayname', array('maxlength'=>32)); ?>
 						<?php echo $form->error($model,'displayname'); ?>
 					</div>
 					<?php echo $form->labelEx($model,'displayname'); ?>
@@ -85,7 +85,7 @@ EOP;
 					<div class="col-lg-8 col-md-9 col-sm-12">
 						<?php 
 						$model->email = $user->email;
-						echo $form->textField($model,'email',array('maxlength'=>32)); ?>
+						echo $form->textField($model,'email', array('maxlength'=>32)); ?>
 						<?php echo $form->error($model,'email'); ?>
 					</div>
 					<?php echo $form->labelEx($model,'email'); ?>
@@ -93,7 +93,7 @@ EOP;
 
 				<div class="form-group row">
 					<div class="col-lg-8 col-md-9 col-sm-12">
-						<?php echo $form->textField($model,'subject',array('maxlength'=>64)); ?>
+						<?php echo $form->textField($model,'subject', array('maxlength'=>64)); ?>
 						<?php echo $form->error($model,'subject'); ?>
 					</div>
 					<?php echo $form->labelEx($model,'subject'); ?>
@@ -101,7 +101,7 @@ EOP;
 
 				<div class="clearfix message">
 					<div class="col-lg-8 col-md-9 col-sm-12">
-						<?php echo $form->textArea($model,'message',array('rows'=>6, 'cols'=>50)); ?>
+						<?php echo $form->textArea($model,'message', array('rows'=>6, 'cols'=>50)); ?>
 						<?php echo $form->error($model,'message'); ?>
 					</div>
 				</div>

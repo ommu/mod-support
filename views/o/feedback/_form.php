@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 21 March 2018, 08:48 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -53,7 +53,7 @@ EOP;
 		<div class="form-group row">
 			<?php echo $form->labelEx($model, 'displayname', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
 			<div class="col-lg-8 col-md-9 col-sm-12">
-				<?php echo $form->textField($model, 'displayname',array('maxlength'=>32, 'class'=>'form-control'));?>
+				<?php echo $form->textField($model, 'displayname', array('maxlength'=>32, 'class'=>'form-control'));?>
 				<?php echo $form->error($model, 'displayname');?>
 			</div>
 		</div>

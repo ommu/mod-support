@@ -22,7 +22,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 20 March 2018, 14:29 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -126,7 +126,7 @@ class ContactController extends Controller
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
+		$this->render('admin_manage', array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
@@ -173,7 +173,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Create Contact');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_add',array(
+		$this->render('admin_add', array(
 			'model'=>$model,
 		));
 	}
@@ -220,7 +220,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Update Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_edit',array(
+		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
@@ -240,7 +240,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_view',array(
+		$this->render('admin_view', array(
 			'model'=>$model,
 		));
 	}
@@ -276,7 +276,7 @@ class ContactController extends Controller
 		}
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!(Yii::app()->getRequest()->getParam('action'))) {
+		if(!Yii::app()->getRequest()->getParam('ajax')) {
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
 		}
 	}
@@ -352,7 +352,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', '$title Contact: {contact_name} Category {category_name}', array('$title'=>$title, '{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_publish',array(
+		$this->render('admin_publish', array(
 			'title'=>$title,
 			'model'=>$model,
 		));
@@ -409,7 +409,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Address Settings');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_setting',array(
+		$this->render('admin_setting', array(
 			'model'=>$model,
 		));
 	}

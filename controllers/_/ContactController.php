@@ -17,7 +17,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ class ContactController extends Controller
 		$this->pageTitle = Yii::t('phrase', 'Contact Us');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('front_index',array(
+		$this->render('front_index', array(
 			'model'=>$model,
 			'contact'=>$contact,
 		));
@@ -143,7 +143,7 @@ class ContactController extends Controller
 		$this->pageTitle = isset($_GET['email']) ? Yii::t('phrase', 'Kontak Kami Berhasil Dikirim') : Yii::t('phrase', 'Kontak Kami');
 		$this->pageDescription = isset($_GET['email']) ? (isset($_GET['name']) ? Yii::t('phrase', 'Hi <strong>$1 ($2)</strong>, terimakasih telah menghubungi support kami.'), array($_GET['name'], $_GET['email'])) : Yii::t('phrase', 'Hi <strong>$1</strong>, terimakasih telah menghubungi support kami.'), array($_GET['email']))) : '';
 		$this->pageMeta = '';
-		$this->render('front_feedback',array(
+		$this->render('front_feedback', array(
 			'model'=>$model,
 			'user'=>$user,
 		));
@@ -158,7 +158,7 @@ class ContactController extends Controller
 		$model = OmmuMeta::model()->findAll(array(
 			//'select' => 'office_on, google_on, twitter_on, facebook_on'
 		));
-		$setting = OmmuSettings::model()->findByPk(1,array(
+		$setting = OmmuSettings::model()->findByPk(1, array(
 			'select' => 'site_title'
 		));
 		

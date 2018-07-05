@@ -4,7 +4,7 @@
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 19 March 2018, 19:52 WIB
  * @link https://github.com/ommu/mod-support
  *
@@ -239,7 +239,7 @@ class SupportMailSetting extends OActiveRecord
 					),
 					'options'=>array(
 						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
+						'dateFormat' => 'yy-mm-dd',
 						'showOtherMonths' => true,
 						'selectOtherMonths' => true,
 						'changeMonth' => true,
@@ -257,7 +257,7 @@ class SupportMailSetting extends OActiveRecord
 			}
 			$this->templateColumns['mail_queueing'] = array(
 				'name' => 'mail_queueing',
-				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_queueing\',array(\'id\'=>$data->id)), $data->mail_queueing)',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_queueing\', array(\'id\'=>$data->id)), $data->mail_queueing)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -269,7 +269,7 @@ class SupportMailSetting extends OActiveRecord
 			);
 			$this->templateColumns['mail_smtp'] = array(
 				'name' => 'mail_smtp',
-				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_smtp\',array(\'id\'=>$data->id)), $data->mail_smtp)',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'mail_smtp\', array(\'id\'=>$data->id)), $data->mail_smtp)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -281,7 +281,7 @@ class SupportMailSetting extends OActiveRecord
 			);
 			$this->templateColumns['smtp_authentication'] = array(
 				'name' => 'smtp_authentication',
-				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_authentication\',array(\'id\'=>$data->id)), $data->smtp_authentication)',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_authentication\', array(\'id\'=>$data->id)), $data->smtp_authentication)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -293,7 +293,7 @@ class SupportMailSetting extends OActiveRecord
 			);
 			$this->templateColumns['smtp_ssl'] = array(
 				'name' => 'smtp_ssl',
-				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_ssl\',array(\'id\'=>$data->id)), $data->smtp_ssl)',
+				'value' => 'Utility::getPublish(Yii::app()->controller->createUrl(\'smtp_ssl\', array(\'id\'=>$data->id)), $data->smtp_ssl)',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -313,7 +313,7 @@ class SupportMailSetting extends OActiveRecord
 	public static function getInfo($column=null)
 	{
 		if($column != null) {
-			$model = self::model()->findByPk(1,array(
+			$model = self::model()->findByPk(1, array(
 				'select' => $column,
 			));
 			if(count(explode(',', $column)) == 1)

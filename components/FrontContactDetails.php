@@ -19,7 +19,7 @@ class FrontContactDetails extends CWidget
 			'select' => 'office_place, office_village, office_district, office_city_id, office_province_id, office_country_id, office_zipcode, office_phone, office_fax, office_hotline, office_email'
 		));
 
-		$this->render('front_contact_details',array(
+		$this->render('front_contact_details', array(
 			'model'=>$model,
 		));	
 	}
