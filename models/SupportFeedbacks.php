@@ -38,6 +38,8 @@
 
 class SupportFeedbacks extends OActiveRecord
 {
+	use UtilityTrait;
+
 	public $gridForbiddenColumn = array('message','reply_message','replied_date','replied_search','modified_date','modified_search','updated_date');
 	public $subject_i;
 
@@ -517,7 +519,7 @@ class SupportFeedbacks extends OActiveRecord
 	protected function beforeSave() 
 	{
 		if(parent::beforeSave()) {
-			$subjectSlug = Utility::getUrlTitle($this->subject_i);
+			$subjectSlug = $this->urlTitle($this->subject_i);
 
 			if($this->isNewRecord && $this->subject_id == '') {
 				$subject = SupportFeedbackSubject::model()->find(array(
