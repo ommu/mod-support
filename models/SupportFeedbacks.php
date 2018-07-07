@@ -39,6 +39,7 @@
 class SupportFeedbacks extends OActiveRecord
 {
 	use UtilityTrait;
+	use GridViewTrait;
 
 	public $gridForbiddenColumn = array('message','reply_message','replied_date','replied_search','modified_date','modified_search','updated_date');
 	public $subject_i;
@@ -429,10 +430,7 @@ class SupportFeedbacks extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			$this->templateColumns['users_search'] = array(
@@ -450,10 +448,7 @@ class SupportFeedbacks extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			if(!Yii::app()->getRequest()->getParam('type')) {
@@ -463,10 +458,7 @@ class SupportFeedbacks extends OActiveRecord
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
+					'filter' => $this->filterYesNo(),
 					'type' => 'raw',
 				);
 			}

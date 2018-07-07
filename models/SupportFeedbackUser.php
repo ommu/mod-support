@@ -29,6 +29,8 @@
 
 class SupportFeedbackUser extends OActiveRecord
 {
+	use GridViewTrait;
+
 	public $gridForbiddenColumn = array('modified_date','modified_search','updated_date');
 
 	// Variable Search
@@ -320,10 +322,7 @@ class SupportFeedbackUser extends OActiveRecord
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
+					'filter' => $this->filterYesNo(),
 					'type' => 'raw',
 				);
 			}

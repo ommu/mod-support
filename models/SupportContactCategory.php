@@ -32,6 +32,7 @@
 class SupportContactCategory extends OActiveRecord
 {
 	use UtilityTrait;
+	use GridViewTrait;
 
 	public $gridForbiddenColumn = array('modified_date','modified_search','updated_date','slug');
 	public $name_i;
@@ -359,10 +360,7 @@ class SupportContactCategory extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			$this->templateColumns['widget_search'] = array(
@@ -371,10 +369,7 @@ class SupportContactCategory extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			if(!Yii::app()->getRequest()->getParam('type')) {
@@ -384,10 +379,7 @@ class SupportContactCategory extends OActiveRecord
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
+					'filter' => $this->filterYesNo(),
 					'type' => 'raw',
 				);
 			}

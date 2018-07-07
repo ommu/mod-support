@@ -30,6 +30,8 @@
 
 class SupportMailSetting extends OActiveRecord
 {
+	use GridViewTrait;
+
 	public $gridForbiddenColumn = array();
 
 	// Variable Search
@@ -261,10 +263,7 @@ class SupportMailSetting extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			$this->templateColumns['mail_smtp'] = array(
@@ -273,10 +272,7 @@ class SupportMailSetting extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			$this->templateColumns['smtp_authentication'] = array(
@@ -285,10 +281,7 @@ class SupportMailSetting extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 			$this->templateColumns['smtp_ssl'] = array(
@@ -297,10 +290,7 @@ class SupportMailSetting extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>array(
-					1=>Yii::t('phrase', 'Yes'),
-					0=>Yii::t('phrase', 'No'),
-				),
+				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
 		}
