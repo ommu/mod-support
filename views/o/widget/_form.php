@@ -41,7 +41,7 @@
 				<div class="col-lg-8 col-md-9 col-sm-12">
 					<?php
 					if($model->isNewRecord) {
-						$category = SupportContactCategory::getCategory('1', 'contact');
+						$category = SupportContactCategory::getCategory(1, 'contact');
 						if($category != null)
 							echo $form->dropDownList($model, 'cat_id', $category, array('prompt'=>'', 'class'=>'form-control'));
 						else
