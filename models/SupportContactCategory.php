@@ -343,7 +343,7 @@ class SupportContactCategory extends OActiveRecord
 	 * 0 = unpublish
 	 * 1 = publish
 	 */
-	public static function getCategory($publish=null, $type=null) 
+	public static function getCategory($publish=null, $type=null, $array=true)
 	{
 		$criteria=new CDbCriteria;
 		$criteria->with = array(
@@ -362,15 +362,17 @@ class SupportContactCategory extends OActiveRecord
 		
 		$model = self::model()->findAll($criteria);
 
-		$items = array();
-		if($model != null) {
-			foreach($model as $key => $val) {
-				$items[$val->cat_id] = $val->title->message;
-			}
-			return $items;
-
+		if($array == true) {
+			$items = array();
+			if($model != null) {
+				foreach($model as $key => $val) {
+					$items[$val->cat_id] = $val->title->message;
+				}
+				return $items;
+			} else
+				return false;
 		} else
-			return false;
+			return $model;
 	}
 
 	/**
