@@ -95,7 +95,7 @@ class ViewController extends Controller
 	public function actionManage($feedback=null, $user=null) 
 	{
 		$model=new SupportFeedbackView('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportFeedbackView')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbackView');
 		}

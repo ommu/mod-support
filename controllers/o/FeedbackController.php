@@ -96,7 +96,7 @@ class FeedbackController extends Controller
 	public function actionManage($user=null) 
 	{
 		$model=new SupportFeedbacks('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportFeedbacks')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbacks');
 		}

@@ -101,7 +101,7 @@ class CategoryController extends Controller
 	public function actionManage() 
 	{
 		$model=new SupportContactCategory('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportContactCategory')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportContactCategory');
 		}

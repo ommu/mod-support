@@ -96,7 +96,7 @@ class SubjectController extends Controller
 	public function actionManage() 
 	{
 		$model=new SupportFeedbackSubject('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportFeedbackSubject')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbackSubject');
 		}

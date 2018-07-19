@@ -92,7 +92,7 @@ class ViewController extends Controller
 	public function actionManage() 
 	{
 		$model=new SupportFeedbackViewHistory('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory');
 		}

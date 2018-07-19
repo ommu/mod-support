@@ -102,7 +102,7 @@ class ContactController extends Controller
 	public function actionManage($category=null) 
 	{
 		$model=new SupportContacts('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportContacts')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportContacts');
 		}

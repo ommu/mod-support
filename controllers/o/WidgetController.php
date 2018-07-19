@@ -97,7 +97,7 @@ class WidgetController extends Controller
 	public function actionManage($category=null) 
 	{
 		$model=new SupportWidget('search');
-		$model->unsetAttributes();  // clear any default values
+		$model->unsetAttributes();	// clear any default values
 		if(Yii::app()->getRequest()->getParam('SupportWidget')) {
 			$model->attributes=Yii::app()->getRequest()->getParam('SupportWidget');
 		}
