@@ -168,27 +168,27 @@ class SupportFeedbacks extends OActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
+				'alias' => 'view',
 			),
 			'subject' => array(
-				'alias'=>'subject',
-				'select'=>'subject_name',
+				'alias' => 'subject',
+				'select' => 'subject_name',
 			),
 			'subject.title' => array(
-				'alias'=>'subject_title',
-				'select'=>'message',
+				'alias' => 'subject_title',
+				'select' => 'message',
 			),
 			'user' => array(
-				'alias'=>'user',
-				'select'=>'displayname',
+				'alias' => 'user',
+				'select' => 'displayname',
 			),
 			'replied' => array(
-				'alias'=>'replied',
-				'select'=>'displayname',
+				'alias' => 'replied',
+				'select' => 'displayname',
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname',
+				'alias' => 'modified',
+				'select' => 'displayname',
 			),
 		);
 
@@ -347,7 +347,7 @@ class SupportFeedbacks extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>false,
+				'filter' =>false,
 				'type' => 'raw',
 			);
 			$this->templateColumns['reply_search'] = array(

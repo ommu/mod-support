@@ -133,20 +133,20 @@ class SupportFeedbackUser extends OActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'feedback' => array(
-				'alias'=>'feedback',
-				'select'=>'subject_id, user_id, email, displayname'
+				'alias' => 'feedback',
+				'select' => 'subject_id, user_id, email, displayname'
 			),
 			'feedback.subject.title' => array(
-				'alias'=>'feedback_subject',
-				'select'=>'message',
+				'alias' => 'feedback_subject',
+				'select' => 'message',
 			),
 			'user' => array(
-				'alias'=>'user',
-				'select'=>'displayname',
+				'alias' => 'user',
+				'select' => 'displayname',
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname',
+				'alias' => 'modified',
+				'select' => 'displayname',
 			),
 		);
 

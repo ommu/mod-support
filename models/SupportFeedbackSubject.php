@@ -145,27 +145,27 @@ class SupportFeedbackSubject extends OActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
+				'alias' => 'view',
 			),
 			'title' => array(
-				'alias'=>'title',
-				'select'=>'message',
+				'alias' => 'title',
+				'select' => 'message',
 			),
 			'parent' => array(
-				'alias'=>'parent',
-				'select'=>'subject_name',
+				'alias' => 'parent',
+				'select' => 'subject_name',
 			),
 			'parent.title' => array(
-				'alias'=>'parent_title',
-				'select'=>'message',
+				'alias' => 'parent_title',
+				'select' => 'message',
 			),
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname',
+				'alias' => 'creation',
+				'select' => 'displayname',
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname',
+				'alias' => 'modified',
+				'select' => 'displayname',
 			),
 		);
 
@@ -255,7 +255,7 @@ class SupportFeedbackSubject extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter'=>false,
+				'filter' =>false,
 			);
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',

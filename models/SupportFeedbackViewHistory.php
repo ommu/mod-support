@@ -117,20 +117,20 @@ class SupportFeedbackViewHistory extends OActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'view' => array(
-				'alias'=>'view',
-				'select'=>'feedback_id, user_id'
+				'alias' => 'view',
+				'select' => 'feedback_id, user_id'
 			),
 			'view.feedback' => array(
-				'alias'=>'view_feedback',
-				'select'=>'subject_id'
+				'alias' => 'view_feedback',
+				'select' => 'subject_id'
 			),
 			'view.feedback.subject.title' => array(
-				'alias'=>'view_feedback_subject',
-				'select'=>'message',
+				'alias' => 'view_feedback_subject',
+				'select' => 'message',
 			),
 			'view.user' => array(
-				'alias'=>'view_user',
-				'select'=>'displayname'
+				'alias' => 'view_user',
+				'select' => 'displayname'
 			),
 		);
 

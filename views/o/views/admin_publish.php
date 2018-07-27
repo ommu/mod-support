@@ -19,7 +19,7 @@
 	);
 ?>
 
-<?php $form=$this->beginWidget('application.libraries.yii-traits.system.OActiveForm', array(
+<?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'support-feedback-view-form',
 	'enableAjaxValidation'=>true,
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')

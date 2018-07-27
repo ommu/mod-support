@@ -132,12 +132,12 @@ class SupportWidget extends OActiveRecord
 		// Custom Search
 		$criteria->with = array(
 			'creation' => array(
-				'alias'=>'creation',
-				'select'=>'displayname',
+				'alias' => 'creation',
+				'select' => 'displayname',
 			),
 			'modified' => array(
-				'alias'=>'modified',
-				'select'=>'displayname',
+				'alias' => 'modified',
+				'select' => 'displayname',
 			),
 		);
 
@@ -199,7 +199,7 @@ class SupportWidget extends OActiveRecord
 				$this->templateColumns['cat_id'] = array(
 					'name' => 'cat_id',
 					'value' => '$data->category->title->message ? $data->category->title->message : \'-\'',
-					'filter'=> SupportContactCategory::getCategory(),
+					'filter' => SupportContactCategory::getCategory(),
 					'type' => 'raw',
 				);
 			}
