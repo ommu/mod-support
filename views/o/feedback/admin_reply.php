@@ -33,8 +33,8 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-form-label col-lg-4 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('feedback_id')?></label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<label class="col-form-label col-lg-3 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('feedback_id')?></label>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php 
 				$subject = $model->subject_id ? $model->subject->title->message : '-';
 				echo Yii::t('phrase', 'Subject: {subject}', array('{subject}'=>$subject));?><br/>
@@ -44,10 +44,10 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+			<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 				<?php echo $model->getAttributeLabel('reply_message');?> <span class="required">*</span>
 			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php 
 				//echo $form->textArea($model,'reply_message', array('rows'=>6, 'cols'=>50, 'class'=>'span-11 smaller'));
 				$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(

@@ -63,10 +63,10 @@ EOP;
 <fieldset>
 
 	<div class="form-group row">
-		<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+		<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 			<?php echo $model->getAttributeLabel('mail_contact');?> <span class="required">*</span>
 		</label>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<?php echo $form->textField($model, 'mail_contact', array('maxlength'=>32, 'class'=>'form-control')); ?>
 			<?php echo $form->error($model, 'mail_contact'); ?>
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'Enter the email address you want contact form messages to be sent to.');?></div>
@@ -74,10 +74,10 @@ EOP;
 	</div>
 
 	<div class="form-group row">
-		<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+		<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 			<?php echo $model->getAttributeLabel('mail_name');?> <span class="required">*</span>
 		</label>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<?php echo $form->textField($model, 'mail_name', array('maxlength'=>32, 'class'=>'form-control')); ?>
 			<?php echo $form->error($model, 'mail_name'); ?>
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'Enter the name you want the emails from the system to come from in the field below.');?></div>
@@ -85,10 +85,10 @@ EOP;
 	</div>
 
 	<div class="form-group row">
-		<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+		<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 			<?php echo $model->getAttributeLabel('mail_from');?> <span class="required">*</span>
 		</label>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<?php echo $form->textField($model, 'mail_from', array('maxlength'=>32, 'class'=>'form-control')); ?>
 			<?php echo $form->error($model, 'mail_from'); ?>
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'Enter the email address you want the emails from the system to come from in the field below.');?></div>
@@ -96,10 +96,10 @@ EOP;
 	</div>
 
 	<div class="form-group row">
-		<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+		<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 			<?php echo $model->getAttributeLabel('mail_count');?> <span class="required">*</span>
 		</label>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<?php echo $form->textField($model, 'mail_count', array('maxlength'=>5, 'class'=>'form-control')); ?>
 			<?php echo $form->error($model, 'mail_count'); ?>
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'The number of emails to send out each time the Background Mailer task is run.');?></div>
@@ -107,8 +107,8 @@ EOP;
 	</div>
 
 	<div class="form-group row">
-		<?php echo $form->labelEx($model, 'mail_queueing', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<?php echo $form->labelEx($model, 'mail_queueing', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'Utilizing an email queue, you can allow your website to throttle the emails being sent out to prevent overloading the mail server.');?></div>
 			<?php echo $form->radioButtonList($model, 'mail_queueing', array(
 				1 => Yii::t('phrase', 'Yes, enable email queue'),
@@ -119,8 +119,8 @@ EOP;
 	</div>
 
 	<div class="form-group row">
-		<?php echo $form->labelEx($model, 'mail_smtp', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<?php echo $form->labelEx($model, 'mail_smtp', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<div class="small-px silent"><?php echo Yii::t('phrase', 'Emails typically get sent through the web server using the PHP mail() function. Alternatively you can have emails sent out using SMTP, usually requiring a username and password, and optionally using an external mail server.');?></div>
 			<?php echo $form->radioButtonList($model, 'mail_smtp', array(
 				0 => Yii::t('phrase', 'Use the built-in mail() function'),
@@ -132,18 +132,18 @@ EOP;
 
 	<div id="smtp" <?php echo $model->mail_smtp == '0' ? 'class="hide"' : ''; ?>>
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'smtp_address', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'smtp_address', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'smtp_address', array('maxlength'=>32, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'smtp_address'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<label class="col-form-label col-lg-4 col-md-3 col-sm-12">
+			<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
 				<?php echo $model->getAttributeLabel('smtp_port');?>
 			</label>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'smtp_port', array('maxlength'=>16, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'smtp_port'); ?>
 				<div class="small-px silent"><?php echo Yii::t('phrase', 'Default: 25. Also commonly on port 465 (SMTP over SSL) or port 587.');?></div>
@@ -151,8 +151,8 @@ EOP;
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'smtp_authentication', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'smtp_authentication', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<div class="small-px silent"><?php echo Yii::t('phrase', 'Does your SMTP Server require authentication?');?></div>
 				<?php echo $form->radioButtonList($model, 'smtp_authentication', array(
 					1 => Yii::t('phrase', 'Yes'),
@@ -164,16 +164,16 @@ EOP;
 
 		<div id="authentication" <?php echo $model->smtp_authentication == '0' ? 'class="hide"' : ''; ?>>
 			<div class="form-group row">
-				<?php echo $form->labelEx($model, 'smtp_username', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-				<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->labelEx($model, 'smtp_username', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+				<div class="col-lg-6 col-md-9 col-sm-12">
 					<?php echo $form->textField($model, 'smtp_username', array('maxlength'=>32, 'class'=>'form-control')); ?>
 					<?php echo $form->error($model, 'smtp_username'); ?>
 				</div>
 			</div>
 
 			<div class="form-group row">
-				<?php echo $form->labelEx($model, 'smtp_password', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-				<div class="col-lg-8 col-md-9 col-sm-12">
+				<?php echo $form->labelEx($model, 'smtp_password', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+				<div class="col-lg-6 col-md-9 col-sm-12">
 					<?php echo $form->textField($model, 'smtp_password', array('maxlength'=>32, 'class'=>'form-control')); ?>
 					<?php echo $form->error($model, 'smtp_password'); ?>
 				</div>
@@ -181,8 +181,8 @@ EOP;
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'smtp_ssl', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'smtp_ssl', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->radioButtonList($model, 'smtp_ssl', array(
 					0 => Yii::t('phrase', 'None'),
 					1 => Yii::t('phrase', 'TLS'),
@@ -194,8 +194,8 @@ EOP;
 	</div>
 
 	<div class="form-group row submit">
-		<label class="col-form-label col-lg-4 col-md-3 col-sm-12">&nbsp;</label>
-		<div class="col-lg-8 col-md-9 col-sm-12">
+		<label class="col-form-label col-lg-3 col-md-3 col-sm-12">&nbsp;</label>
+		<div class="col-lg-6 col-md-9 col-sm-12">
 			<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save'), array('onclick' => 'setEnableSave()')); ?>
 		</div>
 	</div>

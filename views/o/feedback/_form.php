@@ -51,32 +51,32 @@ EOP;
 		<?php //begin.Messages ?>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'displayname', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'displayname', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'displayname', array('maxlength'=>32, 'class'=>'form-control'));?>
 				<?php echo $form->error($model, 'displayname');?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'email', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'email', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'email', array('maxlength'=>32, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'email'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'phone', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'phone', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'phone', array('maxlength'=>15, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'phone'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'subject_id', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'subject_id', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php 
 				$subjects = SupportFeedbackSubject::getSubject();
 				if($subjects != null)
@@ -88,16 +88,16 @@ EOP;
 		</div>
 
 		<div id="subject_i" class="form-group row hide">
-			<?php echo $form->labelEx($model, 'subject_i', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'subject_i', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'subject_i', array('maxlength'=>64, 'class'=>'form-control'));?>
 				<?php echo $form->error($model, 'subject_i');?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'message', array('class'=>'col-form-label col-lg-4 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-8 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'message', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
+			<div class="col-lg-6 col-md-9 col-sm-12">
 				<?php //echo $form->textArea($model, 'message', array('rows'=>6, 'cols'=>50, 'class'=>'form-control'));
 				$this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
 					'model'=>$model,
