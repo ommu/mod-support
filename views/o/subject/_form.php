@@ -38,7 +38,7 @@
 
 		<div class="form-group row">
 			<?php echo $form->labelEx($model, 'parent_id', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-6 col-md-9 col-sm-12">
+			<div class="col-lg-9 col-md-9 col-sm-12">
 				<?php 
 				$subjects = SupportFeedbackSubject::getSubject();
 				if($subjects != null)
@@ -51,7 +51,7 @@
 
 		<div class="form-group row">
 			<?php echo $form->labelEx($model, 'subject_name_i', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-6 col-md-9 col-sm-12">
+			<div class="col-lg-9 col-md-9 col-sm-12">
 				<?php echo $form->textField($model, 'subject_name_i', array('maxlength'=>64, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'subject_name_i'); ?>
 			</div>
@@ -59,7 +59,7 @@
 
 		<div class="form-group row publish">
 			<?php echo $form->labelEx($model, 'publish', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-6 col-md-9 col-sm-12">
+			<div class="col-lg-9 col-md-9 col-sm-12">
 				<?php echo $form->checkBox($model, 'publish', array('class'=>'form-control')); ?>
 				<?php echo $form->labelEx($model, 'publish'); ?>
 				<?php echo $form->error($model, 'publish'); ?>
