@@ -264,7 +264,7 @@ class SupportFeedbackView extends OActiveRecord
 			);
 			$this->templateColumns['views'] = array(
 				'name' => 'views',
-				'value' => '$data->views ? CHtml::link($data->views, Yii::app()->controller->createUrl("history/view/manage", array(\'view\'=>$data->view_id))) : \'0\'',
+				'value' => '$data->views ? CHtml::link($data->views, Yii::app()->controller->createUrl(\'history/view/manage\', array(\'view\'=>$data->view_id))) : \'0\'',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

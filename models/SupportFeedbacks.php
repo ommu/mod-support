@@ -334,7 +334,7 @@ class SupportFeedbacks extends OActiveRecord
 			);
 			$this->templateColumns['views_search'] = array(
 				'name' => 'views_search',
-				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl("o/views/manage", array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
+				'value' => '$data->view->view_condition != 0 ? CHtml::link($data->view->views, Yii::app()->controller->createUrl(\'o/views/manage\', array(\'feedback\'=>$data->feedback_id))) : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\') ',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -343,7 +343,7 @@ class SupportFeedbacks extends OActiveRecord
 			);
 			$this->templateColumns['users_search'] = array(
 				'name' => 'users_search',
-				'value' => 'CHtml::link($data->view->view_users ? $data->view->view_users : \'0\', Yii::app()->controller->createUrl("o/user/manage", array(\'feedback\'=>$data->feedback_id)))',
+				'value' => 'CHtml::link($data->view->view_users ? $data->view->view_users : \'0\', Yii::app()->controller->createUrl(\'o/user/manage\', array(\'feedback\'=>$data->feedback_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

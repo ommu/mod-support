@@ -39,7 +39,7 @@
 				$subject = $model->subject_id ? $model->subject->title->message : '-';
 				echo Yii::t('phrase', 'Subject: {subject}', array('{subject}'=>$subject));?><br/>
 				<?php echo $model->message;?><br/>
-				<span class="small-px"><strong><?php echo $model->displayname;?></strong><br/><?php echo $model->email;?><br/>Date: <?php echo $model->creation_date;?></span>
+				<div class="small-px"><strong><?php echo $model->displayname;?></strong><br/><?php echo $model->email;?><br/>Date: <?php echo $model->creation_date;?></div>
 			</div>
 		</div>
 
