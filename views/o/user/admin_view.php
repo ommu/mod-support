@@ -29,7 +29,7 @@
 			),
 			array(
 				'name'=>'publish',
-				'value'=>$model->publish == '1' ? CHtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : CHtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
+				'value'=>$this->quickAction(Yii::app()->controller->createUrl('publish', array('id'=>$model->id)), $model->publish),
 				'type'=>'raw',
 			),
 			array(
@@ -42,7 +42,7 @@
 			),
 			array(
 				'name'=>'user_id',
-				'value'=>$model->user_id ? $model->user->displayname : '-',
+				'value'=>$model->user->displayname ? $model->user->displayname : '-',
 			),
 			array(
 				'name'=>'creation_date',
@@ -54,7 +54,7 @@
 			),
 			array(
 				'name'=>'modified_id',
-				'value'=>$model->modified_id ? $model->modified->displayname : '-',
+				'value'=>$model->modified->displayname ? $model->modified->displayname : '-',
 			),
 			array(
 				'name'=>'updated_date',
