@@ -1,14 +1,17 @@
-code			: 23000
-name			: Support
-description		: Support
-folder_name		: support
-version			: 0.1.0
-created_date	: 2012-08-30 14:03
-author			: Putra Sudaryanto [putra@sudaryanto.id]
+name: Support
+description: Support module from Ommu Platform
+folder_name: support
+model: Supports
 
-db_table_name	: 
+author:
+  name: Putra Sudaryanto
+  phone: (+62)856-299-4114
+  email: putra@sudaryanto.id
+  homepage: https://sudaryanto.id
+
+db_table_name	:
  
-db_sql_filename	: 
+db_sql_filename	:
 
 plugin_menu		:
 	- urlTitle: Feedbacks
