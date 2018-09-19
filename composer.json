@@ -2,13 +2,14 @@
 	"name": "ommu/support",
 	"description": "Support Module from Ommu Platform",
 	"keywords": [
-		"yii2",
 		"module",
 		"support",
 		"feedback",
+		"social-media",
 		"contact",
 		"ommu",
-		"ommu-platform"
+		"ommu-platform",
+		"yii2"
 	],
 	"homepage": "https://github.com/ommu/mod-support",
 	"type": "ommu-module",
