@@ -72,12 +72,12 @@ class CategoryController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','view'),
+				'actions'=>array('index','edit','manage','view'),
 				'users'=>array('@'),
 				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','edit','delete','runaction','publish'),
+				'actions'=>array('add','delete','runaction','publish'),
 				'users'=>array('@'),
 				'expression'=>'Yii::app()->user->level == 1',
 			),

@@ -6,20 +6,20 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 3 February 2016, 12:24 WIB
- * @modified date 19 March 2018, 19:52 WIB
+ * @modified date 21 September 2018, 06:29 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_widget".
  *
  * The followings are the available columns in table 'ommu_support_widget':
- * @property string $widget_id
+ * @property integer $widget_id
  * @property integer $publish
  * @property integer $cat_id
  * @property string $widget_source
  * @property string $creation_date
- * @property string $creation_id
+ * @property integer $creation_id
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  *
  * The followings are the available model relations:
@@ -67,12 +67,13 @@ class SupportWidget extends OActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cat_id, widget_source', 'required'),
-			array('publish, cat_id', 'numerical', 'integerOnly'=>true),
+			array('publish, cat_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish', 'safe'),
 			array('creation_id, modified_id', 'length', 'max'=>11),
-			array('', 'safe'),
+			// array('creation_date, modified_date, updated_date', 'trigger'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('widget_id, publish, cat_id, widget_source, creation_date, creation_id, modified_date, modified_id, updated_date, 
+			array('widget_id, publish, cat_id, widget_source, creation_date, creation_id, modified_date, modified_id, updated_date,
 				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -128,8 +129,6 @@ class SupportWidget extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'creation' => array(
 				'alias' => 'creation',
@@ -172,7 +171,7 @@ class SupportWidget extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -200,7 +199,6 @@ class SupportWidget extends OActiveRecord
 					'name' => 'cat_id',
 					'value' => '$data->category->title->message ? $data->category->title->message : \'-\'',
 					'filter' => SupportContactCategory::getCategory(),
-					'type' => 'raw',
 				);
 			}
 			$this->templateColumns['widget_source'] = array(
@@ -208,12 +206,6 @@ class SupportWidget extends OActiveRecord
 				'value' => '$data->widget_source',
 				'type' => 'raw',
 			);
-			if(!Yii::app()->getRequest()->getParam('creation')) {
-				$this->templateColumns['creation_search'] = array(
-					'name' => 'creation_search',
-					'value' => '$data->creation->displayname ? $data->creation->displayname : \'-\'',
-				);
-			}
 			$this->templateColumns['creation_date'] = array(
 				'name' => 'creation_date',
 				'value' => '!in_array($data->creation_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\', \'0002-12-02 07:07:12\', \'-0001-11-30 00:00:00\')) ? Yii::app()->dateFormatter->formatDateTime($data->creation_date, \'medium\', false) : \'-\'',
@@ -222,6 +214,12 @@ class SupportWidget extends OActiveRecord
 				),
 				'filter' => $this->filterDatepicker($this, 'creation_date'),
 			);
+			if(!Yii::app()->getRequest()->getParam('creation')) {
+				$this->templateColumns['creation_search'] = array(
+					'name' => 'creation_search',
+					'value' => '$data->creation->displayname ? $data->creation->displayname : \'-\'',
+				);
+			}
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',
 				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\', \'0002-12-02 07:07:12\', \'-0001-11-30 00:00:00\')) ? Yii::app()->dateFormatter->formatDateTime($data->modified_date, \'medium\', false) : \'-\'',
@@ -260,7 +258,7 @@ class SupportWidget extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -268,10 +266,10 @@ class SupportWidget extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -292,5 +290,4 @@ class SupportWidget extends OActiveRecord
 		}
 		return true;
 	}
-
 }

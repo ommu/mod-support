@@ -12,8 +12,8 @@
  *	Add
  *	Edit
  *	View
- *	Runaction
  *	Delete
+ *	Runaction
  *	Publish
  *
  *	LoadModel
@@ -23,7 +23,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
- * @modified date 20 March 2018, 14:30 WIB
+ * @modified date 21 September 2018, 07:45 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ class WidgetController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('index','manage','add','edit','view','delete','runaction','publish'),
 				'users'=>array('@'),
 				'expression'=>'Yii::app()->user->level == 1',
 			),
@@ -82,7 +82,7 @@ class WidgetController extends Controller
 			),
 		);
 	}
-	
+
 	/**
 	 * Lists all models.
 	 */
@@ -98,16 +98,16 @@ class WidgetController extends Controller
 	{
 		$model=new SupportWidget('search');
 		$model->unsetAttributes();	// clear any default values
-		if(Yii::app()->getRequest()->getParam('SupportWidget')) {
-			$model->attributes=Yii::app()->getRequest()->getParam('SupportWidget');
-		}
+		$SupportWidget = Yii::app()->getRequest()->getParam('SupportWidget');
+		if($SupportWidget)
+			$model->attributes=$SupportWidget;
 
 		$columns = $model->getGridColumn($this->gridColumnTemp());
 
-		$pageTitle = Yii::t('phrase', 'Widgets');
+		$pageTitle = Yii::t('phrase', 'Support Widgets');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Widgets: Category {category_name}', array ('{category_name}'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Support Widgets: Category {name}', array ('{name}'=>$data->title->message));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -118,7 +118,7 @@ class WidgetController extends Controller
 			'columns' => $columns,
 		));
 	}
-	
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -144,7 +144,7 @@ class WidgetController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-widget',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support widget success created.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -152,7 +152,7 @@ class WidgetController extends Controller
 			}
 			Yii::app()->end();
 		}
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
@@ -191,7 +191,7 @@ class WidgetController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-widget',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support widget success updated.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -199,19 +199,19 @@ class WidgetController extends Controller
 			}
 			Yii::app()->end();
 		}
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Widget: {cat_id}', array('{cat_id}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
-	
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -219,53 +219,17 @@ class WidgetController extends Controller
 	public function actionView($id) 
 	{
 		$model=$this->loadModel($id);
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Detail Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Widget: {cat_id}', array('{cat_id}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view', array(
 			'model'=>$model,
 		));
-	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionRunaction() {
-		$id       = $_POST['trash_id'];
-		$criteria = null;
-		$actions  = Yii::app()->getRequest()->getParam('action');
-
-		if(count($id) > 0) {
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('widget_id', $id);
-
-			if($actions == 'publish') {
-				SupportWidget::model()->updateAll(array(
-					'publish' => 1,
-				),$criteria);
-			} elseif($actions == 'unpublish') {
-				SupportWidget::model()->updateAll(array(
-					'publish' => 0,
-				),$criteria);
-			} elseif($actions == 'trash') {
-				SupportWidget::model()->updateAll(array(
-					'publish' => 2,
-				),$criteria);
-			} elseif($actions == 'delete') {
-				SupportWidget::model()->deleteAll($criteria);
-			}
-		}
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!Yii::app()->getRequest()->getParam('ajax')) {
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
-		}
 	}
 
 	/**
@@ -287,7 +251,7 @@ class WidgetController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-widget',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support widget success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -297,27 +261,61 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Widget: {category_name}', array('{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Widget: {cat_id}', array('{cat_id}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
 	}
 
 	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionRunaction() 
+	{
+		$id       = $_POST['trash_id'];
+		$criteria = null;
+		$actions  = Yii::app()->getRequest()->getParam('action');
+
+		if(count($id) > 0) {
+			$criteria = new CDbCriteria;
+			$criteria->addInCondition('widget_id', $id);
+
+			if($actions == 'publish') {
+				SupportWidget::model()->updateAll(array(
+					'publish' => 1,
+				), $criteria);
+			} elseif($actions == 'unpublish') {
+				SupportWidget::model()->updateAll(array(
+					'publish' => 0,
+				), $criteria);
+			} elseif($actions == 'trash') {
+				SupportWidget::model()->updateAll(array(
+					'publish' => 2,
+				), $criteria);
+			} elseif($actions == 'delete') {
+				SupportWidget::model()->deleteAll($criteria);
+			}
+		}
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!Yii::app()->getRequest()->getParam('ajax'))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
+	}
+
+	/**
+	 * Publish a particular model.
+	 * If publish is successful, the browser will be redirected to the 'manage' page.
+	 * @param integer $id the ID of the model to be publish
 	 */
 	public function actionPublish($id) 
 	{
 		$model=$this->loadModel($id);
-		
 		$title = $model->publish == 1 ? Yii::t('phrase', 'Unpublish') : Yii::t('phrase', 'Publish');
 		$replace = $model->publish == 1 ? 0 : 1;
 
 		if(Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			//change value active or publish
+			// we only allow publish via POST request
 			$model->publish = $replace;
 			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 
@@ -326,7 +324,7 @@ class WidgetController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-widget',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Widget success published.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support widget success updated.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -336,7 +334,7 @@ class WidgetController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '{title} Widget: {category_name}', array('{title}'=>$title, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} Widget: {cat_id}', array('{title}'=>$title, '{cat_id}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish', array(
@@ -344,7 +342,7 @@ class WidgetController extends Controller
 			'model'=>$model,
 		));
 	}
-
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -369,4 +367,5 @@ class WidgetController extends Controller
 			Yii::app()->end();
 		}
 	}
+
 }

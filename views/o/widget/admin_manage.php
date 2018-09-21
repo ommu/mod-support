@@ -8,7 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
- * @modified date 20 March 2018, 14:30 WIB
+ * @modified date 21 September 2018, 07:45 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -72,24 +72,27 @@
 				'class' => 'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'Detail Support Widget'),
+						'label' => Yii::t('phrase', 'Detail'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'view',
+							'title' => Yii::t('phrase', 'Detail Support Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\', array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Support Widget'),
+						'label' => Yii::t('phrase', 'Update'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'update',
+							'title' => Yii::t('phrase', 'Update Support Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\', array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Support Widget'),
+						'label' => Yii::t('phrase', 'Delete'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'delete',
+							'title' => Yii::t('phrase', 'Delete Support Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'delete\', array(\'id\'=>$data->primaryKey))'),
 				),

@@ -8,16 +8,23 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 10:13 WIB
- * @modified date 20 March 2018, 14:30 WIB
+ * @modified date 21 September 2018, 07:45 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		'Support Widgets'=>array('manage'),
-		$model->widget_id,
+		$model->category->title->message,
 	);
 ?>
+
+<?php //begin.Messages ?>
+<div id="ajax-message">
+<?php if(Yii::app()->user->hasFlash('success'))
+	echo $this->flashMessage(Yii::app()->user->getFlash('success'), 'success');?>
+</div>
+<?php //end.Messages ?>
 
 <div class="dialog-content">
 <?php $this->widget('zii.widgets.CDetailView', array(
@@ -34,7 +41,7 @@
 		),
 		array(
 			'name'=>'cat_id',
-			'value'=>$model->cat_id ? $model->category->title->message : '-',
+			'value'=>$model->category->title->message ? $model->category->title->message : '-',
 		),
 		array(
 			'name'=>'widget_source',
