@@ -187,10 +187,10 @@ class SupportContactCategory extends OActiveRecord
 			$criteria->compare('t.publish', 1);
 		elseif(Yii::app()->getRequest()->getParam('type') == 'unpublish')
 			$criteria->compare('t.publish', 0);
-		elseif(Yii::app()->getRequest()->getParam('type') == 'nopublish')
+		elseif(Yii::app()->getRequest()->getParam('type') == 'trash')
 			$criteria->compare('t.publish', 2);
 		else {
-			$criteria->addInCondition('t.publish', array(0,1,2));
+			$criteria->addInCondition('t.publish', array(0,1));
 			$criteria->compare('t.publish', $this->publish);
 		}
 		$criteria->compare('t.name', $this->name);

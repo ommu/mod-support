@@ -39,30 +39,26 @@
 		</div>
 		<?php //begin.Messages ?>
 
-		<?php 
-		if($model->category->publish != '2') {
-			$category = SupportContactCategory::getCategory(1, 'widget');
-			if($category != null) {?>
-			<div class="form-group row">
-				<?php echo $form->labelEx($model, 'cat_id', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
-				<div class="col-lg-8 col-md-8 col-sm-12">
-					<?php if($model->isNewRecord) {
-						$category = SupportContactCategory::getCategory(1, 'contact');
-						if($category != null)
-							echo $form->dropDownList($model, 'cat_id', $category, array('prompt'=>'', 'class'=>'form-control'));
-						else
-							echo $form->dropDownList($model, 'cat_id', array('prompt'=>''), array('class'=>'form-control'));
-					} else {?>
-						<strong><?php echo $model->category->title->message; ?></strong>
-					<?php }?>
-					<?php echo $form->error($model, 'cat_id'); ?>
-				</div>
+		<?php if($model->isNewRecord) {?>
+		<div class="form-group row">
+			<?php echo $form->labelEx($model, 'cat_id', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php $category = SupportContactCategory::getCategory(1, 'widget');
+				if($category != null)
+					echo $form->dropDownList($model, 'cat_id', $category, array('prompt'=>'', 'class'=>'form-control'));
+				else
+					echo $form->dropDownList($model, 'cat_id', array('prompt'=>''), array('class'=>'form-control')); ?>
+				<?php echo $form->error($model, 'cat_id'); ?>
 			</div>
-			<?php }
-		}?>
+		</div>
+		<?php } ?>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'widget_source', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<?php if($model->isNewRecord) {
+				echo $form->labelEx($model, 'widget_source', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12'));
+			} else { ?>
+				<label class="col-form-label col-lg-4 col-md-4 col-sm-12"><?php echo Yii::t('phrase', '{category} Source', array('{category}'=>$model->category->title->message));?> <span class="required">*</span></label>
+			<?php }?>
 			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->textArea($model, 'widget_source', array('rows'=>6, 'cols'=>50, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'widget_source'); ?>

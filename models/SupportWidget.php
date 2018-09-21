@@ -285,8 +285,12 @@ class SupportWidget extends OActiveRecord
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord)
 				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-			else
+			else {
 				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
+				if($this->widget_source == '')
+					$this->addError('widget_source', Yii::t('phrase', '{widget_source} source cannot be blank.', array('{widget_source}'=>$this->category->title->message)));
+			}
 		}
 		return true;
 	}
