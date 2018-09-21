@@ -5,7 +5,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2015 Ommu Platform (www.ommu.co)
- * @modified date 19 March 2018, 19:52 WIB
+ * @modified date 20 September 2018, 15:04 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "_support_contact_category".
@@ -57,6 +57,7 @@ class ViewSupportContactCategory extends OActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cat_id, contact, widget', 'numerical', 'integerOnly'=>true),
+			array('cat_id, contact, widget', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('cat_id, contact, widget', 'safe', 'on'=>'search'),
@@ -103,7 +104,6 @@ class ViewSupportContactCategory extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('t.cat_id', $this->cat_id);
 		$criteria->compare('t.contact', $this->contact);
 		$criteria->compare('t.widget', $this->widget);
@@ -114,7 +114,7 @@ class ViewSupportContactCategory extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -154,7 +154,7 @@ class ViewSupportContactCategory extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -162,15 +162,14 @@ class ViewSupportContactCategory extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
 			return $model;
 		}
 	}
-
 }

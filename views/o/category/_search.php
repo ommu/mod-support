@@ -9,7 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 07:32 WIB
- * @modified date 20 March 2018, 14:29 WIB
+ * @modified date 21 September 2018, 06:36 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -22,12 +22,12 @@
 	<ul>
 		<li>
 			<?php echo $model->getAttributeLabel('name_i'); ?>
-			<?php echo $form->textField($model, 'name_i', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'name_i', array('maxlength'=>64, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('cat_icon'); ?>
-			<?php echo $form->textField($model, 'cat_icon', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'cat_icon', array('maxlength'=>32, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
@@ -57,12 +57,12 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('slug'); ?>
-			<?php echo $form->textField($model, 'slug', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'slug', array('maxlength'=>32, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('publish'); ?>
-			<?php echo $form->dropDownList($model, 'publish', $this->filterYesNo(), array('prompt'=>'', 'class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model, 'publish', array('1'=>Yii::t('phrase', 'Enable'), '0'=>Yii::t('phrase', 'Disable')), array('prompt'=>'', 'class'=>'form-control')); ?>
 		</li>
 
 		<li class="submit">

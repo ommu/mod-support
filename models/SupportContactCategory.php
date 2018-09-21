@@ -5,7 +5,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 19 March 2018, 19:54 WIB
+ * @modified date 20 September 2018, 15:04 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_contact_category".
@@ -13,18 +13,22 @@
  * The followings are the available columns in table 'ommu_support_contact_category':
  * @property integer $cat_id
  * @property integer $publish
- * @property string $name
+ * @property integer $name
  * @property string $cat_icon
  * @property string $creation_date
- * @property string $creation_id
+ * @property integer $creation_id
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  * @property string $slug
  *
  * The followings are the available model relations:
+ * @property ViewSupportContactCategory $view
  * @property SupportContacts[] $contacts
+ * @property SupportContacts[] $contactAll
  * @property SupportWidget[] $widgets
+ * @property SupportWidget[] $widgetAll
+ * @property SourceMessage $title
  * @property Users $creation
  * @property Users $modified
  */
@@ -36,12 +40,12 @@ class SupportContactCategory extends OActiveRecord
 
 	public $gridForbiddenColumn = array('modified_date','modified_search','updated_date','slug');
 	public $name_i;
+	public $contact_i;
+	public $widget_i;
 
 	// Variable Search
 	public $creation_search;
 	public $modified_search;
-	public $contact_search;
-	public $widget_search;
 
 	/**
 	 * Behaviors for this model
@@ -86,17 +90,17 @@ class SupportContactCategory extends OActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('
-				name_i', 'required'),
-			array('publish', 'numerical', 'integerOnly'=>true),
+			array('name_i', 'required'),
+			array('publish, name, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish, cat_icon', 'safe'),
 			array('name, creation_id, modified_id', 'length', 'max'=>11),
-			array('slug,
-				name_i', 'length', 'max'=>32),
-			array('cat_icon', 'safe'),
+			array('cat_icon, slug', 'length', 'max'=>32),
+			array('name_i', 'length', 'max'=>64),
+			// array('creation_date, modified_date, updated_date', 'trigger'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('cat_id, publish, name, cat_icon, creation_date, creation_id, modified_date, modified_id, updated_date, slug, 
-				name_i, creation_search, modified_search, contact_search, widget_search', 'safe', 'on'=>'search'),
+			array('cat_id, publish, name, cat_icon, creation_date, creation_id, modified_date, modified_id, updated_date, slug,
+				name_i, contact_i, widget_i, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -109,8 +113,10 @@ class SupportContactCategory extends OActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewSupportContactCategory', 'cat_id'),
-			'contacts' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
-			'widgets' => array(self::HAS_MANY, 'SupportWidget', 'cat_id'),
+			'contacts' => array(self::HAS_MANY, 'SupportContacts', 'cat_id', 'on'=>'contacts.publish=1'),
+			'contactAll' => array(self::HAS_MANY, 'SupportContacts', 'cat_id'),
+			'widgets' => array(self::HAS_MANY, 'SupportWidget', 'cat_id', 'on'=>'widgets.publish=1'),
+			'widgetAll' => array(self::HAS_MANY, 'SupportWidget', 'cat_id'),
 			'title' => array(self::BELONGS_TO, 'SourceMessage', 'name'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
@@ -124,7 +130,7 @@ class SupportContactCategory extends OActiveRecord
 	{
 		return array(
 			'cat_id' => Yii::t('attribute', 'Category'),
-			'publish' => Yii::t('attribute', 'Publish'),
+			'publish' => Yii::t('attribute', 'Enable'),
 			'name' => Yii::t('attribute', 'Category'),
 			'cat_icon' => Yii::t('attribute', 'Icon'),
 			'creation_date' => Yii::t('attribute', 'Creation Date'),
@@ -134,10 +140,10 @@ class SupportContactCategory extends OActiveRecord
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
 			'slug' => Yii::t('attribute', 'Slug'),
 			'name_i' => Yii::t('attribute', 'Category'),
+			'contact_i' => Yii::t('attribute', 'Contact'),
+			'widget_i' => Yii::t('attribute', 'Widget'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
-			'contact_search' => Yii::t('attribute', 'Contact'),
-			'widget_search' => Yii::t('attribute', 'Widget'),
 		);
 	}
 
@@ -158,8 +164,6 @@ class SupportContactCategory extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'view' => array(
 				'alias' => 'view',
@@ -204,8 +208,8 @@ class SupportContactCategory extends OActiveRecord
 		$criteria->compare('title.message', strtolower($this->name_i), true);
 		$criteria->compare('creation.displayname', strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
-		$criteria->compare('view.contact', $this->contact_search);
-		$criteria->compare('view.widget', $this->widget_search);
+		$criteria->compare('view.contact', $this->contact_i);
+		$criteria->compare('view.widget', $this->widget_i);
 
 		if(!Yii::app()->getRequest()->getParam('SupportContactCategory_sort'))
 			$criteria->order = 't.cat_id DESC';
@@ -213,7 +217,7 @@ class SupportContactCategory extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -249,7 +253,7 @@ class SupportContactCategory extends OActiveRecord
 				'name' => 'creation_date',
 				'value' => '!in_array($data->creation_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\', \'0002-12-02 07:07:12\', \'-0001-11-30 00:00:00\')) ? Yii::app()->dateFormatter->formatDateTime($data->creation_date, \'medium\', false) : \'-\'',
 				'htmlOptions' => array(
-					//'class' => 'center',
+					'class' => 'center',
 				),
 				'filter' => $this->filterDatepicker($this, 'creation_date'),
 			);
@@ -285,8 +289,8 @@ class SupportContactCategory extends OActiveRecord
 				'name' => 'slug',
 				'value' => '$data->slug',
 			);
-			$this->templateColumns['contact_search'] = array(
-				'name' => 'contact_search',
+			$this->templateColumns['contact_i'] = array(
+				'name' => 'contact_i',
 				'value' => '$data->view->contact == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
@@ -294,8 +298,8 @@ class SupportContactCategory extends OActiveRecord
 				'filter' => $this->filterYesNo(),
 				'type' => 'raw',
 			);
-			$this->templateColumns['widget_search'] = array(
-				'name' => 'widget_search',
+			$this->templateColumns['widget_i'] = array(
+				'name' => 'widget_i',
 				'value' => '$data->view->widget == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
@@ -306,7 +310,7 @@ class SupportContactCategory extends OActiveRecord
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
-					'value' => '$data->publish == 2 ? \'-\' : Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->cat_id)), $data->publish)',
+					'value' => '$data->publish == 2 ? \'-\' : Utility::getPublish(Yii::app()->controller->createUrl(\'publish\', array(\'id\'=>$data->cat_id)), $data->publish, \'Enable,Disable\')',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),
@@ -319,7 +323,7 @@ class SupportContactCategory extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -327,10 +331,10 @@ class SupportContactCategory extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -339,9 +343,7 @@ class SupportContactCategory extends OActiveRecord
 	}
 
 	/**
-	 * getCategory
-	 * 0 = unpublish
-	 * 1 = publish
+	 * function getCategory
 	 */
 	public static function getCategory($publish=null, $type=null, $array=true)
 	{
@@ -380,9 +382,10 @@ class SupportContactCategory extends OActiveRecord
 	 */
 	protected function afterFind()
 	{
-		$this->name_i = $this->title->message;
-		
 		parent::afterFind();
+		$this->name_i = $this->title->message;
+
+		return true;
 	}
 
 	/**
@@ -398,17 +401,17 @@ class SupportContactCategory extends OActiveRecord
 		}
 		return true;
 	}
-	
+
 	/**
 	 * before save attributes
 	 */
-	protected function beforeSave() 
+	protected function beforeSave()
 	{
 		$module = strtolower(Yii::app()->controller->module->id);
 		$controller = strtolower(Yii::app()->controller->id);
 		$action = strtolower(Yii::app()->controller->action->id);
 
-		$location = $module.' '.$controller;
+		$location = $this->urlTitle($module.' '.$controller);
 		
 		if(parent::beforeSave()) {
 			if($this->isNewRecord || (!$this->isNewRecord && !$this->name)) {
@@ -419,12 +422,13 @@ class SupportContactCategory extends OActiveRecord
 					$this->name = $name->id;
 
 				$this->slug = $this->urlTitle($this->name_i);
-				
+
 			} else {
 				$name = SourceMessage::model()->findByPk($this->name);
 				$name->message = $this->name_i;
 				$name->save();
 			}
+
 		}
 		return true;
 	}

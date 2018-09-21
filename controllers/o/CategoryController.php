@@ -12,8 +12,8 @@
  *	Add
  *	Edit
  *	View
- *	Runaction
  *	Delete
+ *	Runaction
  *	Publish
  *
  *	LoadModel
@@ -22,7 +22,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 20 March 2018, 14:29 WIB
+ * @modified date 21 September 2018, 06:36 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -72,12 +72,12 @@ class CategoryController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','edit','view'),
+				'actions'=>array('index','manage','view'),
 				'users'=>array('@'),
 				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','runaction','delete','publish'),
+				'actions'=>array('add','edit','delete','runaction','publish'),
 				'users'=>array('@'),
 				'expression'=>'Yii::app()->user->level == 1',
 			),
@@ -86,7 +86,7 @@ class CategoryController extends Controller
 			),
 		);
 	}
-	
+
 	/**
 	 * Lists all models.
 	 */
@@ -102,13 +102,13 @@ class CategoryController extends Controller
 	{
 		$model=new SupportContactCategory('search');
 		$model->unsetAttributes();	// clear any default values
-		if(Yii::app()->getRequest()->getParam('SupportContactCategory')) {
-			$model->attributes=Yii::app()->getRequest()->getParam('SupportContactCategory');
-		}
+		$SupportContactCategory = Yii::app()->getRequest()->getParam('SupportContactCategory');
+		if($SupportContactCategory)
+			$model->attributes=$SupportContactCategory;
 
 		$columns = $model->getGridColumn($this->gridColumnTemp());
 
-		$this->pageTitle = Yii::t('phrase', 'Categories');
+		$this->pageTitle = Yii::t('phrase', 'Support Contact Categories');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage', array(
@@ -116,7 +116,7 @@ class CategoryController extends Controller
 			'columns' => $columns,
 		));
 	}
-	
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -131,13 +131,32 @@ class CategoryController extends Controller
 		if(isset($_POST['SupportContactCategory'])) {
 			$model->attributes=$_POST['SupportContactCategory'];
 
-			if($model->save()) {
+			$jsonError = CActiveForm::validate($model);
+			if(strlen($jsonError) > 2) {
+				echo $jsonError;
+
+			} else {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
+					if($model->save()) {
+						echo CJSON::encode(array(
+							'type' => 5,
+							'get' => Yii::app()->controller->createUrl('manage'),
+							'id' => 'partial-support-contact-category',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact category success created.').'</strong></div>',
+						));
+					} else
+						print_r($model->getErrors());
+				}
+			}
+			Yii::app()->end();
+
+			/* if($model->save()) {
 				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Category success created.'));
 				//$this->redirect(array('view','id'=>$model->cat_id));
 				$this->redirect(array('manage'));
-			}
+			} */
 		}
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
@@ -165,17 +184,36 @@ class CategoryController extends Controller
 		if(isset($_POST['SupportContactCategory'])) {
 			$model->attributes=$_POST['SupportContactCategory'];
 
-			if($model->save()) {
+			$jsonError = CActiveForm::validate($model);
+			if(strlen($jsonError) > 2) {
+				echo $jsonError;
+
+			} else {
+				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
+					if($model->save()) {
+						echo CJSON::encode(array(
+							'type' => 5,
+							'get' => Yii::app()->controller->createUrl('manage'),
+							'id' => 'partial-support-contact-category',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact category success updated.').'</strong></div>',
+						));
+					} else
+						print_r($model->getErrors());
+				}
+			}
+			Yii::app()->end();
+
+			/* if($model->save()) {
 				Yii::app()->user->setFlash('success', Yii::t('phrase', 'Category success updated.'));
 				$this->redirect(array('manage'));
-			}
+			} */
 		}
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Category: {category_name}', array('{category_name}'=>$model->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Category: {name}', array('{name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit', array(
@@ -190,53 +228,17 @@ class CategoryController extends Controller
 	public function actionView($id) 
 	{
 		$model=$this->loadModel($id);
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Detail Category: {category_name}', array('{category_name}'=>$model->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Category: {name}', array('{name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view', array(
 			'model'=>$model,
 		));
-	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionRunaction() {
-		$id       = $_POST['trash_id'];
-		$criteria = null;
-		$actions  = Yii::app()->getRequest()->getParam('action');
-
-		if(count($id) > 0) {
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('cat_id', $id);
-
-			if($actions == 'publish') {
-				SupportContactCategory::model()->updateAll(array(
-					'publish' => 1,
-				),$criteria);
-			} elseif($actions == 'unpublish') {
-				SupportContactCategory::model()->updateAll(array(
-					'publish' => 0,
-				),$criteria);
-			} elseif($actions == 'trash') {
-				SupportContactCategory::model()->updateAll(array(
-					'publish' => 2,
-				),$criteria);
-			} elseif($actions == 'delete') {
-				SupportContactCategory::model()->deleteAll($criteria);
-			}
-		}
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!Yii::app()->getRequest()->getParam('ajax')) {
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
-		}
 	}
 
 	/**
@@ -258,7 +260,7 @@ class CategoryController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-contact-category',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Category success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact category success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -268,27 +270,61 @@ class CategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Category: {category_name}', array('{category_name}'=>$model->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Category: {name}', array('{name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
 	}
 
 	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionRunaction() 
+	{
+		$id       = $_POST['trash_id'];
+		$criteria = null;
+		$actions  = Yii::app()->getRequest()->getParam('action');
+
+		if(count($id) > 0) {
+			$criteria = new CDbCriteria;
+			$criteria->addInCondition('cat_id', $id);
+
+			if($actions == 'publish') {
+				SupportContactCategory::model()->updateAll(array(
+					'publish' => 1,
+				), $criteria);
+			} elseif($actions == 'unpublish') {
+				SupportContactCategory::model()->updateAll(array(
+					'publish' => 0,
+				), $criteria);
+			} elseif($actions == 'trash') {
+				SupportContactCategory::model()->updateAll(array(
+					'publish' => 2,
+				), $criteria);
+			} elseif($actions == 'delete') {
+				SupportContactCategory::model()->deleteAll($criteria);
+			}
+		}
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!Yii::app()->getRequest()->getParam('ajax'))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
+	}
+
+	/**
+	 * Publish a particular model.
+	 * If publish is successful, the browser will be redirected to the 'manage' page.
+	 * @param integer $id the ID of the model to be publish
 	 */
 	public function actionPublish($id) 
 	{
 		$model=$this->loadModel($id);
-		
-		$title = $model->publish == 1 ? Yii::t('phrase', 'Unpublish') : Yii::t('phrase', 'Publish');
+		$title = $model->publish == 1 ? Yii::t('phrase', 'Disable') : Yii::t('phrase', 'Enable');
 		$replace = $model->publish == 1 ? 0 : 1;
 
 		if(Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			//change value active or publish
+			// we only allow publish via POST request
 			$model->publish = $replace;
 			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 
@@ -297,7 +333,7 @@ class CategoryController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-contact-category',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Category success updated.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact category success updated.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -307,7 +343,7 @@ class CategoryController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '{title} Category: {category_name}', array('{title}'=>$title, '{category_name}'=>$model->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} Category: {name}', array('{title}'=>$title, '{name}'=>$model->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish', array(
@@ -315,7 +351,7 @@ class CategoryController extends Controller
 			'model'=>$model,
 		));
 	}
-
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -340,4 +376,5 @@ class CategoryController extends Controller
 			Yii::app()->end();
 		}
 	}
+
 }
