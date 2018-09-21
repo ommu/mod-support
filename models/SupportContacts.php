@@ -5,7 +5,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 19 March 2018, 19:51 WIB
+ * @modified date 21 September 2018, 06:28 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_contacts".
@@ -16,9 +16,9 @@
  * @property integer $cat_id
  * @property string $contact_name
  * @property string $creation_date
- * @property string $creation_id
+ * @property integer $creation_id
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  *
  * The followings are the available model relations:
@@ -66,12 +66,13 @@ class SupportContacts extends OActiveRecord
 		// will receive user inputs.
 		return array(
 			array('cat_id, contact_name', 'required'),
-			array('publish, cat_id', 'numerical', 'integerOnly'=>true),
+			array('publish, cat_id, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish', 'safe'),
 			array('creation_id, modified_id', 'length', 'max'=>11),
-			array('', 'safe'),
+			// array('creation_date, modified_date, updated_date', 'trigger'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, cat_id, contact_name, creation_date, creation_id, modified_date, modified_id, updated_date, 
+			array('id, publish, cat_id, contact_name, creation_date, creation_id, modified_date, modified_id, updated_date,
 				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -127,8 +128,6 @@ class SupportContacts extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'creation' => array(
 				'alias' => 'creation',
@@ -153,7 +152,6 @@ class SupportContacts extends OActiveRecord
 		}
 		$criteria->compare('t.cat_id', Yii::app()->getRequest()->getParam('category') ? Yii::app()->getRequest()->getParam('category') : $this->cat_id);
 		$criteria->compare('t.contact_name', strtolower($this->contact_name), true);
-
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')))
 			$criteria->compare('date(t.creation_date)', date('Y-m-d', strtotime($this->creation_date)));
 		$criteria->compare('t.creation_id', Yii::app()->getRequest()->getParam('creation') ? Yii::app()->getRequest()->getParam('creation') : $this->creation_id);
@@ -172,7 +170,7 @@ class SupportContacts extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -198,21 +196,19 @@ class SupportContacts extends OActiveRecord
 			if(!Yii::app()->getRequest()->getParam('category')) {
 				$this->templateColumns['cat_id'] = array(
 					'name' => 'cat_id',
-					'value' => '$data->category->title->message',
+					'value' => '$data->category->title->message ? $data->category->title->message : \'-\'',
 					'filter' => SupportContactCategory::getCategory(),
-					'type' => 'raw',
 				);
 			}
 			$this->templateColumns['contact_name'] = array(
 				'name' => 'contact_name',
 				'value' => '$data->contact_name',
-				'type' => 'raw',
 			);
 			$this->templateColumns['creation_date'] = array(
 				'name' => 'creation_date',
 				'value' => '!in_array($data->creation_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\', \'0002-12-02 07:07:12\', \'-0001-11-30 00:00:00\')) ? Yii::app()->dateFormatter->formatDateTime($data->creation_date, \'medium\', false) : \'-\'',
 				'htmlOptions' => array(
-					//'class' => 'center',
+					'class' => 'center',
 				),
 				'filter' => $this->filterDatepicker($this, 'creation_date'),
 			);
@@ -260,7 +256,7 @@ class SupportContacts extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -268,10 +264,10 @@ class SupportContacts extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -285,16 +281,14 @@ class SupportContacts extends OActiveRecord
 	protected function beforeValidate() 
 	{
 		if(parent::beforeValidate()) {
-			if(!$this->isNewRecord) {
-				if($this->category->publish == 2 && $this->contact_name == '')
-					$this->addError('contact_name', Yii::t('phrase', '{contact_name} cannot be blank.', array('{contact_name}'=>$this->category->title->message)));
-				
+			if($this->isNewRecord)
 				$this->creation_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-			} else
+			else {
 				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-			
-			if($this->category->publish == 2)
-				$this->publish = 1;
+
+				if($this->contact_name == '')
+					$this->addError('contact_name', Yii::t('phrase', '{contact_name} address cannot be blank.', array('{contact_name}'=>$this->category->title->message)));
+			}
 		}
 		return true;
 	}

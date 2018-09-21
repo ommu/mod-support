@@ -12,10 +12,10 @@
  *	Add
  *	Edit
  *	View
- *	Runaction
  *	Delete
+ *	Runaction
  *	Publish
- *	Setting
+ *	Address
  *
  *	LoadModel
  *	performAjaxValidation
@@ -23,7 +23,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 20 March 2018, 14:29 WIB
+ * @modified date 21 September 2018, 07:46 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -73,12 +73,12 @@ class ContactController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','edit','view','setting'),
+				'actions'=>array('index','manage','edit','view','address'),
 				'users'=>array('@'),
 				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('add','runaction','delete','publish'),
+				'actions'=>array('add','delete','runaction','publish'),
 				'users'=>array('@'),
 				'expression'=>'Yii::app()->user->level == 1',
 			),
@@ -87,7 +87,7 @@ class ContactController extends Controller
 			),
 		);
 	}
-	
+
 	/**
 	 * Lists all models.
 	 */
@@ -103,16 +103,16 @@ class ContactController extends Controller
 	{
 		$model=new SupportContacts('search');
 		$model->unsetAttributes();	// clear any default values
-		if(Yii::app()->getRequest()->getParam('SupportContacts')) {
-			$model->attributes=Yii::app()->getRequest()->getParam('SupportContacts');
-		}
+		$SupportContacts = Yii::app()->getRequest()->getParam('SupportContacts');
+		if($SupportContacts)
+			$model->attributes=$SupportContacts;
 
 		$columns = $model->getGridColumn($this->gridColumnTemp());
 
-		$pageTitle = Yii::t('phrase', 'Contacts');
+		$pageTitle = Yii::t('phrase', 'Support Contacts');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Contacts: Category {category_name}', array ('{category_name}'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Support Contacts: Category {name}', array ('{name}'=>$data->title->message));
 		}
 		
 		$this->pageTitle = $pageTitle;
@@ -123,7 +123,7 @@ class ContactController extends Controller
 			'columns' => $columns,
 		));
 	}
-	
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -141,7 +141,7 @@ class ContactController extends Controller
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
-				
+
 			} else {
 				if(Yii::app()->getRequest()->getParam('enablesave') == 1) {
 					if($model->save()) {
@@ -149,7 +149,7 @@ class ContactController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-contacts',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success created.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact success created.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -161,7 +161,7 @@ class ContactController extends Controller
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
-		
+
 		$this->pageTitle = Yii::t('phrase', 'Create Contact');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -196,7 +196,7 @@ class ContactController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-contacts',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact success updated.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -209,14 +209,14 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit', array(
 			'model'=>$model,
 		));
 	}
-	
+
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -224,53 +224,17 @@ class ContactController extends Controller
 	public function actionView($id) 
 	{
 		$model=$this->loadModel($id);
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view', array(
 			'model'=>$model,
 		));
-	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionRunaction() {
-		$id       = $_POST['trash_id'];
-		$criteria = null;
-		$actions  = Yii::app()->getRequest()->getParam('action');
-
-		if(count($id) > 0) {
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('id', $id);
-
-			if($actions == 'publish') {
-				SupportContacts::model()->updateAll(array(
-					'publish' => 1,
-				),$criteria);
-			} elseif($actions == 'unpublish') {
-				SupportContacts::model()->updateAll(array(
-					'publish' => 0,
-				),$criteria);
-			} elseif($actions == 'trash') {
-				SupportContacts::model()->updateAll(array(
-					'publish' => 2,
-				),$criteria);
-			} elseif($actions == 'delete') {
-				SupportContacts::model()->deleteAll($criteria);
-			}
-		}
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!Yii::app()->getRequest()->getParam('ajax')) {
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
-		}
 	}
 
 	/**
@@ -292,7 +256,7 @@ class ContactController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-contacts',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -302,27 +266,61 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Contact: {contact_name} Category {category_name}', array('{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
 	}
 
 	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionRunaction() 
+	{
+		$id       = $_POST['trash_id'];
+		$criteria = null;
+		$actions  = Yii::app()->getRequest()->getParam('action');
+
+		if(count($id) > 0) {
+			$criteria = new CDbCriteria;
+			$criteria->addInCondition('id', $id);
+
+			if($actions == 'publish') {
+				SupportContacts::model()->updateAll(array(
+					'publish' => 1,
+				), $criteria);
+			} elseif($actions == 'unpublish') {
+				SupportContacts::model()->updateAll(array(
+					'publish' => 0,
+				), $criteria);
+			} elseif($actions == 'trash') {
+				SupportContacts::model()->updateAll(array(
+					'publish' => 2,
+				), $criteria);
+			} elseif($actions == 'delete') {
+				SupportContacts::model()->deleteAll($criteria);
+			}
+		}
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!Yii::app()->getRequest()->getParam('ajax'))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
+	}
+
+	/**
+	 * Publish a particular model.
+	 * If publish is successful, the browser will be redirected to the 'manage' page.
+	 * @param integer $id the ID of the model to be publish
 	 */
 	public function actionPublish($id) 
 	{
 		$model=$this->loadModel($id);
-		
 		$title = $model->publish == 1 ? Yii::t('phrase', 'Unpublish') : Yii::t('phrase', 'Publish');
 		$replace = $model->publish == 1 ? 0 : 1;
 
 		if(Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			//change value active or publish
+			// we only allow publish via POST request
 			$model->publish = $replace;
 			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 
@@ -331,7 +329,7 @@ class ContactController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-contacts',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Contact success updated.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support contact success updated.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -341,7 +339,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '$title Contact: {contact_name} Category {category_name}', array('$title'=>$title, '{contact_name}'=>$model->contact_name, '{category_name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', '{title} Contact: {name}', array('{title}'=>$title, '{name}'=>$model->contact_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish', array(
@@ -355,7 +353,7 @@ class ContactController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionSetting() 
+	public function actionAddress() 
 	{
 		$model = OmmuMeta::model()->findByPk(1);
 		if($model == null)
@@ -388,7 +386,7 @@ class ContactController extends Controller
 					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 0,
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Address setting success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Address success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -398,10 +396,10 @@ class ContactController extends Controller
 			Yii::app()->end();
 		}
 		
-		$this->pageTitle = Yii::t('phrase', 'Address Settings');
+		$this->pageTitle = Yii::t('phrase', 'Update Address');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_setting', array(
+		$this->render('admin_address', array(
 			'model'=>$model,
 		));
 	}
@@ -430,4 +428,5 @@ class ContactController extends Controller
 			Yii::app()->end();
 		}
 	}
+
 }

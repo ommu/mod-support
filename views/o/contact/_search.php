@@ -9,7 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 07:32 WIB
- * @modified date 20 March 2018, 14:29 WIB
+ * @modified date 21 September 2018, 07:46 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -22,8 +22,7 @@
 	<ul>
 		<li>
 			<?php echo $model->getAttributeLabel('cat_id'); ?>
-			<?php $category = SupportContactCategory::getCategory();
-			echo $form->dropDownList($model, 'cat_id', $category, array('prompt'=>'', 'class'=>'form-control')); ?>
+			<?php echo $form->dropDownList($model, 'cat_id', SupportContactCategory::getCategory(), array('prompt'=>'', 'class'=>'form-control')); ?>
 		</li>
 
 		<li>

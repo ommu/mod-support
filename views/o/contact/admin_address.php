@@ -14,7 +14,7 @@
  
 	$this->breadcrumbs=array(
 		'Support Contacts'=>array('manage'),
-		'Address Settings',
+		'Address',
 	);
 ?>
 
