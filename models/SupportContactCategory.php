@@ -291,7 +291,7 @@ class SupportContactCategory extends OActiveRecord
 			);
 			$this->templateColumns['contact_i'] = array(
 				'name' => 'contact_i',
-				'value' => '$data->view->contact == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+				'value' => '$data->contact_i == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -300,7 +300,7 @@ class SupportContactCategory extends OActiveRecord
 			);
 			$this->templateColumns['widget_i'] = array(
 				'name' => 'widget_i',
-				'value' => '$data->view->widget == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+				'value' => '$data->widget_i == 1 ? CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : CHtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -384,6 +384,8 @@ class SupportContactCategory extends OActiveRecord
 	{
 		parent::afterFind();
 		$this->name_i = $this->title->message;
+		$this->contact_i = $this->view->contact;
+		$this->widget_i = $this->view->widget;
 
 		return true;
 	}
