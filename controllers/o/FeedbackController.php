@@ -185,7 +185,7 @@ class FeedbackController extends Controller
 
 		if(isset($_POST['SupportFeedbacks'])) {
 			$model->attributes=$_POST['SupportFeedbacks'];
-			$model->scenario = 'replyMessage';
+			$model->scenario = 'replyForm';
 
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {

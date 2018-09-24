@@ -6,18 +6,18 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 16 February 2017, 18:03 WIB
- * @modified date 19 March 2018, 19:53 WIB
+ * @modified date 21 September 2018, 11:40 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "_support_feedbacks".
  *
  * The followings are the available columns in table '_support_feedbacks':
- * @property string $feedback_id
+ * @property integer $feedback_id
  * @property integer $reply_condition
  * @property integer $view_condition
  * @property string $views
  * @property string $view_all
- * @property string $view_users
+ * @property integer $view_users
  */
 
 class ViewSupportFeedbacks extends OActiveRecord
@@ -60,10 +60,12 @@ class ViewSupportFeedbacks extends OActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('reply_condition, view_condition', 'numerical', 'integerOnly'=>true),
+			array('feedback_id, reply_condition, view_condition, view_users', 'numerical', 'integerOnly'=>true),
+			array('reply_condition, view_condition, view_condition, view_users', 'safe'),
+			array('view_condition', 'length', 'max'=>1),
 			array('feedback_id', 'length', 'max'=>11),
-			array('views, view_all', 'length', 'max'=>32),
 			array('view_users', 'length', 'max'=>21),
+			array('views, view_all', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('feedback_id, reply_condition, view_condition, views, view_all, view_users', 'safe', 'on'=>'search'),
@@ -113,7 +115,6 @@ class ViewSupportFeedbacks extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('t.feedback_id', $this->feedback_id);
 		$criteria->compare('t.reply_condition', $this->reply_condition);
 		$criteria->compare('t.view_condition', $this->view_condition);
@@ -127,7 +128,7 @@ class ViewSupportFeedbacks extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -179,7 +180,7 @@ class ViewSupportFeedbacks extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -187,15 +188,14 @@ class ViewSupportFeedbacks extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
 			return $model;
 		}
 	}
-
 }

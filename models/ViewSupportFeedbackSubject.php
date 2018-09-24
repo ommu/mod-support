@@ -6,6 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 19 March 2018, 15:23 WIB
+ * @modified date 21 September 2018, 11:39 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "_support_feedback_subject".
@@ -13,14 +14,12 @@
  * The followings are the available columns in table '_support_feedback_subject':
  * @property integer $subject_id
  * @property string $feedbacks
- * @property string $feedback_all
+ * @property integer $feedback_all
  */
 
 class ViewSupportFeedbackSubject extends OActiveRecord
 {
 	public $gridForbiddenColumn = array();
-
-	// Variable Search
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -58,9 +57,10 @@ class ViewSupportFeedbackSubject extends OActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('subject_id', 'numerical', 'integerOnly'=>true),
-			array('feedbacks', 'length', 'max'=>23),
+			array('subject_id, feedback_all', 'numerical', 'integerOnly'=>true),
+			array('subject_id', 'safe'),
 			array('feedback_all', 'length', 'max'=>21),
+			array('feedbacks', 'length', 'max'=>23),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('subject_id, feedbacks, feedback_all', 'safe', 'on'=>'search'),
@@ -107,7 +107,6 @@ class ViewSupportFeedbackSubject extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
 		$criteria->compare('t.subject_id', $this->subject_id);
 		$criteria->compare('t.feedbacks', $this->feedbacks);
 		$criteria->compare('t.feedback_all', $this->feedback_all);
@@ -118,7 +117,7 @@ class ViewSupportFeedbackSubject extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -158,7 +157,7 @@ class ViewSupportFeedbackSubject extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -166,15 +165,14 @@ class ViewSupportFeedbackSubject extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
 			return $model;
 		}
 	}
-
 }

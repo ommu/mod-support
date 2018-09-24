@@ -6,7 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 13:59 WIB
- * @modified date 20 March 2018, 07:04 WIB
+ * @modified date 21 September 2018, 11:39 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_subject".
@@ -17,30 +17,49 @@
  * @property integer $parent_id
  * @property integer $subject_name
  * @property string $creation_date
- * @property string $creation_id
+ * @property integer $creation_id
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  * @property string $slug
  *
  * The followings are the available model relations:
+ * @property ViewSupportFeedbackSubject $view
  * @property SupportFeedbacks[] $feedbacks
+ * @property SupportFeedbacks[] $feedbackAll
+ * @property SourceMessage $title
  * @property Users $creation
  * @property Users $modified
  */
 
 class SupportFeedbackSubject extends OActiveRecord
 {
+	use UtilityTrait;
 	use GridViewTrait;
 
-	public $gridForbiddenColumn = array('modified_date', 'modified_search', 'updated_date');
+	public $gridForbiddenColumn = array('modified_date', 'modified_search', 'updated_date', 'slug');
 	public $subject_name_i;
+	public $feedback_i;
 
 	// Variable Search
 	public $parent_search;
 	public $creation_search;
 	public $modified_search;
-	public $feedback_search;
+
+	/**
+	 * Behaviors for this model
+	 */
+	public function behaviors() 
+	{
+		return array(
+			'sluggable' => array(
+				'class'=>'ext.yii-sluggable.SluggableBehavior',
+				'columns' => array('title.message'),
+				'unique' => true,
+				'update' => true,
+			),
+		);
+	}
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -70,16 +89,16 @@ class SupportFeedbackSubject extends OActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('
-				subject_name_i', 'required'),
-			array('publish, parent_id, subject_name', 'numerical', 'integerOnly'=>true),
+			array('subject_name_i', 'required'),
+			array('publish, parent_id, subject_name, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish, parent_id', 'safe'),
 			array('creation_id, modified_id', 'length', 'max'=>11),
-			array('', 'safe'),
 			array('subject_name_i', 'length', 'max'=>64),
+			// array('creation_date, modified_date, updated_date, slug', 'trigger'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, slug, 
-				subject_name_i, parent_search, creation_search, modified_search, feedback_search', 'safe', 'on'=>'search'),
+			array('subject_id, publish, parent_id, subject_name, creation_date, creation_id, modified_date, modified_id, updated_date, slug,
+				subject_name_i, feedback_i, parent_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,7 +111,8 @@ class SupportFeedbackSubject extends OActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewSupportFeedbackSubject', 'subject_id'),
-			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'subject_id'),
+			'feedbacks' => array(self::HAS_MANY, 'SupportFeedbacks', 'subject_id', 'on'=>'feedbacks.publish=1'),
+			'feedbackAll' => array(self::HAS_MANY, 'SupportFeedbacks', 'subject_id'),
 			'title' => array(self::BELONGS_TO, 'SourceMessage', 'subject_name'),
 			'parent' => array(self::BELONGS_TO, 'SupportFeedbackSubject', 'parent_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
@@ -117,10 +137,10 @@ class SupportFeedbackSubject extends OActiveRecord
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
 			'slug' => Yii::t('attribute', 'Slug'),
 			'subject_name_i' => Yii::t('attribute', 'Subject'),
+			'feedback_i' => Yii::t('attribute', 'Feedabcks'),
 			'parent_search' => Yii::t('attribute', 'Parent'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
-			'feedback_search' => Yii::t('attribute', 'Feedabcks'),
 		);
 	}
 
@@ -141,8 +161,6 @@ class SupportFeedbackSubject extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'view' => array(
 				'alias' => 'view',
@@ -196,7 +214,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		$criteria->compare('parent_title.message', strtolower($this->parent_search), true);
 		$criteria->compare('creation.displayname', strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
-		$criteria->compare('view.feedbacks', $this->feedback_search);
+		$criteria->compare('view.feedbacks', $this->feedback_i);
 
 		if(!Yii::app()->getRequest()->getParam('SupportFeedbackSubject_sort'))
 			$criteria->order = 't.subject_id DESC';
@@ -204,7 +222,7 @@ class SupportFeedbackSubject extends OActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 			'pagination'=>array(
-				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 20,
+				'pageSize'=>Yii::app()->params['grid-view'] ? Yii::app()->params['grid-view']['pageSize'] : 50,
 			),
 		));
 	}
@@ -227,13 +245,13 @@ class SupportFeedbackSubject extends OActiveRecord
 					'class' => 'center',
 				),
 			);
-			$this->templateColumns['parent_search'] = array(
-				'name' => 'parent_search',
-				'value' => '$data->parent_id != 0 ? $data->parent->title->message : \'-\'',
-			);
 			$this->templateColumns['subject_name_i'] = array(
 				'name' => 'subject_name_i',
 				'value' => '$data->title->message',
+			);
+			$this->templateColumns['parent_search'] = array(
+				'name' => 'parent_search',
+				'value' => '$data->parent_id != 0 ? $data->parent->title->message : \'-\'',
 			);
 			$this->templateColumns['creation_date'] = array(
 				'name' => 'creation_date',
@@ -249,14 +267,6 @@ class SupportFeedbackSubject extends OActiveRecord
 					'value' => '$data->creation->displayname ? $data->creation->displayname : \'-\'',
 				);
 			}
-			$this->templateColumns['feedback_search'] = array(
-				'name' => 'feedback_search',
-				'value' => '$data->view->feedbacks ? $data->view->feedbacks : 0',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' =>false,
-			);
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',
 				'value' => '!in_array($data->modified_date, array(\'0000-00-00 00:00:00\', \'1970-01-01 00:00:00\', \'0002-12-02 07:07:12\', \'-0001-11-30 00:00:00\')) ? Yii::app()->dateFormatter->formatDateTime($data->modified_date, \'medium\', false) : \'-\'',
@@ -283,6 +293,15 @@ class SupportFeedbackSubject extends OActiveRecord
 				'name' => 'slug',
 				'value' => '$data->slug',
 			);
+			$this->templateColumns['feedback_i'] = array(
+				'name' => 'feedback_i',
+				'value' => 'CHtml::link($data->feedback_i ? $data->feedback_i : 0, Yii::app()->controller->createUrl(\'o/feedback/manage\', array(\'subject\'=>$data->subject_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => false,
+				'type' => 'raw',
+			);
 			if(!Yii::app()->getRequest()->getParam('type')) {
 				$this->templateColumns['publish'] = array(
 					'name' => 'publish',
@@ -299,7 +318,7 @@ class SupportFeedbackSubject extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -307,10 +326,10 @@ class SupportFeedbackSubject extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -319,9 +338,7 @@ class SupportFeedbackSubject extends OActiveRecord
 	}
 
 	/**
-	 * getSubject
-	 * 0 = unpublish
-	 * 1 = publish
+	 * function getSubject
 	 */
 	public static function getSubject($publish=null, $array=true) 
 	{
@@ -349,9 +366,11 @@ class SupportFeedbackSubject extends OActiveRecord
 	 */
 	protected function afterFind()
 	{
-		$this->subject_name_i = $this->title->message;
-		
 		parent::afterFind();
+		$this->subject_name_i = $this->title->message;
+		$this->feedback_i = $this->view->feedbacks;
+
+		return true;
 	}
 
 	/**
@@ -367,17 +386,17 @@ class SupportFeedbackSubject extends OActiveRecord
 		}
 		return true;
 	}
-	
+
 	/**
 	 * before save attributes
 	 */
-	protected function beforeSave() 
+	protected function beforeSave()
 	{
 		$module = strtolower(Yii::app()->controller->module->id);
 		$controller = strtolower(Yii::app()->controller->id);
 		$action = strtolower(Yii::app()->controller->action->id);
 
-		$location = $module.' '.$controller;
+		$location = $this->urlTitle($module.' '.$controller);
 		
 		if(parent::beforeSave()) {
 			if($this->isNewRecord || (!$this->isNewRecord && !$this->subject_name)) {
@@ -386,14 +405,16 @@ class SupportFeedbackSubject extends OActiveRecord
 				$subject_name->location = $location.'_title';
 				if($subject_name->save())
 					$this->subject_name = $subject_name->id;
-				
+
+				$this->slug = $this->urlTitle($this->subject_name_i);
+
 			} else {
 				$subject_name = SourceMessage::model()->findByPk($this->subject_name);
 				$subject_name->message = $this->subject_name_i;
 				$subject_name->save();
 			}
+
 		}
 		return true;
 	}
-
 }
