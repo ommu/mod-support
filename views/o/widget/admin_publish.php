@@ -15,7 +15,9 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Widgets'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Contact')=>array('o/contact/manage'),
+		Yii::t('phrase', 'Widget')=>array('manage'),
 		$model->category->title->message=>array('view','id'=>$model->widget_id),
 		Yii::t('phrase', 'Publish'),
 	);

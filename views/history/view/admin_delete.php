@@ -15,7 +15,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Feedback View Histories'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'History')=>array('manage'),
 		Yii::t('phrase', 'Delete'),
 	);
 ?>

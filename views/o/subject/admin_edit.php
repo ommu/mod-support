@@ -14,7 +14,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Feedback Subjects'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Subject')=>array('manage'),
 		$model->title->message=>array('view','id'=>$model->subject_id),
 		Yii::t('phrase', 'Update'),
 	);

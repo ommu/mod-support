@@ -14,7 +14,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Contacts'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Contact')=>array('manage'),
 		$model->contact_name=>array('view','id'=>$model->id),
 		Yii::t('phrase', 'Delete'),
 	);

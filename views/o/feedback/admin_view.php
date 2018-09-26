@@ -14,7 +14,7 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Feedbacks'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('manage'),
 		$model->displayname,
 	);
 ?>

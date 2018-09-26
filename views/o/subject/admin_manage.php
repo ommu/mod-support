@@ -13,7 +13,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Feedback Subjects'=>array('manage'),
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Subject')=>array('manage'),
 		Yii::t('phrase', 'Manage'),
 	);
 	$this->menu=array(

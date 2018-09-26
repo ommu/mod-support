@@ -14,8 +14,9 @@
  */
 
 	$this->breadcrumbs=array(
-		'Feedback Views'=>array('manage'),
-		$model->view_id,
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Views')=>array('manage'),
+        $model->feedback->displayname, 
 	);
 ?>
 

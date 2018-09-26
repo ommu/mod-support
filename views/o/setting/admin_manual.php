@@ -11,8 +11,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Settings'=>array('manage'),
-		'Manual',
+		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Manual'),
 	);
 ?>
 
