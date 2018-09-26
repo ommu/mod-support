@@ -14,7 +14,7 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Contacts'=>array('manage'),,
+		'Support Contacts'=>array('manage'),
 		Yii::t('phrase', 'Create'),
 	);
 ?>
