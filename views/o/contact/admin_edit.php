@@ -16,7 +16,7 @@
 	$this->breadcrumbs=array(
 		'Support Contacts'=>array('manage'),
 		$model->contact_name=>array('view','id'=>$model->id),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 

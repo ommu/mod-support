@@ -15,7 +15,7 @@
 
 	$this->breadcrumbs=array(
 		'Feedback Subjects'=>array('manage'),
-		'Publish',
+		Yii::t('phrase', 'Publish'),
 	);
 ?>
 

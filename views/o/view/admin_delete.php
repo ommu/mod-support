@@ -16,7 +16,7 @@
 
 	$this->breadcrumbs=array(
 		'Feedback Views'=>array('manage'),
-		'Delete',
+		Yii::t('phrase', 'Delete'),
 	);
 ?>
 

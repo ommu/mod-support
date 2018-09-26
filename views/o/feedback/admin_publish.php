@@ -16,7 +16,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Feedbacks'=>array('manage'),
-		'Publish',
+		Yii::t('phrase', 'Publish'),
 	);
 ?>
 

@@ -17,7 +17,7 @@
 	$this->breadcrumbs=array(
 		'Support Widgets'=>array('manage'),
 		$model->category->title->message=>array('view','id'=>$model->widget_id),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 

@@ -15,8 +15,8 @@
  */
 
 	$this->breadcrumbs=array(
-		'Support Widgets'=>array('manage'),
-		'Create',
+		'Support Widgets'=>array('manage'),,
+		Yii::t('phrase', 'Create'),
 	);
 ?>
 

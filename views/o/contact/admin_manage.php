@@ -14,7 +14,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Contacts'=>array('manage'),
-		'Manage',
+		Yii::t('phrase', 'Manage'),
 	);
 	$this->menu=array(
 		array(

@@ -12,7 +12,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Settings'=>array('manage'),
-		'Manual Book',
+		'Manual',
 	);
 ?>
 

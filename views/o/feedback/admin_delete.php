@@ -15,7 +15,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Feedbacks'=>array('manage'),
-		'Delete',
+		Yii::t('phrase', 'Delete'),
 	);
 ?>
 

@@ -15,7 +15,7 @@
 
 	$this->breadcrumbs=array(
 		'Support Mail Settings'=>array('manage'),
-		'Update',
+		Yii::t('phrase', 'Update'),
 	);
 ?>
 
