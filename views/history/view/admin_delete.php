@@ -9,14 +9,16 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 17:21 WIB
- * @modified date 21 March 2018, 12:35 WIB
+ * @modified date 28 September 2018, 06:31 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Feedback View')=>array('o/view/manage'),
 		Yii::t('phrase', 'History')=>array('manage'),
+		$model->view->feedback->subject->title->message=>array('view','id'=>$model->id),
 		Yii::t('phrase', 'Delete'),
 	);
 ?>

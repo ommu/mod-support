@@ -9,6 +9,7 @@
  * TOC :
  *	Index
  *	Manage
+ *	View
  *	Delete
  *
  *	LoadModel
@@ -18,7 +19,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 17:21 WIB
- * @modified date 21 March 2018, 12:35 WIB
+ * @modified date 28 September 2018, 06:31 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -68,7 +69,7 @@ class ViewController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','delete'),
+				'actions'=>array('index','manage','view','delete'),
 				'users'=>array('@'),
 				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -77,7 +78,7 @@ class ViewController extends Controller
 			),
 		);
 	}
-	
+
 	/**
 	 * Lists all models.
 	 */
@@ -89,22 +90,50 @@ class ViewController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage() 
+	public function actionManage($view=null) 
 	{
 		$model=new SupportFeedbackViewHistory('search');
 		$model->unsetAttributes();	// clear any default values
-		if(Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory')) {
-			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory');
-		}
+		$SupportFeedbackViewHistory = Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory');
+		if($SupportFeedbackViewHistory)
+			$model->attributes=$SupportFeedbackViewHistory;
 
 		$columns = $model->getGridColumn($this->gridColumnTemp());
 
-		$this->pageTitle = Yii::t('phrase', 'Feedback View Histories');
+		$pageTitle = Yii::t('phrase', 'Support Feedback View Histories');
+		if($view != null) {
+			$data = SupportFeedbackView::model()->findByPk($view);
+			$user_id = $data->user_id != null ? $data->user->displayname : 'Guest';
+			$pageTitle = Yii::t('phrase', 'Feedback View Histories: Subject {feedback_id} By {user_id}', array ('{feedback_id}'=>$data->feedback->subject->title->message, '{user_id}'=>$user_id));
+		}
+
+		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage', array(
 			'model'=>$model,
 			'columns' => $columns,
+		));
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id) 
+	{
+		$model=$this->loadModel($id);
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$user_id = $model->view->user_id != null ? $model->view->user->displayname : 'Guest';
+		$this->pageTitle = Yii::t('phrase', 'Detail Feedback View History: Subject {feedback_id} By {user_id}', array('{feedback_id}'=>$model->view->feedback->subject->title->message, '{user_id}'=>$user_id));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_view', array(
+			'model'=>$model,
 		));
 	}
 
@@ -124,7 +153,7 @@ class ViewController extends Controller
 					'type' => 5,
 					'get' => Yii::app()->controller->createUrl('manage'),
 					'id' => 'partial-support-feedback-view-history',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback view history success deleted.').'</strong></div>',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support feedback view history success deleted.').'</strong></div>',
 				));
 			}
 			Yii::app()->end();
@@ -134,7 +163,8 @@ class ViewController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Feedback View History: {id}', array('{id}'=>$model->id));
+		$user_id = $model->view->user_id != null ? $model->view->user->displayname : 'Guest';
+		$this->pageTitle = Yii::t('phrase', 'Delete Feedback View History: Subject {feedback_id} By {user_id}', array('{feedback_id}'=>$model->view->feedback->subject->title->message, '{user_id}'=>$user_id));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -164,4 +194,5 @@ class ViewController extends Controller
 			Yii::app()->end();
 		}
 	}
+
 }

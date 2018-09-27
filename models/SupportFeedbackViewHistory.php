@@ -6,14 +6,14 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 17:19 WIB
- * @modified date 19 March 2018, 19:51 WIB
+ * @modified date 27 September 2018, 12:35 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_view_history".
  *
  * The followings are the available columns in table 'ommu_support_feedback_view_history':
- * @property string $id
- * @property string $view_id
+ * @property integer $id
+ * @property integer $view_id
  * @property string $view_date
  * @property string $view_ip
  *
@@ -27,8 +27,9 @@ class SupportFeedbackViewHistory extends OActiveRecord
 
 	public $gridForbiddenColumn = array();
 
-	// Variable Search	
+	// Variable Search
 	public $subject_search;
+	public $feedback_search;
 	public $user_search;
 
 	/**
@@ -60,12 +61,13 @@ class SupportFeedbackViewHistory extends OActiveRecord
 		// will receive user inputs.
 		return array(
 			array('view_id, view_date, view_ip', 'required'),
+			array('view_id', 'numerical', 'integerOnly'=>true),
 			array('view_id', 'length', 'max'=>11),
 			array('view_ip', 'length', 'max'=>20),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, view_id, view_date, view_ip, 
-				subject_search, user_search', 'safe', 'on'=>'search'),
+			array('id, view_id, view_date, view_ip,
+				subject_search, feedback_search, user_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -92,6 +94,7 @@ class SupportFeedbackViewHistory extends OActiveRecord
 			'view_date' => Yii::t('attribute', 'View Date'),
 			'view_ip' => Yii::t('attribute', 'View Ip'),
 			'subject_search' => Yii::t('attribute', 'Subject'),
+			'feedback_search' => Yii::t('attribute', 'Feedback'),
 			'user_search' => Yii::t('attribute', 'View By'),
 		);
 	}
@@ -113,24 +116,22 @@ class SupportFeedbackViewHistory extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'view' => array(
 				'alias' => 'view',
-				'select' => 'feedback_id, user_id'
+				'select' => 'feedback_id, user_id',
 			),
 			'view.feedback' => array(
-				'alias' => 'view_feedback',
-				'select' => 'subject_id'
+				'alias' => 'feedback',
+				'select' => 'subject_id, user_id, email, displayname, message',
 			),
 			'view.feedback.subject.title' => array(
-				'alias' => 'view_feedback_subject',
+				'alias' => 'subjectTitle',
 				'select' => 'message',
 			),
 			'view.user' => array(
-				'alias' => 'view_user',
-				'select' => 'displayname'
+				'alias' => 'user',
+				'select' => 'displayname',
 			),
 		);
 
@@ -140,8 +141,9 @@ class SupportFeedbackViewHistory extends OActiveRecord
 			$criteria->compare('date(t.view_date)', date('Y-m-d', strtotime($this->view_date)));
 		$criteria->compare('t.view_ip', strtolower($this->view_ip), true);
 
-		$criteria->compare('view_feedback_subject.message', strtolower($this->subject_search), true);
-		$criteria->compare('view_user.displayname', strtolower($this->user_search), true);
+		$criteria->compare('subjectTitle.message', strtolower($this->subject_search), true);			//view.feedback.subject.title.message
+		$criteria->compare('feedback.message', strtolower($this->feedback_search), true);			//view.feedback.message
+		$criteria->compare('user.displayname', strtolower($this->user_search), true);			//view.user.displayname
 
 		if(!Yii::app()->getRequest()->getParam('SupportFeedbackViewHistory_sort'))
 			$criteria->order = 't.id DESC';
@@ -177,6 +179,10 @@ class SupportFeedbackViewHistory extends OActiveRecord
 					'name' => 'subject_search',
 					'value' => '$data->view->feedback->subject->title->message',
 				);
+				$this->templateColumns['feedback_search'] = array(
+					'name' => 'feedback_search',
+					'value' => '$data->view->feedback->message',
+				);
 				$this->templateColumns['user_search'] = array(
 					'name' => 'user_search',
 					'value' => '$data->view->user->displayname',
@@ -199,7 +205,7 @@ class SupportFeedbackViewHistory extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -207,10 +213,10 @@ class SupportFeedbackViewHistory extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -218,4 +224,14 @@ class SupportFeedbackViewHistory extends OActiveRecord
 		}
 	}
 
+	/**
+	 * before validate attributes
+	 */
+	protected function beforeValidate() 
+	{
+		if(parent::beforeValidate()) {
+			$this->view_ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return true;
+	}
 }

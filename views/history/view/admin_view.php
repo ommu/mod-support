@@ -1,22 +1,23 @@
 <?php
 /**
- * Support Feedback Views (support-feedback-view)
+ * Support Feedback View Histories (support-feedback-view-history)
  * @var $this ViewController
- * @var $model SupportFeedbackView
+ * @var $model SupportFeedbackViewHistory
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
- * @created date 11 May 2017, 23:13 WIB
- * @modified date 27 September 2018, 15:19 WIB
+ * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
+ * @created date 28 September 2018, 06:31 WIB
+ * @modified date 28 September 2018, 06:31 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
-		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
-		Yii::t('phrase', 'Feedback View')=>array('manage'),
-		$model->feedback->subject->title->message,
+		Yii::t('phrase', 'Support')=>array('o/admin/manage'),
+		Yii::t('phrase', 'Feedback View')=>array('o/view/manage'),
+		Yii::t('phrase', 'History')=>array('manage'),
+		$model->view->feedback->subject->title->message,
 	);
 ?>
 

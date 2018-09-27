@@ -8,13 +8,14 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 17:21 WIB
- * @modified date 21 March 2018, 12:35 WIB
+ * @modified date 28 September 2018, 06:31 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
+		Yii::t('phrase', 'Feedback View')=>array('o/view/manage'),
 		Yii::t('phrase', 'History')=>array('manage'),
 		Yii::t('phrase', 'Manage'),
 	);
@@ -73,28 +74,31 @@
 				'class' => 'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'Detail Feedback View History'),
+						'label' => Yii::t('phrase', 'Detail'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'view',
+							'title' => Yii::t('phrase', 'Detail Feedback View History'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\', array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Feedback View History'),
+						'label' => Yii::t('phrase', 'Update'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'update',
+							'title' => Yii::t('phrase', 'Update Feedback View History'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\', array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Feedback View History'),
+						'label' => Yii::t('phrase', 'Delete'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'delete',
+							'title' => Yii::t('phrase', 'Delete Feedback View History'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'delete\', array(\'id\'=>$data->primaryKey))'),
 				),
-				'template' => '{delete}',
+				'template' => '{view}|{delete}',
 			));
 
 			$this->widget('application.libraries.yii-traits.system.OGridView', array(

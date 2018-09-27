@@ -17,7 +17,7 @@
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
 		Yii::t('phrase', 'Feedback View')=>array('manage'),
-		$model->feedback->displayname=>array('view','id'=>$model->view_id),
+		$model->feedback->subject->title->message=>array('view','id'=>$model->view_id),
 		Yii::t('phrase', 'Publish'),
 	);
 ?>
