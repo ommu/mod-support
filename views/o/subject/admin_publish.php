@@ -9,13 +9,14 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
-		Yii::t('phrase', 'Subject')=>array('manage'),
+		Yii::t('phrase', 'Feedback Subject')=>array('manage'),
 		$model->title->message=>array('view','id'=>$model->subject_id),
 		Yii::t('phrase', 'Publish'),
 	);
@@ -33,5 +34,5 @@
 		<?php echo CHtml::submitButton($title, array('onclick' => 'setEnableSave()')); ?>
 		<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 	</div>
-	
+
 <?php $this->endWidget(); ?>

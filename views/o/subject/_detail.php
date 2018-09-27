@@ -8,6 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -30,7 +31,7 @@
 			'value'=>$model->parent_id != 0 ? $model->parent->title->message : '-',
 		),
 		array(
-			'name'=>'subject_name',
+			'name'=>'subject_name_i',
 			'value'=>$model->subject_name ? $model->title->message : '-',
 		),
 		array(
@@ -52,6 +53,10 @@
 		array(
 			'name'=>'updated_date',
 			'value'=>!in_array($model->updated_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')) ? $this->dateFormat($model->updated_date) : '-',
+		),
+		array(
+			'name'=>'slug',
+			'value'=>$model->slug ? $model->slug : '-',
 		),
 	),
 )); ?>

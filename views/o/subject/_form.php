@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -18,15 +19,17 @@
 	'id'=>'support-feedback-subject-form',
 	'enableAjaxValidation'=>true,
 	/*
+	'htmlOptions' => array(
+		'enctype' => 'multipart/form-data',
+		'on_post' => '',
+	),
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
 	),
-	'htmlOptions' => array(
-		'enctype' => 'multipart/form-data',
-	),
 	*/
 )); ?>
+
 <div class="dialog-content">
 	<fieldset>
 
@@ -37,10 +40,9 @@
 		<?php //begin.Messages ?>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'parent_id', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
-				<?php 
-				$subjects = SupportFeedbackSubject::getSubject();
+			<?php echo $form->labelEx($model, 'parent_id', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php $subjects = SupportFeedbackSubject::getSubject();
 				if($subjects != null)
 					echo $form->dropDownList($model, 'parent_id', $subjects, array('prompt'=>Yii::t('phrase', 'No Parent'), 'class'=>'form-control'));
 				else 
@@ -50,16 +52,16 @@
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'subject_name_i', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'subject_name_i', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->textField($model, 'subject_name_i', array('maxlength'=>64, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'subject_name_i'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row publish">
-			<?php echo $form->labelEx($model, 'publish', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'publish', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->checkBox($model, 'publish', array('class'=>'form-control')); ?>
 				<?php echo $form->labelEx($model, 'publish'); ?>
 				<?php echo $form->error($model, 'publish'); ?>

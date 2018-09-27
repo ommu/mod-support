@@ -8,13 +8,14 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
-		Yii::t('phrase', 'Subject')=>array('manage'),
+		Yii::t('phrase', 'Feedback Subject')=>array('manage'),
 		Yii::t('phrase', 'Manage'),
 	);
 	$this->menu=array(
@@ -54,7 +55,7 @@
 <div id="partial-support-feedback-subject">
 	<?php //begin.Messages ?>
 	<div id="ajax-message">
-	<?php 
+	<?php
 	if(Yii::app()->user->hasFlash('error'))
 		echo $this->flashMessage(Yii::app()->user->getFlash('error'), 'error');
 	if(Yii::app()->user->hasFlash('success'))
@@ -72,24 +73,27 @@
 				'class' => 'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'Detail Feedback Subject'),
+						'label' => Yii::t('phrase', 'Detail'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'view',
+							'title' => Yii::t('phrase', 'Detail Feedback Subject'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\', array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Feedback Subject'),
+						'label' => Yii::t('phrase', 'Update'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'update',
+							'title' => Yii::t('phrase', 'Update Feedback Subject'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\', array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Feedback Subject'),
+						'label' => Yii::t('phrase', 'Delete'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'delete',
+							'title' => Yii::t('phrase', 'Delete Feedback Subject'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'delete\', array(\'id\'=>$data->primaryKey))'),
 				),

@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 15 March 2018, 14:05 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -21,12 +22,12 @@
 	<ul>
 		<li>
 			<?php echo $model->getAttributeLabel('parent_id'); ?>
-			<?php echo $form->textField($model, 'parent_id', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'parent_id', array('maxlength'=>5, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('subject_name_i'); ?>
-			<?php echo $form->textField($model, 'subject_name_i', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'subject_name_i', array('maxlength'=>64, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
@@ -52,6 +53,11 @@
 		<li>
 			<?php echo $model->getAttributeLabel('updated_date'); ?>
 			<?php echo $this->filterDatepicker($model, 'updated_date', false); ?>
+		</li>
+
+		<li>
+			<?php echo $model->getAttributeLabel('slug'); ?>
+			<?php echo $form->textField($model, 'slug', array('class'=>'form-control')); ?>
 		</li>
 
 		<li>
