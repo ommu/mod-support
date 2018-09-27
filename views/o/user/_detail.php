@@ -8,7 +8,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 05:42 WIB
- * @modified date 21 March 2018, 08:46 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -28,14 +28,14 @@
 		),
 		array(
 			'name'=>'subject_search',
-			'value'=>$model->feedback->subject_id ? $model->feedback->subject->title->message : '-',
+			'value'=>$model->feedback->subject->title->message ? $model->feedback->subject->title->message : '-',
 		),
 		array(
-			'name'=>'message_i',
+			'name'=>'feedback_search',
 			'value'=>$model->feedback->message ? $model->feedback->message : '-',
 		),
 		array(
-			'name'=>'user_id',
+			'name'=>'user_search',
 			'value'=>$model->user->displayname ? $model->user->displayname : '-',
 		),
 		array(

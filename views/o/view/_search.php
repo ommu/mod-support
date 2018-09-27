@@ -9,7 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 11 May 2017, 23:13 WIB
- * @modified date 21 March 2018, 08:46 WIB
+ * @modified date 27 September 2018, 15:19 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -26,13 +26,18 @@
 		</li>
 
 		<li>
+			<?php echo $model->getAttributeLabel('feedback_search'); ?>
+			<?php echo $form->textField($model, 'feedback_search', array('class'=>'form-control')); ?>
+		</li>
+
+		<li>
 			<?php echo $model->getAttributeLabel('user_search'); ?>
 			<?php echo $form->textField($model, 'user_search', array('class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('views'); ?>
-			<?php echo $form->textField($model, 'views', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'views', array('maxlength'=>11, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
@@ -42,7 +47,7 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('view_ip'); ?>
-			<?php echo $form->textField($model, 'view_ip', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'view_ip', array('maxlength'=>20, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>

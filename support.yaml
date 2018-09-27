@@ -35,18 +35,18 @@ content_menu	:
 		urlRules: {support, o/subject, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/subject/add, attr: -, icon: -}
 		
-# controller o/views
+# controller o/view
 	- urlTitle: Back to Feedbacks
-		urlRules: {support, o/views, manage, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {support, o/view, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/feedback/manage, attr: -, icon: -}
 	- urlTitle: View Feedback Views Data
-		urlRules: {support, o/views, manage, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {support, o/view, manage, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: history/view/manage, attr: -, icon: -}
 
 # controller history/view
 	- urlTitle: Back to Feedback Views
 		urlRules: {support, history/view, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/views/manage, attr: -, icon: -}
+		urlPath: {url: o/view/manage, attr: -, icon: -}
 		
 # controller o/user
 	- urlTitle: Back to Feedbacks

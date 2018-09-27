@@ -8,14 +8,14 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 23 August 2017, 05:42 WIB
- * @modified date 21 March 2018, 08:46 WIB
+ * @modified date 27 September 2018, 15:18 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
-		Yii::t('phrase', 'Users')=>array('manage'),
+		Yii::t('phrase', 'Feedback User')=>array('manage'),
 		Yii::t('phrase', 'Manage'),
 	);
 	$this->menu=array(
@@ -73,24 +73,27 @@
 				'class' => 'CButtonColumn',
 				'buttons' => array(
 					'view' => array(
-						'label' => Yii::t('phrase', 'Detail Feedback User'),
+						'label' => Yii::t('phrase', 'Detail'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'view',
+							'title' => Yii::t('phrase', 'Detail Feedback User'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\', array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
-						'label' => Yii::t('phrase', 'Update Feedback User'),
+						'label' => Yii::t('phrase', 'Update'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'update',
+							'title' => Yii::t('phrase', 'Update Feedback User'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\', array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
-						'label' => Yii::t('phrase', 'Delete Feedback User'),
+						'label' => Yii::t('phrase', 'Delete'),
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'delete',
+							'title' => Yii::t('phrase', 'Delete Feedback User'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'delete\', array(\'id\'=>$data->primaryKey))'),
 				),

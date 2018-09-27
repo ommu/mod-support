@@ -6,27 +6,27 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
  * @created date 11 May 2017, 23:12 WIB
- * @modified date 19 March 2018, 19:51 WIB
+ * @modified date 27 September 2018, 12:06 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_view".
  *
  * The followings are the available columns in table 'ommu_support_feedback_view':
- * @property string $view_id
+ * @property integer $view_id
  * @property integer $publish
- * @property string $feedback_id
- * @property string $user_id
+ * @property integer $feedback_id
+ * @property integer $user_id
  * @property integer $views
  * @property string $view_date
  * @property string $view_ip
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  *
  * The followings are the available model relations:
  * @property SupportFeedbacks $feedback
- * @property SupportFeedbackViewHistory[] $histories
  * @property Users $user
+ * @property SupportFeedbackViewHistory[] $histories
  * @property Users $modified
  */
 
@@ -38,6 +38,7 @@ class SupportFeedbackView extends OActiveRecord
 
 	// Variable Search
 	public $subject_search;
+	public $feedback_search;
 	public $user_search;
 	public $modified_search;
 
@@ -70,14 +71,15 @@ class SupportFeedbackView extends OActiveRecord
 		// will receive user inputs.
 		return array(
 			array('feedback_id', 'required'),
-			array('publish, views', 'numerical', 'integerOnly'=>true),
+			array('publish, feedback_id, user_id, views, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish, user_id, views', 'safe'),
 			array('feedback_id, user_id, modified_id', 'length', 'max'=>11),
 			array('view_ip', 'length', 'max'=>20),
-			array('publish, user_id', 'safe'),
+			// array('view_date, modified_date, updated_date', 'trigger'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('view_id, publish, feedback_id, user_id, views, view_date, view_ip, modified_date, modified_id, updated_date, 
-				subject_search, user_search, modified_search', 'safe', 'on'=>'search'),
+			array('view_id, publish, feedback_id, user_id, views, view_date, view_ip, modified_date, modified_id, updated_date,
+				subject_search, feedback_search, user_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -90,8 +92,8 @@ class SupportFeedbackView extends OActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'feedback' => array(self::BELONGS_TO, 'SupportFeedbacks', 'feedback_id'),
-			'histories' => array(self::HAS_MANY, 'SupportFeedbackViewHistory', 'view_id'),
 			'user' => array(self::BELONGS_TO, 'Users', 'user_id'),
+			'histories' => array(self::HAS_MANY, 'SupportFeedbackViewHistory', 'view_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
@@ -113,9 +115,9 @@ class SupportFeedbackView extends OActiveRecord
 			'modified_id' => Yii::t('attribute', 'Modified'),
 			'updated_date' => Yii::t('attribute', 'Updated Date'),
 			'subject_search' => Yii::t('attribute', 'Subject'),
+			'feedback_search' => Yii::t('attribute', 'Feedback'),
 			'user_search' => Yii::t('attribute', 'User'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
-			'message_i' => Yii::t('attribute', 'Message'),
 		);
 	}
 
@@ -136,15 +138,13 @@ class SupportFeedbackView extends OActiveRecord
 		// @todo Please modify the following code to remove attributes that should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		// Custom Search
 		$criteria->with = array(
 			'feedback' => array(
 				'alias' => 'feedback',
-				'select' => 'subject_id',
+				'select' => 'subject_id, user_id, email, displayname, message',
 			),
 			'feedback.subject.title' => array(
-				'alias' => 'feedback_subject',
+				'alias' => 'subjectTitle',
 				'select' => 'message',
 			),
 			'user' => array(
@@ -180,8 +180,9 @@ class SupportFeedbackView extends OActiveRecord
 		if($this->updated_date != null && !in_array($this->updated_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')))
 			$criteria->compare('date(t.updated_date)', date('Y-m-d', strtotime($this->updated_date)));
 
-		$criteria->compare('feedback_subject.message', strtolower($this->subject_search), true);
-		$criteria->compare('user.displayname', strtolower($this->user_search), true);
+		$criteria->compare('subjectTitle.message', strtolower($this->subject_search), true);			//feedback.subject.title.message
+		$criteria->compare('feedback.message', strtolower($this->feedback_search), true);			//feedback.message
+		$criteria->compare('user.displayname', strtolower($this->user_search), true);			//user.displayname
 		$criteria->compare('modified.displayname', strtolower($this->modified_search), true);
 
 		if(!Yii::app()->getRequest()->getParam('SupportFeedbackView_sort'))
@@ -218,6 +219,10 @@ class SupportFeedbackView extends OActiveRecord
 					'name' => 'subject_search',
 					'value' => '$data->feedback->subject_id ? $data->feedback->subject->title->message : \'-\'',
 				);
+				$this->templateColumns['feedback_search'] = array(
+					'name' => 'feedback_search',
+					'value' => '$data->feedback->message',
+				);
 			}
 			if(!Yii::app()->getRequest()->getParam('user')) {
 				$this->templateColumns['user_search'] = array(
@@ -236,9 +241,6 @@ class SupportFeedbackView extends OActiveRecord
 			$this->templateColumns['view_ip'] = array(
 				'name' => 'view_ip',
 				'value' => '$data->view_ip',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
 			);
 			$this->templateColumns['modified_date'] = array(
 				'name' => 'modified_date',
@@ -268,6 +270,7 @@ class SupportFeedbackView extends OActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
+				'filter' => false,
 				'type' => 'raw',
 			);
 			if(!Yii::app()->getRequest()->getParam('type')) {
@@ -286,7 +289,7 @@ class SupportFeedbackView extends OActiveRecord
 	}
 
 	/**
-	 * User get information
+	 * Model get information
 	 */
 	public static function getInfo($id, $column=null)
 	{
@@ -294,10 +297,10 @@ class SupportFeedbackView extends OActiveRecord
 			$model = self::model()->findByPk($id, array(
 				'select' => $column,
 			));
- 			if(count(explode(',', $column)) == 1)
- 				return $model->$column;
- 			else
- 				return $model;
+			if(count(explode(',', $column)) == 1)
+				return $model->$column;
+			else
+				return $model;
 			
 		} else {
 			$model = self::model()->findByPk($id);
@@ -311,7 +314,7 @@ class SupportFeedbackView extends OActiveRecord
 	public static function insertView($feedback_id)
 	{
 		$criteria=new CDbCriteria;
-		$criteria->select = 'view_id, feedback_id, user_id, views';
+		$criteria->select = 'view_id, views';
 		$criteria->compare('publish', 1);
 		$criteria->compare('feedback_id', $feedback_id);
 		if(!Yii::app()->user->isGuest)
@@ -340,10 +343,8 @@ class SupportFeedbackView extends OActiveRecord
 				$this->user_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
 			else
 				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-			
 			$this->view_ip = $_SERVER['REMOTE_ADDR'];
 		}
 		return true;
 	}
-
 }
