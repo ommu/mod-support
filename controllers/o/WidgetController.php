@@ -23,7 +23,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
- * @modified date 21 September 2018, 07:45 WIB
+ * @modified date 27 September 2018, 11:47 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class WidgetController extends Controller
 	public function init() 
 	{
 		if(!Yii::app()->user->isGuest) {
-			if(Yii::app()->user->level == 1) {
+			if(in_array(Yii::app()->user->level, array(1,2))) {
 				$arrThemes = $this->currentTemplate('admin');
 				Yii::app()->theme = $arrThemes['folder'];
 				$this->layout = $arrThemes['layout'];
@@ -75,7 +75,7 @@ class WidgetController extends Controller
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('index','manage','add','edit','view','delete','runaction','publish'),
 				'users'=>array('@'),
-				'expression'=>'Yii::app()->user->level == 1',
+				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -107,9 +107,9 @@ class WidgetController extends Controller
 		$pageTitle = Yii::t('phrase', 'Support Widgets');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Support Widgets: Category {name}', array ('{name}'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Widgets: {name}', array ('{name}'=>$data->title->message));
 		}
-		
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';

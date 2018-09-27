@@ -34,5 +34,5 @@
 		<?php echo CHtml::submitButton($title, array('onclick' => 'setEnableSave()')); ?>
 		<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 	</div>
-	
+
 <?php $this->endWidget(); ?>

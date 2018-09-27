@@ -78,7 +78,7 @@
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'view',
-							'title' => Yii::t('phrase', 'Detail Support Widget'),
+							'title' => Yii::t('phrase', 'Detail Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'view\', array(\'id\'=>$data->primaryKey))'),
 					'update' => array(
@@ -86,7 +86,7 @@
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'update',
-							'title' => Yii::t('phrase', 'Update Support Widget'),
+							'title' => Yii::t('phrase', 'Update Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'edit\', array(\'id\'=>$data->primaryKey))'),
 					'delete' => array(
@@ -94,7 +94,7 @@
 						'imageUrl' => Yii::app()->params['grid-view']['buttonImageUrl'],
 						'options' => array(
 							'class' => 'delete',
-							'title' => Yii::t('phrase', 'Delete Support Widget'),
+							'title' => Yii::t('phrase', 'Delete Widget'),
 						),
 						'url' => 'Yii::app()->controller->createUrl(\'delete\', array(\'id\'=>$data->primaryKey))'),
 				),

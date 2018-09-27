@@ -23,7 +23,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 21 September 2018, 07:46 WIB
+ * @modified date 27 September 2018, 11:46 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -112,9 +112,9 @@ class ContactController extends Controller
 		$pageTitle = Yii::t('phrase', 'Support Contacts');
 		if($category != null) {
 			$data = SupportContactCategory::model()->findByPk($category);
-			$pageTitle = Yii::t('phrase', 'Support Contacts: Category {name}', array ('{name}'=>$data->title->message));
+			$pageTitle = Yii::t('phrase', 'Contacts: {name}', array ('{name}'=>$data->title->message));
 		}
-		
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -209,7 +209,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Update Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Update Contact: {name} {contact_name}', array('{name}'=>$model->category->title->message, '{contact_name}'=>$model->contact_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit', array(
@@ -229,7 +229,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Detail Contact: {name} {contact_name}', array('{name}'=>$model->category->title->message, '{contact_name}'=>$model->contact_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_view', array(
@@ -266,7 +266,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', 'Delete Contact: {name} {contact_name}', array('{contact_name}'=>$model->contact_name, '{name}'=>$model->category->title->message));
+		$this->pageTitle = Yii::t('phrase', 'Delete Contact: {name} {contact_name}', array('{name}'=>$model->category->title->message, '{contact_name}'=>$model->contact_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_delete');
@@ -339,7 +339,7 @@ class ContactController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 350;
 
-		$this->pageTitle = Yii::t('phrase', '{title} Contact: {name}', array('{title}'=>$title, '{name}'=>$model->contact_name));
+		$this->pageTitle = Yii::t('phrase', '{title} Contact: {name} {contact_name}', array('{title}'=>$title, '{name}'=>$model->category->title->message, '{contact_name}'=>$model->contact_name));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_publish', array(

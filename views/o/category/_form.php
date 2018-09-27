@@ -8,7 +8,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 21 September 2018, 06:36 WIB
+ * @modified date 27 September 2018, 11:45 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -54,7 +54,6 @@
 			</div>
 		</div>
 
-		<?php if($model->publish != 2) {?>
 		<div class="form-group row publish">
 			<?php echo $form->labelEx($model, 'publish', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
 			<div class="col-lg-8 col-md-8 col-sm-12">
@@ -63,7 +62,7 @@
 				<?php echo $form->error($model, 'publish'); ?>
 			</div>
 		</div>
-		<?php }?>
+
 	</fieldset>
 </div>
 <div class="dialog-submit">
