@@ -52,10 +52,6 @@
 			'type'=>'raw',
 		),
 		array(
-			'name'=>'reply_search',
-			'value'=>$model->view->reply_condition ? Yii::t('phrase', 'Yes') : Yii::t('phrase', 'No'),
-		),
-		array(
 			'name'=>'reply_message',
 			'value'=>$model->reply_message ? $model->reply_message : '-',
 			'type'=>'raw',
@@ -65,16 +61,8 @@
 			'value'=>!in_array($model->replied_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')) ? $this->dateFormat($model->replied_date) : '-',
 		),
 		array(
-			'name'=>'replied_id',
-			'value'=>$model->replied_id ? $model->replied->displayname : '-',
-		),
-		array(
-			'name'=>'views_search',
-			'value'=>$model->view->views ? $model->view->views : '0',
-		),
-		array(
-			'name'=>'users_search',
-			'value'=>$model->view->view_users ? $model->view->view_users : '0',
+			'name'=>'replied_search',
+			'value'=>$model->replied->displayname ? $model->replied->displayname : '-',
 		),
 		array(
 			'name'=>'creation_date',
@@ -91,6 +79,21 @@
 		array(
 			'name'=>'updated_date',
 			'value'=>!in_array($model->updated_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00')) ? $this->dateFormat($model->updated_date) : '-',
+		),
+		array(
+			'name'=>'reply_i',
+			'value'=>$this->parseYesNo($model->reply_i),
+			'type'=>'raw',
+		),
+		array(
+			'name'=>'view_i',
+			'value'=>$this->parseYesNo($model->view_i),
+			'type'=>'raw',
+		),
+		array(
+			'name'=>'user_i',
+			'value'=>CHtml::link($model->user_i ? $model->user_i : 0, Yii::app()->controller->createUrl('o/user/manage', array('feedback'=>$model->feedback_id))),
+			'type'=>'raw',
 		),
 	),
 )); ?>

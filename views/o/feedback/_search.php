@@ -9,6 +9,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 21 March 2018, 08:48 WIB
+ * @modified date 27 September 2018, 15:17 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -31,17 +32,17 @@
 
 		<li>
 			<?php echo $model->getAttributeLabel('email'); ?>
-			<?php echo $form->textField($model, 'email', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'email', array('maxlength'=>32, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('displayname'); ?>
-			<?php echo $form->textField($model, 'displayname', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'displayname', array('maxlength'=>32, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>
 			<?php echo $model->getAttributeLabel('phone'); ?>
-			<?php echo $form->textField($model, 'phone', array('class'=>'form-control')); ?>
+			<?php echo $form->textField($model, 'phone', array('maxlength'=>15, 'class'=>'form-control')); ?>
 		</li>
 
 		<li>

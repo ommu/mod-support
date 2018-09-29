@@ -8,7 +8,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
- * @modified date 21 March 2018, 08:48 WIB
+ * @modified date 27 September 2018, 15:17 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -18,9 +18,9 @@ $js=<<<EOP
 	$('select#SupportFeedbacks_subject_id').on('change', function() {
 		var id = $(this).val();
 		if(id == '') {
-			$('div#subject_i').slideDown();
+			$('div#subject_i').slideDown().css('display', '').removeClass('hide');
 		} else {
-			$('div#subject_i').slideUp();
+			$('div#subject_i').slideUp().addClass('hide');
 		}
 	});
 EOP;
@@ -31,12 +31,13 @@ EOP;
 	'id'=>'support-feedbacks-form',
 	'enableAjaxValidation'=>true,
 	/*
+	'htmlOptions' => array(
+		'enctype' => 'multipart/form-data',
+		'on_post' => '',
+	),
 	'enableClientValidation'=>true,
 	'clientOptions'=>array(
 		'validateOnSubmit'=>true,
-	),
-	'htmlOptions' => array(
-		'enctype' => 'multipart/form-data',
 	),
 	*/
 )); ?>
@@ -51,74 +52,63 @@ EOP;
 		<?php //begin.Messages ?>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'displayname', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
-				<?php echo $form->textField($model, 'displayname', array('maxlength'=>32, 'class'=>'form-control'));?>
-				<?php echo $form->error($model, 'displayname');?>
+			<?php echo $form->labelEx($model, 'displayname', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php echo $form->textField($model, 'displayname', array('maxlength'=>32, 'class'=>'form-control')); ?>
+				<?php echo $form->error($model, 'displayname'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'email', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'email', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->textField($model, 'email', array('maxlength'=>32, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'email'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'phone', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'phone', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->textField($model, 'phone', array('maxlength'=>15, 'class'=>'form-control')); ?>
 				<?php echo $form->error($model, 'phone'); ?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'subject_id', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
-				<?php 
-				$subjects = SupportFeedbackSubject::getSubject();
-				if($subjects != null)
-					echo $form->dropDownList($model, 'subject_id', $subjects, array('prompt'=>Yii::t('phrase', 'Other Subject'), 'class'=>'form-control'));
-				else 
-					echo $form->dropDownList($model, 'subject_id', array(0=>Yii::t('phrase', 'Other Subject')), array('class'=>'form-control'));?>
-				<?php echo $form->error($model, 'subject_id');?>
+			<?php echo $form->labelEx($model, 'subject_id', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php $subject = SupportFeedbackSubject::getSubject();
+				if($subject != null)
+					echo $form->dropDownList($model, 'subject_id', $subject, array('prompt'=>Yii::t('phrase', 'Other Subject'), 'class'=>'form-control'));
+				else
+					echo $form->dropDownList($model, 'subject_id', array(0=>Yii::t('phrase', 'Other Subject')), array('class'=>'form-control')); ?>
+				<?php echo $form->error($model, 'subject_id'); ?>
 			</div>
 		</div>
 
 		<div id="subject_i" class="form-group row hide">
-			<?php echo $form->labelEx($model, 'subject_i', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
+			<?php echo $form->labelEx($model, 'subject_i', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php echo $form->textField($model, 'subject_i', array('maxlength'=>64, 'class'=>'form-control'));?>
 				<?php echo $form->error($model, 'subject_i');?>
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<?php echo $form->labelEx($model, 'message', array('class'=>'col-form-label col-lg-3 col-md-3 col-sm-12')); ?>
-			<div class="col-lg-9 col-md-9 col-sm-12">
-				<?php $this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
-					'model'=>$model,
-					'attribute'=>'message',
-					'options'=>array(
-						'buttons'=>array(
-							'html', 'formatting', '|', 
-							'bold', 'italic', 'deleted', '|',
-							'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-							'link', '|',
-						),
-					),
-					'plugins' => array(
-						'fontcolor' => array('js' => array('fontcolor.js')),
-						'table' => array('js' => array('table.js')),
-						'fullscreen' => array('js' => array('fullscreen.js')),
-					),
-					'htmlOptions'=>array(
-						'class' => 'form-control',
-					),
-				)); ?>
+			<?php echo $form->labelEx($model, 'message', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php echo $form->textArea($model, 'message', array('rows'=>6, 'cols'=>50, 'class'=>'medium form-control')); ?>
 				<?php echo $form->error($model, 'message'); ?>
+			</div>
+		</div>
+
+		<div class="form-group row publish">
+			<?php echo $form->labelEx($model, 'publish', array('class'=>'col-form-label col-lg-4 col-md-4 col-sm-12')); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php echo $form->checkBox($model, 'publish', array('class'=>'form-control')); ?>
+				<?php echo $form->labelEx($model, 'publish'); ?>
+				<?php echo $form->error($model, 'publish'); ?>
 			</div>
 		</div>
 

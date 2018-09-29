@@ -15,14 +15,24 @@
 
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('manage'),
-		$model->displayname=>array('view','id'=>$model->feedback_id),
-		Yii::t('phrase', 'Update'),
+		$model->subject->title->message=>array('view','id'=>$model->feedback_id),
+		Yii::t('phrase', 'Reply'),
 	);
 ?>
 
 <?php $form=$this->beginWidget('application.libraries.yii-traits.system.OActiveForm', array(
 	'id'=>'support-feedbacks-form',
 	'enableAjaxValidation'=>true,
+	/*
+	'htmlOptions' => array(
+		'enctype' => 'multipart/form-data',
+		'on_post' => '',
+	),
+	'enableClientValidation'=>true,
+	'clientOptions'=>array(
+		'validateOnSubmit'=>true,
+	),
+	*/
 )); ?>
 <div class="dialog-content">
 
@@ -32,8 +42,8 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-form-label col-lg-3 col-md-3 col-sm-12"><?php echo $model->getAttributeLabel('feedback_id')?></label>
-			<div class="col-lg-6 col-md-9 col-sm-12">
+			<label class="col-form-label col-lg-4 col-md-4 col-sm-12"><?php echo $model->getAttributeLabel('feedback_id')?></label>
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<?php 
 				$subject = $model->subject_id ? $model->subject->title->message : '-';
 				echo Yii::t('phrase', 'Subject: {subject}', array('{subject}'=>$subject));?><br/>
@@ -43,31 +53,12 @@
 		</div>
 
 		<div class="form-group row">
-			<label class="col-form-label col-lg-3 col-md-3 col-sm-12">
+			<label class="col-form-label col-lg-4 col-md-4 col-sm-12">
 				<?php echo $model->getAttributeLabel('reply_message');?> <span class="required">*</span>
 			</label>
-			<div class="col-lg-6 col-md-9 col-sm-12">
-				<?php $this->widget('yiiext.imperavi-redactor-widget.ImperaviRedactorWidget', array(
-					'model'=>$model,
-					'attribute'=>'reply_message',
-					'options'=>array(
-						'buttons'=>array(
-							'html', 'formatting', '|', 
-							'bold', 'italic', 'deleted', '|',
-							'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-							'link', '|',
-						),
-					),
-					'plugins' => array(
-						'fontcolor' => array('js' => array('fontcolor.js')),
-						'table' => array('js' => array('table.js')),
-						'fullscreen' => array('js' => array('fullscreen.js')),
-					),
-					'htmlOptions'=>array(
-						'class' => 'form-control',
-					 ),
-				)); ?>
-				<?php echo $form->error($model,'reply_message'); ?>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+				<?php echo $form->textArea($model, 'reply_message', array('rows'=>6, 'cols'=>50, 'class'=>'medium form-control')); ?>
+				<?php echo $form->error($model, 'reply_message'); ?>
 			</div>
 		</div>
 

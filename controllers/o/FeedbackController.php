@@ -12,8 +12,8 @@
  *	Edit
  *	Reply
  *	View
- *	Runaction
  *	Delete
+ *	Runaction
  *	Publish
  *
  *	LoadModel
@@ -23,6 +23,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @created date 21 March 2018, 08:48 WIB
+ * @modified date 27 September 2018, 15:17 WIB
  * @link https://github.com/ommu/mod-support
  *
  *----------------------------------------------------------------------------------------------------------
@@ -72,7 +73,7 @@ class FeedbackController extends Controller
 	{
 		return array(
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index','manage','edit','reply','view','runaction','delete','publish'),
+				'actions'=>array('index','manage','edit','view','delete','runaction','publish','reply'),
 				'users'=>array('@'),
 				'expression'=>'in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -81,7 +82,7 @@ class FeedbackController extends Controller
 			),
 		);
 	}
-	
+
 	/**
 	 * Lists all models.
 	 */
@@ -93,22 +94,30 @@ class FeedbackController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionManage($user=null) 
+	public function actionManage($user=null, $subject=null, $replied=null) 
 	{
 		$model=new SupportFeedbacks('search');
 		$model->unsetAttributes();	// clear any default values
-		if(Yii::app()->getRequest()->getParam('SupportFeedbacks')) {
-			$model->attributes=Yii::app()->getRequest()->getParam('SupportFeedbacks');
-		}
+		$SupportFeedbacks = Yii::app()->getRequest()->getParam('SupportFeedbacks');
+		if($SupportFeedbacks)
+			$model->attributes=$SupportFeedbacks;
 
 		$columns = $model->getGridColumn($this->gridColumnTemp());
 
-		$pageTitle = Yii::t('phrase', 'Feedbacks');
-		if($user != null && $user != '0') {
+		$pageTitle = Yii::t('phrase', 'Support Feedbacks');
+		if($user != null) {
 			$data = Users::model()->findByPk($user);
-			$pageTitle = Yii::t('phrase', 'Feedback: User {displayname}', array ('{displayname}'=>$data->displayname));
+			$pageTitle = Yii::t('phrase', 'Feedbacks: User {displayname}', array ('{displayname}'=>$data->displayname));
 		}
-		
+		if($subject != null) {
+			$data = SupportFeedbackSubject::model()->findByPk($subject);
+			$pageTitle = Yii::t('phrase', 'Feedbacks: Subject {subject_name}', array ('{subject_name}'=>$data->title->message));
+		}
+		if($replied != null) {
+			$data = Users::model()->findByPk($replied);
+			$pageTitle = Yii::t('phrase', 'Feedbacks: Reply {displayname}', array ('{displayname}'=>$data->displayname));
+		}
+
 		$this->pageTitle = $pageTitle;
 		$this->pageDescription = '';
 		$this->pageMeta = '';
@@ -145,7 +154,7 @@ class FeedbackController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-feedbacks',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success updated.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support feedback success updated.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -153,19 +162,147 @@ class FeedbackController extends Controller
 			}
 			Yii::app()->end();
 		}
-		
+
 		$this->dialogDetail = true;
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Update Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
-		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Update Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
-
-		$this->pageTitle = $pageTitle;
+		$this->pageTitle = Yii::t('phrase', 'Update Feedback: {subject_id} By {displayname}', array('{subject_id}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit', array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionView($id) 
+	{
+		$model=$this->loadModel($id);
+		SupportFeedbackView::insertView($model->feedback_id);
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = Yii::t('phrase', 'Detail Feedback: {subject_id} By {displayname}', array('{subject_id}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_view', array(
+			'model'=>$model,
+		));
+	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionDelete($id) 
+	{
+		$model=$this->loadModel($id);
+		
+		if(Yii::app()->request->isPostRequest) {
+			// we only allow deletion via POST request
+			$model->publish = 2;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+			
+			if($model->update()) {
+				echo CJSON::encode(array(
+					'type' => 5,
+					'get' => Yii::app()->controller->createUrl('manage'),
+					'id' => 'partial-support-feedbacks',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support feedback success deleted.').'</strong></div>',
+				));
+			}
+			Yii::app()->end();
+		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', 'Delete Feedback: {subject_id} By {displayname}', array('{subject_id}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_delete');
+	}
+
+	/**
+	 * Displays a particular model.
+	 * @param integer $id the ID of the model to be displayed
+	 */
+	public function actionRunaction() 
+	{
+		$id       = $_POST['trash_id'];
+		$criteria = null;
+		$actions  = Yii::app()->getRequest()->getParam('action');
+
+		if(count($id) > 0) {
+			$criteria = new CDbCriteria;
+			$criteria->addInCondition('feedback_id', $id);
+
+			if($actions == 'publish') {
+				SupportFeedbacks::model()->updateAll(array(
+					'publish' => 1,
+				), $criteria);
+			} elseif($actions == 'unpublish') {
+				SupportFeedbacks::model()->updateAll(array(
+					'publish' => 0,
+				), $criteria);
+			} elseif($actions == 'trash') {
+				SupportFeedbacks::model()->updateAll(array(
+					'publish' => 2,
+				), $criteria);
+			} elseif($actions == 'delete') {
+				SupportFeedbacks::model()->deleteAll($criteria);
+			}
+		}
+
+		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+		if(!Yii::app()->getRequest()->getParam('ajax'))
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
+	}
+
+	/**
+	 * Publish a particular model.
+	 * If publish is successful, the browser will be redirected to the 'manage' page.
+	 * @param integer $id the ID of the model to be publish
+	 */
+	public function actionPublish($id) 
+	{
+		$model=$this->loadModel($id);
+		$title = $model->publish == 1 ? Yii::t('phrase', 'Unpublish') : Yii::t('phrase', 'Publish');
+		$replace = $model->publish == 1 ? 0 : 1;
+
+		if(Yii::app()->request->isPostRequest) {
+			// we only allow publish via POST request
+			$model->publish = $replace;
+			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
+
+			if($model->update()) {
+				echo CJSON::encode(array(
+					'type' => 5,
+					'get' => Yii::app()->controller->createUrl('manage'),
+					'id' => 'partial-support-feedbacks',
+					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support feedback success updated.').'</strong></div>',
+				));
+			}
+			Yii::app()->end();
+		}
+
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 350;
+
+		$this->pageTitle = Yii::t('phrase', '{title} Feedback: {subject_id} By {displayname}', array('{title}'=>$title, '{subject_id}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_publish', array(
+			'title'=>$title,
 			'model'=>$model,
 		));
 	}
@@ -201,7 +338,7 @@ class FeedbackController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-support-feedbacks',
-							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success replied.').'</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Support feedback success replied.').'</strong></div>',
 						));
 					} else
 						print_r($model->getErrors());
@@ -214,164 +351,14 @@ class FeedbackController extends Controller
 		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 		$this->dialogWidth = 600;
 
-		$pageTitle = Yii::t('phrase', 'Reply Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
-		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Reply Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
-
-		$this->pageTitle = $pageTitle;
+		$this->pageTitle = Yii::t('phrase', 'Reply Feedback: {subject_id} By {displayname}', array('{subject_id}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_reply', array(
 			'model'=>$model,
 		));
 	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionView($id) 
-	{
-		$model=$this->loadModel($id);
-		SupportFeedbackView::insertView($model->feedback_id);
-		
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 600;
-
-		$pageTitle = Yii::t('phrase', 'Detail Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
-		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Detail Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
-			
-		$this->pageTitle = $pageTitle;
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_view', array(
-			'model'=>$model,
-		));
-	}
-
-	/**
-	 * Displays a particular model.
-	 * @param integer $id the ID of the model to be displayed
-	 */
-	public function actionRunaction() {
-		$id       = $_POST['trash_id'];
-		$criteria = null;
-		$actions  = Yii::app()->getRequest()->getParam('action');
-
-		if(count($id) > 0) {
-			$criteria = new CDbCriteria;
-			$criteria->addInCondition('feedback_id', $id);
-
-			if($actions == 'publish') {
-				SupportFeedbacks::model()->updateAll(array(
-					'publish' => 1,
-				),$criteria);
-			} elseif($actions == 'unpublish') {
-				SupportFeedbacks::model()->updateAll(array(
-					'publish' => 0,
-				),$criteria);
-			} elseif($actions == 'trash') {
-				SupportFeedbacks::model()->updateAll(array(
-					'publish' => 2,
-				),$criteria);
-			} elseif($actions == 'delete') {
-				SupportFeedbacks::model()->deleteAll($criteria);
-			}
-		}
-
-		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!Yii::app()->getRequest()->getParam('ajax')) {
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('manage'));
-		}
-	}
-
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionDelete($id) 
-	{
-		$model=$this->loadModel($id);
-		
-		if(Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			$model->publish = 2;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-			
-			if($model->update()) {
-				echo CJSON::encode(array(
-					'type' => 5,
-					'get' => Yii::app()->controller->createUrl('manage'),
-					'id' => 'partial-support-feedbacks',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success deleted.').'</strong></div>',
-				));
-			}
-			Yii::app()->end();
-		}
-
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 350;
-
-		$pageTitle = Yii::t('phrase', 'Delete Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
-		if($model->user_id)
-			$pageTitle = Yii::t('phrase', 'Delete Feedback: {subject} by {displayname}', array('{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
-
-		$this->pageTitle = $pageTitle;
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_delete');
-	}
-
-	/**
-	 * Deletes a particular model.
-	 * If deletion is successful, the browser will be redirected to the 'admin' page.
-	 * @param integer $id the ID of the model to be deleted
-	 */
-	public function actionPublish($id) 
-	{
-		$model=$this->loadModel($id);
-		
-		$title = $model->publish == 1 ? Yii::t('phrase', 'Unpublish') : Yii::t('phrase', 'Publish');
-		$replace = $model->publish == 1 ? 0 : 1;
-
-		if(Yii::app()->request->isPostRequest) {
-			// we only allow deletion via POST request
-			//change value active or publish
-			$model->publish = $replace;
-			$model->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : null;
-
-			if($model->update()) {
-				echo CJSON::encode(array(
-					'type' => 5,
-					'get' => Yii::app()->controller->createUrl('manage'),
-					'id' => 'partial-support-feedbacks',
-					'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Feedback success updated.').'</strong></div>',
-				));
-			}
-			Yii::app()->end();
-		}
-
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 350;
-
-		$pageTitle = Yii::t('phrase', '{title} Feedback: {subject} by {displayname}', array('{title}'=>$title, '{subject}'=>$model->subject->title->message, '{displayname}'=>$model->displayname));
-		if($model->user_id)
-			$pageTitle = Yii::t('phrase', '{title} Feedback: {subject} by {displayname}', array('{title}'=>$title, '{subject}'=>$model->subject->title->message, '{displayname}'=>$model->user->displayname));
-			
-		$this->pageTitle = $pageTitle;
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_publish', array(
-			'title'=>$title,
-			'model'=>$model,
-		));
-	}
-
+	
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -396,4 +383,5 @@ class FeedbackController extends Controller
 			Yii::app()->end();
 		}
 	}
+
 }
