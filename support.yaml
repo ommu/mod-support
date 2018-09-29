@@ -67,9 +67,9 @@ content_menu	:
 		urlPath: {url: o/widget/manage, attr: -, icon: -}
 	- urlTitle: Address
 		urlRules: {support, o/contact, manage, siteType: "0,1", userLevel: "1,2"}
-		urlPath: {url: o/contact/setting, attr: -, icon: -}
+		urlPath: {url: o/contact/address, attr: -, icon: -}
 	- urlTitle: Back to Contacts
-		urlRules: {support, o/contact, setting, siteType: "0,1", userLevel: "1,2"}
+		urlRules: {support, o/contact, address, siteType: "0,1", userLevel: "1,2"}
 		urlPath: {url: o/contact/manage, attr: -, icon: -}
 		
 # controller o/category

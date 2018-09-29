@@ -15,12 +15,11 @@
 	$this->breadcrumbs=array(
 		Yii::t('phrase', 'Support')=>array('o/feedback/manage'),
 		Yii::t('phrase', 'Contact')=>array('manage'),
-		'Address',
+		Yii::t('phrase', 'Address'),
 	);
 ?>
 
 <div class="form" name="post-on">
-
 	<?php $form=$this->beginWidget('application.libraries.yii-traits.system.OActiveForm', array(
 	'id'=>'support-contacts-form',
 		'enableAjaxValidation'=>true,
