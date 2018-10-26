@@ -17,8 +17,8 @@
  * The followings are the available model relations:
  * @property SupportFeedbacks $feedbacks
 
- * @copyright Copyright (c) 2017 ECC UGM (ecc.ft.ugm.ac.id)
- * @link http://ecc.ft.ugm.ac.id
+ * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @created date 20 September 2017, 15:37 WIB
  * @contact (+62)856-299-4114

@@ -4,11 +4,11 @@
  * 
  * @author Eko Hariyanto <haryeko29@gmail.com>
  * @contact (+62)857-4381-4273
- * @copyright Copyright (c) 2018 ECC UGM (ecc.ft.ugm.ac.id)
+ * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
  * @created date 18 April 2018, 17:39 WIB
  * @modified date 18 April 2018, 17:39 WIB
  * @modified by Eko Hariyanto <haryeko29@gmail.com>
- * @link http://ecc.ft.ugm.ac.id
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_subject".
  *
