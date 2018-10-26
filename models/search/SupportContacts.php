@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportContacts
- * version: 0.0.1
  *
  * SupportContacts represents the model behind the search form about `app\modules\support\models\SupportContacts`.
  *

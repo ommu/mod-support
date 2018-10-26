@@ -3,7 +3,6 @@
  * CategoryController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportContactCategory
- * version: 0.0.1
  *
  * CategoryController implements the CRUD actions for SupportContactCategory model.
  * Reference start

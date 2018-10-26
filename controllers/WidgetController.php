@@ -3,7 +3,6 @@
  * WidgetController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportWidget
- * version: 0.0.1
  *
  * WidgetController implements the CRUD actions for SupportWidget model.
  * Reference start

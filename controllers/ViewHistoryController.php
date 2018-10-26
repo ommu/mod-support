@@ -3,7 +3,6 @@
  * ViewHistoryController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportFeedbackViewHistory
- * version: 0.0.1
  *
  * ViewHistoryController implements the CRUD actions for SupportFeedbackViewHistory model.
  * Reference start

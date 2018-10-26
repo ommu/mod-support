@@ -3,7 +3,6 @@ namespace app\modules\support;
 
 /**
  * support module definition class
- * version: 0.0.1
  *
  * @copyright Copyright (c) 2017 ECC UGM (ecc.ft.ugm.ac.id)
  * @link http://ecc.ft.ugm.ac.id

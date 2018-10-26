@@ -2,7 +2,6 @@
 /**
  * @var $this yii\web\View
  * @var $this app\modules\support\controllers\DefaultController
- * version: 0.0.1
  *
  * @copyright Copyright (c) 2017 ECC UGM (ecc.ft.ugm.ac.id)
  * @link http://ecc.ft.ugm.ac.id

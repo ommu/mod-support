@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportFeedbackViewHistory
- * version: 0.0.1
  *
  * SupportFeedbackViewHistory represents the model behind the search form about `app\modules\support\models\SupportFeedbackViewHistory`.
  *

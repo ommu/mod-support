@@ -3,7 +3,6 @@
  * ReplyController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportFeedbackReply
- * version: 0.0.1
  *
  * ReplyController implements the CRUD actions for SupportFeedbackReply model.
  * Reference start

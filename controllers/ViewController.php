@@ -3,7 +3,6 @@
  * ViewController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportFeedbackView
- * version: 0.0.1
  *
  * ViewController implements the CRUD actions for SupportFeedbackView model.
  * Reference start

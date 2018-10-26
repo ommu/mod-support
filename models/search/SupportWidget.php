@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportWidget
- * version: 0.0.1
  *
  * SupportWidget represents the model behind the search form about `app\modules\support\models\SupportWidget`.
  *

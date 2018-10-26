@@ -3,7 +3,6 @@
  * UserController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportFeedbackUser
- * version: 0.0.1
  *
  * UserController implements the CRUD actions for SupportFeedbackUser model.
  * Reference start

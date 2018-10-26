@@ -6,7 +6,6 @@ use app\components\Controller;
 /**
  * 
  * @var $this yii\web\View
- * version: 0.0.1
  *
  * Default controller for the `support` module
  * Reference start

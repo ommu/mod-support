@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportFeedbacks
- * version: 0.0.1
  *
  * SupportFeedbacks represents the model behind the search form about `app\modules\support\models\SupportFeedbacks`.
  *

@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportFeedbackUser
- * version: 0.0.1
  *
  * SupportFeedbackUser represents the model behind the search form about `app\modules\support\models\SupportFeedbackUser`.
  *

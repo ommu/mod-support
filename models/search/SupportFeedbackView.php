@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportFeedbackView
- * version: 0.0.1
  *
  * SupportFeedbackView represents the model behind the search form about `app\modules\support\models\SupportFeedbackView`.
  *

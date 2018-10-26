@@ -3,7 +3,6 @@
  * ContactsController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportContacts
- * version: 0.0.1
  *
  * ContactsController implements the CRUD actions for SupportContacts model.
  * Reference start

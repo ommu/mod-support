@@ -5,7 +5,6 @@
  * @var $this app\modules\support\controllers\ContactsController
  * @var $model app\modules\support\models\SupportContacts
  * @var $form yii\widgets\ActiveForm
- * version: 0.0.1
  *
  * @copyright Copyright (c) 2017 ECC UGM (ecc.ft.ugm.ac.id)
  * @link http://ecc.ft.ugm.ac.id

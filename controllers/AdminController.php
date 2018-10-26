@@ -3,7 +3,6 @@
  * AdminController
  * @var $this yii\web\View
  * @var $model app\modules\support\models\SupportFeedbacks
- * version: 0.0.1
  *
  * AdminController implements the CRUD actions for SupportFeedbacks model.
  * Reference start

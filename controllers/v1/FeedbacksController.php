@@ -8,7 +8,6 @@ use app\modules\support\models\SupportFeedbacks;
 
 /**
  * FeedbacksController
- * version: 0.0.1
  *
  * @copyright Copyright(c) 2018 ECC UGM (ecc.ft.ugm.ac.id)
  * @link    http://ecc.ft.ugm.ac.id

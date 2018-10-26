@@ -1,7 +1,6 @@
 <?php
 /**
  * SupportFeedbackViewHistory
- * version: 0.0.1
  *
  * This is the model class for table "ommu_support_feedback_view_history".
  *
