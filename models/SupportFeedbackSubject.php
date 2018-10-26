@@ -44,7 +44,6 @@ use app\modules\user\models\Users;
 class SupportFeedbackSubject extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
-	use \ommu\traits\GridViewTrait;
 
 	public $gridForbiddenColumn = [];
 	public $subject_name_i;

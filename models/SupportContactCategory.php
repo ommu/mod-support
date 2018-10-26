@@ -203,7 +203,7 @@ class SupportContactCategory extends \app\components\ActiveRecord
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
 				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
-				return GridView::getPublish($url, $model->publish);
+				return $this->quickAction($url, $model->publish);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'raw',
