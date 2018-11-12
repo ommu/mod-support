@@ -36,7 +36,7 @@ use mdm\admin\components\AccessControl;
 class ViewHistoryController extends Controller
 {
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function behaviors()
 	{

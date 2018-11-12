@@ -38,7 +38,7 @@ use mdm\admin\components\AccessControl;
 class UserController extends Controller
 {
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function behaviors()
 	{

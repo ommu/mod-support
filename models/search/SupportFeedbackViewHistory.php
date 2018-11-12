@@ -26,7 +26,7 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 	public $feedbackView_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -38,7 +38,7 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{

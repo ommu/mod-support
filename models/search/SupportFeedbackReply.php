@@ -29,7 +29,7 @@ class SupportFeedbackReply extends SupportFeedbackReplyModel
 	public $modified_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -41,7 +41,7 @@ class SupportFeedbackReply extends SupportFeedbackReplyModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{

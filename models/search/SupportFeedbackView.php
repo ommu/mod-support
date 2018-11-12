@@ -29,7 +29,7 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 	public $modified_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -41,7 +41,7 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{

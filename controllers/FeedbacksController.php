@@ -41,7 +41,7 @@ use mdm\admin\components\AccessControl;
 class FeedbacksController extends Controller
 {
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function behaviors()
 	{

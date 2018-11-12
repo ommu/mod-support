@@ -38,7 +38,7 @@ use mdm\admin\components\AccessControl;
 class WidgetController extends Controller
 {
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function behaviors()
 	{

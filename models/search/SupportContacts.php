@@ -29,7 +29,7 @@ class SupportContacts extends SupportContactsModel
 	public $modified_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -41,7 +41,7 @@ class SupportContacts extends SupportContactsModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{

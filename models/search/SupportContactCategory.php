@@ -27,7 +27,7 @@ class SupportContactCategory extends SupportContactCategoryModel
 	public $modified_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -39,7 +39,7 @@ class SupportContactCategory extends SupportContactCategoryModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{

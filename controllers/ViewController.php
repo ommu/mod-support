@@ -38,7 +38,7 @@ use mdm\admin\components\AccessControl;
 class ViewController extends Controller
 {
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function behaviors()
 	{

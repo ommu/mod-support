@@ -29,7 +29,7 @@ class SupportWidget extends SupportWidgetModel
 	public $modified_search;
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
@@ -41,7 +41,7 @@ class SupportWidget extends SupportWidgetModel
 	}
 
 	/**
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function scenarios()
 	{
