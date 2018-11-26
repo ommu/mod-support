@@ -16,7 +16,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use app\libraries\MenuContent;
+use app\components\menu\MenuContent;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support Feedbacks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id' => $model->feedback_id]];
@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Back To Manage'), 'url' => Url::to(['index']), 'icon' => 'table'],
 	['label' => Yii::t('app', 'View'), 'url' => Url::to(['view', 'id' => $model->feedback_id]), 'icon' => 'eye'],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id' => $model->feedback_id]), 'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'), 'method' => 'post', 'icon' => 'trash'],
+	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id' => $model->feedback_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post'], 'icon' => 'trash'],
 ];
 ?>
 
