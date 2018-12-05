@@ -18,7 +18,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\support\models\SupportFeedbacks as SupportFeedbacksModel;
-//use app\modules\user\models\Users;
 
 class SupportFeedbacks extends SupportFeedbacksModel
 {

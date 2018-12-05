@@ -19,7 +19,6 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\support\models\SupportWidget as SupportWidgetModel;
 //use app\modules\support\models\SupportContactCategory;
-//use app\modules\user\models\Users;
 
 class SupportWidget extends SupportWidgetModel
 {

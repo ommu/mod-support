@@ -18,7 +18,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\redactor\widgets\Redactor;
 use yii\helpers\ArrayHelper;
-use app\modules\user\models\Users;
+use ommu\users\models\Users;
 
 $redactorOptions = [
 	'imageManagerJson' => ['/redactor/upload/image-json'],

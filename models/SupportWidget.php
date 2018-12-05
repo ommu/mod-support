@@ -30,7 +30,7 @@ namespace app\modules\support\models;
 
 use Yii;
 use yii\helpers\Url;
-use app\modules\user\models\Users;
+use ommu\users\models\Users;
 use app\libraries\grid\GridView;
 
 class SupportWidget extends \app\components\ActiveRecord
@@ -134,15 +134,10 @@ class SupportWidget extends \app\components\ActiveRecord
 		$this->templateColumns['widget_source'] = 'widget_source';
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
-			'filter'	=> \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'creation_date',
-				'model'	 => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				return !in_array($model->creation_date, ['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00']) ? Yii::$app->formatter->format($model->creation_date, 'date'/*datetime*/) : '-';
+				return Yii::$app->formatter->asDatetime($model->creation_date, 'medium');
 			},
-			'format'	=> 'html',
+			'filter' => $this->filterDatepicker($this, 'creation_date'),
 		];
 		$this->templateColumns['creation_search'] = [
 			'attribute' => 'creation_search',
@@ -152,15 +147,10 @@ class SupportWidget extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['modified_date'] = [
 			'attribute' => 'modified_date',
-			'filter'	=> \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'modified_date',
-				'model'	 => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				return !in_array($model->modified_date, ['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00']) ? Yii::$app->formatter->format($model->modified_date, 'date'/*datetime*/) : '-';
+				return Yii::$app->formatter->asDatetime($model->modified_date, 'medium');
 			},
-			'format'	=> 'html',
+			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
 		$this->templateColumns['modified_search'] = [
 			'attribute' => 'modified_search',
@@ -170,15 +160,10 @@ class SupportWidget extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['updated_date'] = [
 			'attribute' => 'updated_date',
-			'filter'	=> \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'updated_date',
-				'model'	 => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				return !in_array($model->updated_date, ['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00']) ? Yii::$app->formatter->format($model->updated_date, 'date'/*datetime*/) : '-';
+				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
-			'format'	=> 'html',
+			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [

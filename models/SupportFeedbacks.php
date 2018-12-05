@@ -47,8 +47,7 @@ namespace app\modules\support\models;
 
 use Yii;
 use yii\helpers\Url;
-use app\modules\user\models\Users;
-//use app\modules\user\models\Users;
+use ommu\users\models\Users;
 use app\models\SourceMessage;
 use app\modules\support\models\SupportFeedbackSubject;
 use app\libraries\grid\GridView;
@@ -227,20 +226,10 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		$this->templateColumns['reply_message'] = 'reply_message';
 		$this->templateColumns['replied_date'] = [
 			'attribute' => 'replied_date',
-			'filter'    => \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'replied_date',
-				'model'  => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				if(!in_array($model->replied_date, 
-					['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00','0002-12-02 00:00:00','-0001-11-30 00:00:00'])) {
-					return Yii::$app->formatter->format($model->replied_date, 'date');/*datetime*/
-				}else {
-					return '-';
-				}
+				return Yii::$app->formatter->asDatetime($model->replied_date, 'medium');
 			},
-			'format'    => 'html',
+			'filter' => $this->filterDatepicker($this, 'replied_date'),
 		];
 		if(!isset($_GET['user'])) {
 			$this->templateColumns['user_search'] = [
@@ -252,37 +241,17 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		}
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
-			'filter'    => \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'creation_date',
-				'model'  => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				if(!in_array($model->creation_date, 
-					['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00','0002-12-02 00:00:00','-0001-11-30 00:00:00'])) {
-					return Yii::$app->formatter->format($model->creation_date, 'date'/*datetime*/);
-				}else {
-					return '-';
-				}
+				return Yii::$app->formatter->asDatetime($model->creation_date, 'medium');
 			},
-			'format'    => 'html',
+			'filter' => $this->filterDatepicker($this, 'creation_date'),
 		];
 		$this->templateColumns['modified_date'] = [
 			'attribute' => 'modified_date',
-			'filter'    => \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'modified_date',
-				'model'  => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				if(!in_array($model->modified_date, 
-					['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00','0002-12-02 00:00:00','-0001-11-30 00:00:00'])) {
-					return Yii::$app->formatter->format($model->modified_date, 'date'/*datetime*/);
-				}else {
-					return '-';
-				}
+				return Yii::$app->formatter->asDatetime($model->modified_date, 'medium');
 			},
-			'format'    => 'html',
+			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
 		if(!isset($_GET['modified'])) {
 			$this->templateColumns['modified_search'] = [
@@ -294,20 +263,10 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		}
 		$this->templateColumns['updated_date'] = [
 			'attribute' => 'updated_date',
-			'filter'    => \yii\jui\DatePicker::widget([
-				'dateFormat' => 'yyyy-MM-dd',
-				'attribute' => 'updated_date',
-				'model'  => $this,
-			]),
 			'value' => function($model, $key, $index, $column) {
-				if(!in_array($model->updated_date, 
-					['0000-00-00 00:00:00','1970-01-01 00:00:00','0002-12-02 07:07:12','-0001-11-30 00:00:00','0002-12-02 00:00:00','-0001-11-30 00:00:00'])) {
-					return Yii::$app->formatter->format($model->updated_date, 'date'/*datetime*/);
-				}else {
-					return '-';
-				}
+				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
-			'format'    => 'html',
+			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
 		$this->templateColumns['_inbox_id'] = '_inbox_id';
 		$this->templateColumns['_website'] = '_website';

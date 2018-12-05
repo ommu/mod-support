@@ -19,7 +19,6 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\support\models\SupportFeedbackView as SupportFeedbackViewModel;
 //use app\modules\support\models\SupportFeedbacks;
-//use app\modules\user\models\Users;
 
 class SupportFeedbackView extends SupportFeedbackViewModel
 {

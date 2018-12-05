@@ -18,7 +18,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\support\models\SupportContactCategory as SupportContactCategoryModel;
-//use app\modules\user\models\Users;
 
 class SupportContactCategory extends SupportContactCategoryModel
 {
