@@ -34,7 +34,7 @@ class ContactsController extends ActiveController
 		$contact_category = [];
 		$meta = CoreMeta::find()->one();
 		
-		$connection = Yii::$app->get('ecc4');
+		$connection = Yii::$app->get('db');
 		$command = $connection->createCommand("
 				SELECT a.id,b.`cat_icon`,a.`contact_name` FROM `ommu_support_contacts` AS a LEFT JOIN`ommu_support_contact_category`AS b
 				ON a.`cat_id`= b.`cat_id` WHERE a.`publish`=1 AND b.`publish`=1 AND a.`contact_name` NOT LIKE''");

@@ -61,14 +61,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	}
 
 	/**
-	 * @return \yii\db\Connection the database connection used by this AR class.
-	 */
-	public static function getDb()
-	{
-		return Yii::$app->get('ecc4');
-	}
-
-	/**
 	 * behaviors model class.
 	 */
 	public function behaviors() {
