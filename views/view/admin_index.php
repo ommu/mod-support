@@ -5,7 +5,7 @@
  * @var $this app\modules\support\controllers\ViewController
  * @var $model app\modules\support\models\SupportFeedbackView
  *
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:11 WIB

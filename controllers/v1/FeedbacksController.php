@@ -9,7 +9,7 @@ use app\modules\support\models\SupportFeedbacks;
 /**
  * FeedbacksController
  *
- * @copyright Copyright(c) 2018 Ommu Platform (www.ommu.co)
+ * @copyright Copyright(c) 2018 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author  Eko Hariyanto <haryeko29@gmail.com>
  * @created 5 April 2018, 13:36 WIB

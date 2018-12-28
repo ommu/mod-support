@@ -20,7 +20,7 @@
  * @property SupportFeedbacks $feedbacks
  * @property SupportFeedbackViewHistory[] $feedbackViewHistories
 
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:10 WIB

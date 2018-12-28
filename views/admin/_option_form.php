@@ -6,7 +6,7 @@
  * @var $model app\modules\support\models\search\SupportFeedbacks
  * @var $form yii\widgets\ActiveForm
  *
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @created date 15 September 2017, 15:11 WIB
@@ -14,7 +14,7 @@
  *
  */
 
-use app\helpers\Html;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 $js = <<<JS

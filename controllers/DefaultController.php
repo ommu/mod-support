@@ -12,7 +12,7 @@ use app\components\Controller;
  * TOC :
  *	Index
  *
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @created date 15 September 2017, 15:05 WIB

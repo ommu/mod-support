@@ -35,7 +35,7 @@
  * @property SupportFeedbackSubject $subject
  * @property Users $user
 
- * @copyright Copyright (c) 2018 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2018 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Eko Hariyanto <haryeko29@gmail.com>
  * @created date 18 April 2018, 14:39 WIB

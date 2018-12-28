@@ -6,7 +6,7 @@
  * @var $model app\modules\support\models\search\SupportWidget
  * @var $form yii\widgets\ActiveForm
  *
- * @copyright Copyright (c) 2017 Ommu Platform (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @created date 20 September 2017, 13:11 WIB
