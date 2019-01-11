@@ -15,7 +15,7 @@
  */
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use app\components\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\redactor\widgets\Redactor;
 use app\modules\support\models\SupportContactCategory;
@@ -29,10 +29,6 @@ $redactorOptions = [
 ?>
 
 <?php $form = ActiveForm::begin([
-	'options' => [
-		'class' => 'form-horizontal form-label-left',
-		//'enctype' => 'multipart/form-data',
-	],
 ]); ?>
 
 <?php 
