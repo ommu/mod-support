@@ -1,7 +1,7 @@
 <?php
 /**
  * FeedbacksController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbacks
  *
  * FeedbacksController implements the CRUD actions for SupportFeedbacks model.

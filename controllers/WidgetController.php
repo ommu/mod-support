@@ -1,7 +1,7 @@
 <?php
 /**
  * WidgetController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportWidget
  *
  * WidgetController implements the CRUD actions for SupportWidget model.

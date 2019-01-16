@@ -1,7 +1,7 @@
 <?php
 /**
  * CategoryController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportContactCategory
  *
  * CategoryController implements the CRUD actions for SupportContactCategory model.

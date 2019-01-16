@@ -1,7 +1,7 @@
 <?php
 /**
  * ContactsController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportContacts
  *
  * ContactsController implements the CRUD actions for SupportContacts model.

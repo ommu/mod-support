@@ -1,10 +1,10 @@
 <?php
 /**
  * Support Contacts (support-contacts)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\ContactsController
  * @var $model app\modules\support\models\search\SupportContacts
- * @var $form yii\widgets\ActiveForm
+ * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -34,7 +34,7 @@ $js = <<<JS
 		});
 	});
 JS;
-	$this->registerJs($js, \yii\web\View::POS_READY);
+	$this->registerJs($js, \app\components\View::POS_READY);
 ?>
 
 <div class="grid-form">

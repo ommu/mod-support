@@ -33,7 +33,7 @@ namespace app\modules\support\models;
 use Yii;
 use yii\helpers\Url;
 use ommu\users\models\Users;
-use app\libraries\grid\GridView;
+use app\components\grid\GridView;
 
 class SupportFeedbackView extends \app\components\ActiveRecord
 {

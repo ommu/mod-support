@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Contacts (support-contacts)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\ContactsController
  * @var $model app\modules\support\models\SupportContacts
  *
@@ -17,7 +17,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\menu\MenuContent;
 use app\components\menu\MenuOption;
-use app\libraries\grid\GridView;
+use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;

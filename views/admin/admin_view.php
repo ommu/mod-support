@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Feedbacks (support-feedbacks)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\AdminController
  * @var $model app\modules\support\models\SupportFeedbacks
  *

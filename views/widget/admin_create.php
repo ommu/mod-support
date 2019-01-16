@@ -1,10 +1,10 @@
 <?php
 /**
  * Support Widgets (support-widget)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\WidgetController
  * @var $model app\modules\support\models\SupportWidget
- * @var $form yii\widgets\ActiveForm
+ * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support

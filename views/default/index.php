@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\DefaultController
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)

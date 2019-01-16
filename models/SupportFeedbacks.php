@@ -50,7 +50,7 @@ use yii\helpers\Url;
 use ommu\users\models\Users;
 use app\models\SourceMessage;
 use app\modules\support\models\SupportFeedbackSubject;
-use app\libraries\grid\GridView;
+use app\components\grid\GridView;
 use app\components\Utility;
 
 class SupportFeedbacks extends \app\components\ActiveRecord

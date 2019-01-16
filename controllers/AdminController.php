@@ -1,7 +1,7 @@
 <?php
 /**
  * AdminController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbacks
  *
  * AdminController implements the CRUD actions for SupportFeedbacks model.

@@ -1,10 +1,10 @@
 <?php
 /**
  * Support Feedbacks (support-feedbacks)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\AdminController
  * @var $model app\modules\support\models\SupportFeedbacks
- * @var $form yii\widgets\ActiveForm
+ * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -17,7 +17,7 @@
 use yii\helpers\Html;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support Feedbacks'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id' => $model->feedback_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id'=>$model->feedback_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 

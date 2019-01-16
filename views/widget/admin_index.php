@@ -1,7 +1,7 @@
 <?php
 /**
  * Support Widgets (support-widget)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\WidgetController
  * @var $model app\modules\support\models\SupportWidget
  *
@@ -17,7 +17,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\menu\MenuContent;
 use app\components\menu\MenuOption;
-use app\libraries\grid\GridView;
+use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;

@@ -1,10 +1,10 @@
 <?php
 /**
  * Support Feedback Views (support-feedback-view)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\ViewController
  * @var $model app\modules\support\models\SupportFeedbackView
- * @var $form yii\widgets\ActiveForm
+ * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -22,11 +22,11 @@ use app\components\ActiveForm;
 ]); ?>
 
 <?php echo $form->field($model, 'feedback_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength' => true])
+	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('feedback_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'user_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength' => true])
+	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('user_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'views', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
@@ -34,7 +34,7 @@ use app\components\ActiveForm;
 	->label($model->getAttributeLabel('views'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'view_ip', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength' => true])
+	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('view_ip'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'publish', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12 checkbox">{input}{error}</div>'])
@@ -43,7 +43,7 @@ use app\components\ActiveForm;
 
 <div class="ln_solid"></div>
 <div class="form-group">
-	<div class="col-md-6 col-sm-9 col-xs-12 col-md-offset-3">
+	<div class="col-md-6 col-sm-9 col-xs-12 col-sm-offset-3">
 		<?php echo Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']); ?>
 	</div>
 </div>

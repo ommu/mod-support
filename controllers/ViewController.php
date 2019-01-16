@@ -1,7 +1,7 @@
 <?php
 /**
  * ViewController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbackView
  *
  * ViewController implements the CRUD actions for SupportFeedbackView model.

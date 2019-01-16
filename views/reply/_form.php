@@ -1,10 +1,10 @@
 <?php
 /**
  * Support Feedback Replies (support-feedback-reply)
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $this app\modules\support\controllers\ReplyController
  * @var $model app\modules\support\models\SupportFeedbackReply
- * @var $form yii\widgets\ActiveForm
+ * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -32,7 +32,7 @@ $redactorOptions = [
 ]); ?>
 
 <!-- <?php echo $form->field($model, 'feedback_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength' => true])
+	->textInput(['maxlength'=>true])
 	->label($model->getAttributeLabel('feedback_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?> -->
 
 <?php 
@@ -44,7 +44,7 @@ $redactorOptions = [
 ?>
 
 <?php echo $form->field($model, 'reply_message', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textarea(['rows'=>2,'rows'=>6])
+	->textarea(['rows'=>6, 'cols'=>50])
 	->widget(Redactor::className(), ['clientOptions' => $redactorOptions])
 	->label($model->getAttributeLabel('reply_message'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
@@ -54,7 +54,7 @@ $redactorOptions = [
 
 <div class="ln_solid"></div>
 <div class="form-group">
-	<div class="col-md-6 col-sm-9 col-xs-12 col-md-offset-3">
+	<div class="col-md-6 col-sm-9 col-xs-12 col-sm-offset-3">
 		<?php echo Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']); ?>
 	</div>
 </div>

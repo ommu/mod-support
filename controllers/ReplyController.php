@@ -1,7 +1,7 @@
 <?php
 /**
  * ReplyController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbackReply
  *
  * ReplyController implements the CRUD actions for SupportFeedbackReply model.

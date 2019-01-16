@@ -1,7 +1,7 @@
 <?php
 /**
  * UserController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbackUser
  *
  * UserController implements the CRUD actions for SupportFeedbackUser model.

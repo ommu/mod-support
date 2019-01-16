@@ -5,7 +5,7 @@ use app\components\Controller;
 
 /**
  * 
- * @var $this yii\web\View
+ * @var $this app\components\View
  *
  * Default controller for the `support` module
  * Reference start

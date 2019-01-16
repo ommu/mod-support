@@ -1,7 +1,7 @@
 <?php
 /**
  * ViewHistoryController
- * @var $this yii\web\View
+ * @var $this app\components\View
  * @var $model app\modules\support\models\SupportFeedbackViewHistory
  *
  * ViewHistoryController implements the CRUD actions for SupportFeedbackViewHistory model.
