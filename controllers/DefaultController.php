@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\support\controllers;
+namespace ommu\support\controllers;
 
 use app\components\Controller;
 

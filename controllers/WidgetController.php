@@ -25,15 +25,14 @@
  *
  */
  
-namespace app\modules\support\controllers;
+namespace ommu\support\controllers;
 
 use Yii;
+use yii\filters\VerbFilter;
+use app\components\Controller;
+use mdm\admin\components\AccessControl;
 use app\modules\support\models\SupportWidget;
 use app\modules\support\models\search\SupportWidget as SupportWidgetSearch;
-use app\components\Controller;
-use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use mdm\admin\components\AccessControl;
 
 class WidgetController extends Controller
 {
@@ -57,10 +56,18 @@ class WidgetController extends Controller
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function actionIndex()
+	{
+		return $this->redirect(['manage']);
+	}
+
+	/**
 	 * Lists all SupportWidget models.
 	 * @return mixed
 	 */
-	public function actionIndex()
+	public function actionManage()
 	{
 		$searchModel = new SupportWidgetSearch();
 		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
@@ -78,7 +85,7 @@ class WidgetController extends Controller
 		$this->view->title = Yii::t('app', 'Support Widgets');
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_index', [
+		return $this->render('admin_manage', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns'	  => $columns,
@@ -191,9 +198,9 @@ class WidgetController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if (($model = SupportWidget::findOne($id)) !== null) 
+		if (($model = SupportWidget::findOne($id)) !== null)
 			return $model;
-		else
-			throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+
+		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}
 }

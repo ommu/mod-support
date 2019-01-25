@@ -26,7 +26,7 @@
  *
  */
 
-namespace app\modules\support\models;
+namespace ommu\support\models;
 
 use Yii;
 use yii\helpers\Url;

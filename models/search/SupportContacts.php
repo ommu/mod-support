@@ -12,7 +12,7 @@
  *
  */
 
-namespace app\modules\support\models\search;
+namespace ommu\support\models\search;
 
 use Yii;
 use yii\base\Model;
