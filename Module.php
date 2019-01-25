@@ -1,16 +1,17 @@
 <?php
-namespace app\modules\support;
-
 /**
  * support module definition class
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 15 September 2017, 15:05 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 15 September 2017, 15:05 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
+
+namespace ommu\support;
+
 class Module extends \app\components\Module
 {
 	public $layout = 'main';
@@ -18,7 +19,7 @@ class Module extends \app\components\Module
 	/**
 	 * {@inheritdoc}
 	 */
-	public $controllerNamespace = 'app\modules\support\controllers';
+	public $controllerNamespace = 'ommu\support\controllers';
 
 	/**
 	 * {@inheritdoc}
