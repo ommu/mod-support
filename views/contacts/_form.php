@@ -28,8 +28,7 @@ $redactorOptions = [
 ];
 ?>
 
-<?php $form = ActiveForm::begin([
-]); ?>
+<?php $form = ActiveForm::begin(); ?>
 
 <?php 
 	$data = ArrayHelper::map(SupportContactCategory::find()->all(), 'cat_id', 'name');

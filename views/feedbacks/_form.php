@@ -28,8 +28,7 @@ $redactorOptions = [
 ];
 ?>
 
-<?php $form = ActiveForm::begin([
-]); ?>
+<?php $form = ActiveForm::begin(); ?>
 
 <!-- <?php echo $form->field($model, 'user_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
 	->textInput(['maxlength'=>true])
