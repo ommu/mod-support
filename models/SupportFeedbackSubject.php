@@ -2,12 +2,11 @@
 /**
  * SupportFeedbackSubject
  * 
- * @author Eko Hariyanto <haryeko29@gmail.com>
- * @contact (+62)857-4381-4273
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2018 OMMU (www.ommu.co)
  * @created date 18 April 2018, 17:39 WIB
- * @modified date 18 April 2018, 17:39 WIB
- * @modified by Eko Hariyanto <haryeko29@gmail.com>
+ * @modified date 27 January 2019, 18:51 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_subject".
@@ -18,9 +17,9 @@
  * @property integer $parent_id
  * @property integer $subject_name
  * @property string $creation_date
- * @property string $creation_id
+ * @property integer $creation_id
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  * @property string $slug
  *
@@ -40,17 +39,18 @@ use yii\helpers\Html;
 use yii\behaviors\SluggableBehavior;
 use app\models\SourceMessage;
 use ommu\users\models\Users;
+use ommu\support\models\view\SupportFeedbackSubject as SupportFeedbackSubjectView;
 
 class SupportFeedbackSubject extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
-	public $subject_name_i;
+	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date', 'slug'];
 
-	// Variable Search
-	public $creation_search;
-	public $modified_search;
+	public $subject_name_i;
+	public $parent_name_i;
+	public $creationDisplayname;
+	public $modifiedDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -82,6 +82,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		return [
 			[['subject_name_i'], 'required'],
 			[['publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
+			[['parent_id'], 'safe'],
 			[['subject_name_i', 'slug'], 'string'],
 			[['subject_name_i'], 'string', 'max' => 64],
 		];
@@ -96,25 +97,45 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'subject_id' => Yii::t('app', 'Subject'),
 			'publish' => Yii::t('app', 'Publish'),
 			'parent_id' => Yii::t('app', 'Parent'),
-			'subject_name' => Yii::t('app', 'Subject Name'),
+			'subject_name' => Yii::t('app', 'Subject'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'creation_id' => Yii::t('app', 'Creation'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'slug' => Yii::t('app', 'Slug'),
-			'subject_name_i' => Yii::t('app', 'Subject Name'),
-			'creation_search' => Yii::t('app', 'Creation'),
-			'modified_search' => Yii::t('app', 'Modified'),
+			'subject_name_i' => Yii::t('app', 'Subject'),
+			'parent_name_i' => Yii::t('app', 'Paerent'),
+			'feedbacks' => Yii::t('app', 'Feedbacks'),
+			'creationDisplayname' => Yii::t('app', 'Creation'),
+			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getFeedbacks()
+	public function getFeedbacks($count=true, $publish=null)
 	{
-		return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id']);
+		if($count == true) {
+			$model = SupportFeedbacks::find()
+				->where(['subject_id' => $this->subject_id]);
+			if($publish === null)
+				$model->send();
+			else {
+				if($publish == 0)
+					$model->unpublish();
+				elseif($publish == 1)
+					$model->published();
+				elseif($publish == 2)
+					$model->deleted();
+			}
+
+			return $model->count();
+		}
+
+		return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
+			->andOnCondition([sprintf('%s.publish', SupportFeedbacks::tableName()) => $publish]);
 	}
 
 	/**
@@ -142,9 +163,34 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getParent()
+	{
+		return $this->hasOne(SupportFeedbackSubject::className(), ['subject_id' => 'parent_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getView()
+	{
+		return $this->hasOne(SupportFeedbackSubjectView::className(), ['subject_id' => 'subject_id']);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * @return \ommu\support\models\query\SupportFeedbackSubject the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		return new \ommu\support\models\query\SupportFeedbackSubject(get_called_class());
+	}
+
+	/**
 	 * Set default columns to display
 	 */
-	public function init() 
+	public function init()
 	{
 		parent::init();
 
@@ -153,16 +199,16 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'class'  => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['parent_id'] = [
-			'attribute' => 'parent_id',
-			'value' => function($model, $key, $index, $column) {
-				return $model->parent_id;
-			},
-		];
 		$this->templateColumns['subject_name_i'] = [
 			'attribute' => 'subject_name_i',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->title) ? $model->title->message : '-';
+				return $model->subject_name_i;
+			},
+		];
+		$this->templateColumns['parent_name_i'] = [
+			'attribute' => 'parent_name_i',
+			'value' => function($model, $key, $index, $column) {
+				return $model->parent_name_i;
 			},
 		];
 		$this->templateColumns['creation_date'] = [
@@ -173,10 +219,10 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'filter' => $this->filterDatepicker($this, 'creation_date'),
 		];
 		if(!Yii::$app->request->get('creation')) {
-			$this->templateColumns['creation_search'] = [
-				'attribute' => 'creation_search',
+			$this->templateColumns['creationDisplayname'] = [
+				'attribute' => 'creationDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return isset($model->creation) ? $model->creation->displayname : '-';
+					return $model->creationDisplayname;
 				},
 			];
 		}
@@ -188,10 +234,10 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
 		if(!Yii::$app->request->get('modified')) {
-			$this->templateColumns['modified_search'] = [
-				'attribute' => 'modified_search',
+			$this->templateColumns['modifiedDisplayname'] = [
+				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return isset($model->modified) ? $model->modified->displayname : '-';
+					return $model->modifiedDisplayname;
 				},
 			];
 		}
@@ -208,7 +254,16 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				return $model->slug;
 			},
 		];
-		if(!isset($_GET['trash'])) {
+		$this->templateColumns['feedbacks'] = [
+			'attribute' => 'feedbacks',
+			'filter' => false,
+			'value' => function($model, $key, $index, $column) {
+				return Html::a($model->feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>'0,1'], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$model->feedbacks])]);
+			},
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
+		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
 				'filter' => $this->filterYesNo(),
@@ -246,42 +301,40 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	public static function getSubject($publish=null, $array=true) 
 	{
 		$model = self::find()->alias('t');
-		$model->with(['title title']);
+		$model->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id');
 		if($publish != null)
-			$model = $model->andWhere(['t.publish' => $publish]);
+			$model->andWhere(['t.publish' => $publish]);
 
 		$model = $model->orderBy('title.message ASC')->all();
 
-		if($array == true) {
-			$items = [];
-			if($model !== null) {
-				foreach($model as $val) {
-					$items[$val->subject_id] = $val->title->message;
-				}
-				return $items;
-			} else
-				return false;
-		} else 
-			return $model;
+		if($array == true)
+			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subject_name_i');
+
+		return $model;
 	}
 
 	/**
 	 * after find attributes
 	 */
-	public function afterFind() 
+	public function afterFind()
 	{
+		parent::afterFind();
+
 		$this->subject_name_i = isset($this->title) ? $this->title->message : '';
+		$this->parent_name_i = isset($this->parent) ? $this->parent->title->message : '';
+		$this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
+		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
 
 	/**
 	 * before validate attributes
 	 */
-	public function beforeValidate() 
+	public function beforeValidate()
 	{
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord) {
 				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : '0';
+					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			} else {
 				if($this->modified_id == null)
 					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
@@ -308,13 +361,15 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				$subject_name->message = $this->subject_name_i;
 				if($subject_name->save())
 					$this->subject_name = $subject_name->id;
-				
+
+				$this->slug = $this->urlTitle($this->subject_name_i);
+
 			} else {
 				$subject_name = SourceMessage::findOne($this->subject_name);
 				$subject_name->message = $this->subject_name_i;
 				$subject_name->save();
 			}
-			// Create action
+
 		}
 		return true;
 	}
