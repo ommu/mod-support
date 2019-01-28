@@ -202,13 +202,13 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		$this->templateColumns['subjectName'] = [
 			'attribute' => 'subjectName',
 			'value' => function($model, $key, $index, $column) {
-				return $model->subjectName;
+				return isset($model->title) ? $model->title->message : '-';
 			},
 		];
 		$this->templateColumns['parentName'] = [
 			'attribute' => 'parentName',
 			'value' => function($model, $key, $index, $column) {
-				return $model->parentName;
+				return isset($model->parent) ? $model->parent->title->message : '-';
 			},
 		];
 		$this->templateColumns['creation_date'] = [
@@ -222,7 +222,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			$this->templateColumns['creationDisplayname'] = [
 				'attribute' => 'creationDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->creationDisplayname;
+					return isset($model->creation) ? $model->creation->displayname : '-';
 				},
 			];
 		}
@@ -237,7 +237,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			$this->templateColumns['modifiedDisplayname'] = [
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->modifiedDisplayname;
+					return isset($model->modified) ? $model->modified->displayname : '-';
 				},
 			];
 		}
@@ -344,8 +344,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 
 		$this->subjectName = isset($this->title) ? $this->title->message : '';
 		$this->parentName = isset($this->parent) ? $this->parent->title->message : '';
-		$this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
-		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		// $this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
+		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
 
 	/**

@@ -243,7 +243,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			$this->templateColumns['subject_id'] = [
 				'attribute' => 'subject_id',
 				'value' => function($model, $key, $index, $column) {
-					return $model->subjectName;
+					return isset($model->subject) ? $model->subject->title->message : '-';
 				},
 				'filter' => SupportFeedbackSubject::getSubject(),
 			];
@@ -252,7 +252,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		// 	$this->templateColumns['userDisplayname'] = [
 		// 		'attribute' => 'userDisplayname',
 		// 		'value' => function($model, $key, $index, $column) {
-		// 			return $model->userDisplayname;
+		// 			return isset($model->user) ? $model->user->displayname : '-';
 		// 		},
 		// 	];
 		// }
@@ -297,7 +297,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			$this->templateColumns['repliedDisplayname'] = [
 				'attribute' => 'repliedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->repliedDisplayname;
+					return isset($model->replied) ? $model->replied->displayname : '-';
 				},
 			];
 		}
@@ -319,7 +319,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			$this->templateColumns['modifiedDisplayname'] = [
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->modifiedDisplayname;
+					return isset($model->modified) ? $model->modified->displayname : '-';
 				},
 			];
 		}
@@ -405,10 +405,10 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->subjectName = isset($this->subject) ? $this->subject->title->message : '-';
-		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
-		$this->repliedDisplayname = isset($this->replied) ? $this->replied->displayname : '-';
-		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		// $this->subjectName = isset($this->subject) ? $this->subject->title->message : '-';
+		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
+		// $this->repliedDisplayname = isset($this->replied) ? $this->replied->displayname : '-';
+		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 
 		$this->OldSubjectId = $this->subject_id;
 		$this->OldSubjectName = $this->subjectName;

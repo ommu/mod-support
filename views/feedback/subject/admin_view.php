@@ -44,11 +44,11 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'subjectName',
-			'value' => $model->subjectName,
+			'value' => isset($model->title) ? $model->title->message : '-',
 		],
 		[
 			'attribute' => 'parentName',
-			'value' => Html::a($model->parentName, ['feedback/subject/manage', 'parent'=>$model->parent_id]),
+			'value' => isset($model->parent) ? Html::a($model->parent->title->message, ['feedback/subject/manage', 'parent'=>$model->parent_id]) : '-',
 			'format' => 'html',
 		],
 		[
@@ -57,7 +57,7 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'creationDisplayname',
-			'value' => $model->creationDisplayname,
+			'value' => isset($model->creation) ? $model->creation->displayname : '-',
 		],
 		[
 			'attribute' => 'modified_date',
@@ -65,7 +65,7 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'modifiedDisplayname',
-			'value' => $model->modifiedDisplayname,
+			'value' => isset($model->modified) ? $model->modified->displayname : '-',
 		],
 		[
 			'attribute' => 'updated_date',

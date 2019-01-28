@@ -44,15 +44,15 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'feedbackDisplayname',
-			'value' => $model->feedbackDisplayname,
+			'value' => isset($model->feedback) ? $model->feedback->displayname : '-',
 		],
 		[
 			'attribute' => 'feedbackSubject',
-			'value' => $model->feedbackSubject,
+			'value' => isset($model->feedback) ? $model->feedback->subject->title->message : '-',
 		],
 		[
 			'attribute' => 'userDisplayname',
-			'value' => $model->userDisplayname,
+			'value' => isset($model->user) ? $model->user->displayname : '-',
 		],
 		[
 			'attribute' => 'view_date',
@@ -65,7 +65,7 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'modifiedDisplayname',
-			'value' => $model->modifiedDisplayname,
+			'value' => isset($model->modified) ? $model->modified->displayname : '-',
 		],
 		[
 			'attribute' => 'updated_date',

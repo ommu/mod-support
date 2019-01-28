@@ -160,13 +160,13 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			$this->templateColumns['feedbackDisplayname'] = [
 				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->feedbackDisplayname;
+					return isset($model->feedback) ? $model->feedback->displayname : '-';
 				},
 			];
 			$this->templateColumns['feedbackSubject'] = [
 				'attribute' => 'feedbackSubject',
 				'value' => function($model, $key, $index, $column) {
-					return $model->feedbackSubject;
+					return isset($model->feedback) ? $model->feedback->subject->title->message : '-';
 				},
 			];
 		}
@@ -174,7 +174,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			$this->templateColumns['userDisplayname'] = [
 				'attribute' => 'userDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->userDisplayname;
+					return isset($model->user) ? $model->user->displayname : '-';
 				},
 			];
 		}
@@ -202,7 +202,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			$this->templateColumns['modifiedDisplayname'] = [
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return $model->modifiedDisplayname;
+					return isset($model->modified) ? $model->modified->displayname : '-';
 				},
 			];
 		}
@@ -282,10 +282,10 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
-		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
-		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
-		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
+		// $this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
+		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
+		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		// $this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 	}
 
 	/**

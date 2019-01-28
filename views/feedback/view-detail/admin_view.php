@@ -38,11 +38,11 @@ $this->params['menu']['content'] = [
 		'id',
 		[
 			'attribute' => 'feedbackDisplayname',
-			'value' => $model->feedbackDisplayname,
+			'value' => isset($model->view) ? $model->view->feedback->displayname : '-',
 		],
 		[
 			'attribute' => 'feedbackSubject',
-			'value' => $model->feedbackSubject,
+			'value' => isset($model->view) ? $model->view->feedback->subject->title->message : '-',
 		],
 		[
 			'attribute' => 'view_date',

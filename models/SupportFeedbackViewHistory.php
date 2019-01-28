@@ -153,7 +153,7 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->feedbackSubject = isset($this->view) ? $this->view->feedback->subject->title->message : '-';
-		$this->feedbackDisplayname = isset($this->view) ? $this->view->feedback->displayname : '-';
+		// $this->feedbackSubject = isset($this->view) ? $this->view->feedback->subject->title->message : '-';
+		// $this->feedbackDisplayname = isset($this->view) ? $this->view->feedback->displayname : '-';
 	}
 }

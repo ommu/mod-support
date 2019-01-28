@@ -45,14 +45,14 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'userDisplayname',
-			'value' => $model->userDisplayname,
+			'value' => isset($model->user) ? $model->user->displayname : '-',
 		],
 		'email:email',
 		'displayname',
 		'phone',
 		[
 			'attribute' => 'subject_id',
-			'value' => $model->subjectName,
+			'value' => isset($model->subject) ? $model->subject->title->message : '-',
 		],
 		[
 			'attribute' => 'message',
@@ -68,7 +68,7 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'repliedDisplayname',
-			'value' => $model->repliedDisplayname,
+			'value' => isset($model->replied) ? $model->replied->displayname : '-',
 		],
 		[
 			'attribute' => 'replied_date',
@@ -80,7 +80,7 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'modifiedDisplayname',
-			'value' => $model->modifiedDisplayname,
+			'value' => isset($model->modified) ? $model->modified->displayname : '-',
 		],
 		[
 			'attribute' => 'updated_date',
