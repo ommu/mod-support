@@ -6,11 +6,12 @@
  * @var $model ommu\support\models\search\SupportFeedbackViewHistory
  * @var $form app\components\ActiveForm
  *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:32 WIB
- * @contact (+62)857-2971-9487
+ * @modified date 28 January 2019, 14:18 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
@@ -38,11 +39,9 @@ JS;
 <div class="grid-form">
 	<?php echo Html::beginForm(Url::to(['/'.$route]), 'get', ['name' => 'gridoption']);
 		$columns = [];
-
 		foreach($model->templateColumns as $key => $column) {
 			if($key == '_no')
 				continue;
-			
 			$columns[$key] = $key;
 		}
 	?>
@@ -54,6 +53,5 @@ JS;
 			</li>
 			<?php endforeach; ?>
 		</ul>
-		<div class="clear"></div>
 	<?php echo Html::endForm(); ?>
 </div>

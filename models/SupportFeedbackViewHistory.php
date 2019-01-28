@@ -30,9 +30,8 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 {
 	public $gridForbiddenColumn = [];
 
-	// Search Variable
-	public $feedback_subject;
-	public $feedback_displayname;
+	public $feedbackSubject;
+	public $feedbackDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -66,8 +65,8 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			'view_id' => Yii::t('app', 'View'),
 			'view_date' => Yii::t('app', 'View Date'),
 			'view_ip' => Yii::t('app', 'View Ip'),
-			'feedback_subject' => Yii::t('app', 'Subject'),
-			'feedback_displayname' => Yii::t('app', 'Name'),
+			'feedbackSubject' => Yii::t('app', 'Subject'),
+			'feedbackDisplayname' => Yii::t('app', 'Name'),
 		];
 	}
 
@@ -101,16 +100,16 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 		];
 		if(!Yii::$app->request->get('view')) {
-			$this->templateColumns['feedback_subject'] = [
-				'attribute' => 'feedback_subject',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
-				},
-			];
-			$this->templateColumns['feedback_displayname'] = [
-				'attribute' => 'feedback_displayname',
+			$this->templateColumns['feedbackDisplayname'] = [
+				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->view) ? $model->view->feedback->displayname : '-';
+				},
+			];
+			$this->templateColumns['feedbackSubject'] = [
+				'attribute' => 'feedbackSubject',
+				'value' => function($model, $key, $index, $column) {
+					return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
 				},
 			];
 		}
@@ -145,5 +144,16 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			$model = self::findOne($id);
 			return $model;
 		}
+	}
+
+	/**
+	 * after find attributes
+	 */
+	public function afterFind()
+	{
+		parent::afterFind();
+
+		$this->feedbackSubject = isset($this->view) ? $this->view->feedback->subject->title->message : '-';
+		$this->feedbackDisplayname = isset($this->view) ? $this->view->feedback->displayname : '-';
 	}
 }

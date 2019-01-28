@@ -8,21 +8,21 @@
  * Reference start
  * TOC :
  *	Index
- *	Create
- *	Update
+ *	Manage
  *	View
  *	Delete
  *
  *	findModel
  *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:32 WIB
- * @contact (+62)857-2971-9487
+ * @modified date 28 January 2019, 14:18 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
- 
+
 namespace ommu\support\controllers\feedback;
 
 use Yii;
@@ -40,9 +40,9 @@ class ViewDetailController extends Controller
 	public function behaviors()
 	{
 		return [
-            'access' => [
-                'class' => AccessControl::className(),
-            ],
+			'access' => [
+				'class' => AccessControl::className(),
+			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
@@ -79,73 +79,26 @@ class ViewDetailController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		$this->view->title = Yii::t('app', 'Support Feedback View Histories');
+		$this->view->title = Yii::t('app', 'Feedback View Histories');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-			'columns'	  => $columns,
+			'columns' => $columns,
 		]);
 	}
 
 	/**
-	 * Creates a new SupportFeedbackViewHistory model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 * @return mixed
-	 */
-	public function actionCreate()
-	{
-		$model = new SupportFeedbackViewHistory();
-
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			//return $this->redirect(['view', 'id' => $model->id]);
-			return $this->redirect(['index']);
-
-		} else {
-			$this->view->title = Yii::t('app', 'Create Support Feedback View History');
-			$this->view->description = '';
-			$this->view->keywords = '';
-			return $this->render('admin_create', [
-				'model' => $model,
-			]);
-		}
-	}
-
-	/**
-	 * Updates an existing SupportFeedbackViewHistory model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param string $id
-	 * @return mixed
-	 */
-	public function actionUpdate($id)
-	{
-		$model = $this->findModel($id);
-
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			//return $this->redirect(['view', 'id' => $model->id]);
-			return $this->redirect(['index']);
-
-		} else {
-			$this->view->title = Yii::t('app', 'Update {modelClass}: {id}', ['modelClass' => 'Support Feedback View History', 'id' => $model->id]);
-			$this->view->description = '';
-			$this->view->keywords = '';
-			return $this->render('admin_update', [
-				'model' => $model,
-			]);
-		}
-	}
-
-	/**
 	 * Displays a single SupportFeedbackViewHistory model.
-	 * @param string $id
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'View {modelClass}: {id}', ['modelClass' => 'Support Feedback View History', 'id' => $model->id]);
+		$this->view->title = Yii::t('app', 'Detail {model-class}: {view-id}', ['model-class' => 'Feedback View History', 'view-id' => $model->view->feedback->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_view', [
@@ -156,26 +109,27 @@ class ViewDetailController extends Controller
 	/**
 	 * Deletes an existing SupportFeedbackViewHistory model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 * @param string $id
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionDelete($id)
 	{
 		$this->findModel($id)->delete();
 		
-		return $this->redirect(['index']);
+		Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view history success deleted.'));
+		return $this->redirect(['manage']);
 	}
 
 	/**
 	 * Finds the SupportFeedbackViewHistory model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 * @param string $id
+	 * @param integer $id
 	 * @return SupportFeedbackViewHistory the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = SupportFeedbackViewHistory::findOne($id)) !== null)
+		if(($model = SupportFeedbackViewHistory::findOne($id)) !== null)
 			return $model;
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

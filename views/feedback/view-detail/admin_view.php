@@ -5,61 +5,51 @@
  * @var $this ommu\support\controllers\feedback\ViewDetailController
  * @var $model ommu\support\models\SupportFeedbackViewHistory
  *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:32 WIB
- * @contact (+62)857-2971-9487
+ * @modified date 28 January 2019, 14:18 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
-use yii\helpers\Html;
 use yii\helpers\Url;
-use app\components\menu\MenuContent;
 use yii\widgets\DetailView;
 
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support Feedback View Histories'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback View Histories'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = $model->view->feedback->displayname;
 
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Back To Manage'), 'url' => Url::to(['index']), 'icon' => 'table'],
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->id]), 'icon' => 'eye'],
+	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->id]), 'icon' => 'eye'],
 	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post'], 'icon' => 'trash'],
 ];
 ?>
 
-<div class="col-md-12 col-sm-12 col-xs-12">
-	<div class="x_panel">
-		<div class="x_title">
-			<h2><?php echo Html::encode($this->title); ?></h2>
-			<?php if($this->params['menu']['content']):
-			echo MenuContent::widget(['items' => $this->params['menu']['content']]);
-			endif;?>
-			<ul class="nav navbar-right panel_toolbox">
-				<li><a href="#" title="<?php echo Yii::t('app', 'Toggle');?>" class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-				<li><a href="#" title="<?php echo Yii::t('app', 'Close');?>" class="close-link"><i class="fa fa-close"></i></a></li>
-			</ul>
-			<div class="clearfix"></div>
-		</div>
-		<div class="x_content">
-			<?php echo DetailView::widget([
-				'model' => $model,
-				'options' => [
-					'class'=>'table table-striped detail-view',
-				],
-				'attributes' => [
-					'id',
-					[
-						'attribute' => 'feedbackView_search',
-						'value' => $model->feedbackView->id,
-					],
-					[
-						'attribute' => 'view_date',
-						'value' => Yii::$app->formatter->asDatetime($model->view_date, 'medium'),
-					],
-					'view_ip',
-				],
-			]) ?>
-		</div>
-	</div>
+<div class="support-feedback-view-history-view">
+
+<?php echo DetailView::widget([
+	'model' => $model,
+	'options' => [
+		'class'=>'table table-striped detail-view',
+	],
+	'attributes' => [
+		'id',
+		[
+			'attribute' => 'feedbackDisplayname',
+			'value' => $model->feedbackDisplayname,
+		],
+		[
+			'attribute' => 'feedbackSubject',
+			'value' => $model->feedbackSubject,
+		],
+		[
+			'attribute' => 'view_date',
+			'value' => Yii::$app->formatter->asDatetime($model->view_date, 'medium'),
+		],
+		'view_ip',
+	],
+]) ?>
+
 </div>
