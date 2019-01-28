@@ -60,6 +60,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public $OldSubjectId;
 	public $OldSubjectName;
 
+	public $reply;
+
 	const SCENARIO_REPLY = 'replyForm';
 
 	/**
@@ -91,7 +93,9 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		];
 	}
 
-	// get scenarios
+	/**
+	 * {@inheritdoc}
+	 */
 	public function scenarios()
 	{
 		$scenarios = parent::scenarios();
@@ -122,6 +126,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'users' => Yii::t('app', 'Users'),
 			'views' => Yii::t('app', 'Views'),
+			'reply' => Yii::t('app', 'Reply'),
 			'subjectName' => Yii::t('app', 'Subject'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'repliedDisplayname' => Yii::t('app', 'Replied'),
@@ -343,6 +348,16 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
+		$this->templateColumns['reply'] = [
+			'attribute' => 'reply',
+			'filter' => $this->filterYesNo(),
+			'value' => function($model, $key, $index, $column) {
+				$reply = $this->filterYesNo($model->reply);
+				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey]) : $reply;
+			},
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
@@ -376,6 +391,14 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function getReplyStatus()
+	{
+		return $this->reply_message != '' || $this->replied_id != null ? 1 : 0;
+	}
+
+	/**
 	 * after find attributes
 	 */
 	public function afterFind()
@@ -389,6 +412,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 
 		$this->OldSubjectId = $this->subject_id;
 		$this->OldSubjectName = $this->subjectName;
+		
+		$this->reply = $this->getReplyStatus();
 	}
 
 	/**
@@ -400,6 +425,11 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			if(!$this->isNewRecord) {
 				if($this->modified_id == null)
 					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+
+				if($this->scenario = self::SCENARIO_REPLY) {
+					if($this->replied_id == null)
+						$this->replied_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+				}
 			}
 		}
 		return true;

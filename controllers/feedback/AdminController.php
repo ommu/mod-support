@@ -206,6 +206,34 @@ class AdminController extends Controller
 	}
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function actionReply($id)
+	{
+		$model = $this->findModel($id);
+		$model->scenario = SupportFeedbacks::SCENARIO_REPLY;
+		if(Yii::$app->request->isPost) {
+			$model->load(Yii::$app->request->post());
+
+			if($model->save()) {
+				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success replied.'));
+				return $this->redirect(['manage']);
+
+			} else {
+				if(Yii::$app->request->isAjax)
+					return \yii\helpers\Json::encode(\app\components\ActiveForm::validate($model));
+			}
+		}
+
+		$this->view->title = Yii::t('app', 'Update {model-class}: {displayname}', ['model-class' => 'Feedback', 'displayname' => $model->displayname]);
+		$this->view->description = '';
+		$this->view->keywords = '';
+		return $this->oRender('admin_reply', [
+			'model' => $model,
+		]);
+	}
+
+	/**
 	 * Finds the SupportFeedbacks model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id

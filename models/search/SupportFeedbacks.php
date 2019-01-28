@@ -30,7 +30,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 		return [
 			[['feedback_id', 'publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
 			[['email', 'displayname', 'phone', 'message', 'reply_message', 'replied_date', 'creation_date', 'modified_date', 'updated_date',
-				'subjectName', 'userDisplayname', 'repliedDisplayname', 'modifiedDisplayname'], 'safe'],
+				'subjectName', 'userDisplayname', 'repliedDisplayname', 'modifiedDisplayname', 'reply'], 'safe'],
 		];
 	}
 
@@ -101,6 +101,14 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
+		$attributes['views'] = [
+			'asc' => ['view.views' => SORT_ASC],
+			'desc' => ['view.views' => SORT_DESC],
+		];
+		$attributes['reply'] = [
+			'asc' => ['view.reply' => SORT_ASC],
+			'desc' => ['view.reply' => SORT_DESC],
+		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
 			'defaultOrder' => ['feedback_id' => SORT_DESC],
@@ -125,6 +133,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'cast(t.modified_date as date)' => $this->modified_date,
 			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
+			'view.reply' => isset($params['reply']) ? $params['reply'] : $this->reply,
 		]);
 
 		if(isset($params['trash']))
