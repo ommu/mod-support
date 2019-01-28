@@ -4,11 +4,12 @@
  *
  * SupportFeedbackUser represents the model behind the search form about `ommu\support\models\SupportFeedbackUser`.
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 15:40 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 15:40 WIB
+ * @modified date 28 January 2019, 12:21 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
@@ -18,15 +19,9 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use ommu\support\models\SupportFeedbackUser as SupportFeedbackUserModel;
-//use ommu\support\models\SupportFeedbacks;
 
 class SupportFeedbackUser extends SupportFeedbackUserModel
 {
-	// Variable Search	
-	public $feedbacks_search;
-	public $userDisplayname;
-	public $modifiedDisplayname;
-
 	/**
 	 * {@inheritdoc}
 	 */
@@ -34,8 +29,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 	{
 		return [
 			[['id', 'publish', 'feedback_id', 'user_id', 'modified_id'], 'integer'],
-            [['creation_date', 'modified_date', 'updated_date',
-				'feedbacks_search', 'userDisplayname', 'modifiedDisplayname'], 'safe'],
+			[['creation_date', 'modified_date', 'updated_date',
+				'feedbackDisplayname', 'userDisplayname', 'modifiedDisplayname', 'feedbackSubject'], 'safe'],
 		];
 	}
 
@@ -62,22 +57,32 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 	 * Creates data provider instance with search query applied
 	 *
 	 * @param array $params
+	 *
 	 * @return ActiveDataProvider
 	 */
 	public function search($params)
 	{
 		$query = SupportFeedbackUserModel::find()->alias('t');
-		$query->joinWith(['feedbacks feedbacks', 'user user', 'modified modified']);
-
-		// add conditions that should always apply here
-		$dataProvider = new ActiveDataProvider([
-			'query' => $query,
+		$query->joinWith([
+			'feedback feedback', 
+			'user user', 
+			'modified modified',
+			'feedback.subject.title subject', 
 		]);
 
+		// add conditions that should always apply here
+		$dataParams = [
+			'query' => $query,
+		];
+		// disable pagination agar data pada api tampil semua
+		if(isset($params['pagination']) && $params['pagination'] == 0)
+			$dataParams['pagination'] = false;
+		$dataProvider = new ActiveDataProvider($dataParams);
+
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['feedbacks_search'] = [
-			'asc' => ['feedbacks.displayname' => SORT_ASC],
-			'desc' => ['feedbacks.displayname' => SORT_DESC],
+		$attributes['feedbackDisplayname'] = [
+			'asc' => ['feedback.displayname' => SORT_ASC],
+			'desc' => ['feedback.displayname' => SORT_DESC],
 		];
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
@@ -87,6 +92,10 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
+		$attributes['feedbackSubject'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
 			'defaultOrder' => ['id' => SORT_DESC],
@@ -94,7 +103,7 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 
 		$this->load($params);
 
-		if (!$this->validate()) {
+		if(!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -103,13 +112,13 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		// grid filtering conditions
 		$query->andFilterWhere([
 			't.id' => $this->id,
-			't.feedback_id' => isset($params['feedbacks']) ? $params['feedbacks'] : $this->feedback_id,
-            't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
-            'cast(t.creation_date as date)' => $this->creation_date,
-            'cast(t.modified_date as date)' => $this->modified_date,
-            't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
-            'cast(t.updated_date as date)' => $this->updated_date,
-        ]);
+			't.feedback_id' => isset($params['feedback']) ? $params['feedback'] : $this->feedback_id,
+			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
+			'cast(t.creation_date as date)' => $this->creation_date,
+			'cast(t.modified_date as date)' => $this->modified_date,
+			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
+			'cast(t.updated_date as date)' => $this->updated_date,
+		]);
 
 		if(isset($params['trash']))
 			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
@@ -120,9 +129,10 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-        $query->andFilterWhere(['like', 'feedbacks.displayname', $this->feedbacks_search])
-            ->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-            ->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);
+		$query->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
+			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
+			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname])
+			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject]);
 
 		return $dataProvider;
 	}

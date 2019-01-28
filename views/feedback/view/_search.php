@@ -6,11 +6,12 @@
  * @var $model ommu\support\models\search\SupportFeedbackView
  * @var $form app\components\ActiveForm
  *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:11 WIB
- * @contact (+62)857-2971-9487
+ * @modified date 28 January 2019, 12:21 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
@@ -18,34 +19,45 @@ use yii\helpers\Html;
 use app\components\ActiveForm;
 ?>
 
-<div class="search-form">
+<div class="support-feedback-view-search search-form">
+
 	<?php $form = ActiveForm::begin([
 		'action' => ['index'],
 		'method' => 'get',
+		'options' => [
+			'data-pjax' => 1
+		],
 	]); ?>
-		<?= $form->field($model, 'view_id') ?>
 
-		<?= $form->field($model, 'publish') ?>
+		<?php echo $form->field($model, 'feedbackDisplayname');?>
 
-		<?= $form->field($model, 'feedback_id') ?>
+		<?php echo $form->field($model, 'feedbackSubject');?>
 
-		<?= $form->field($model, 'user_id') ?>
+		<?php echo $form->field($model, 'userDisplayname');?>
 
-		<?= $form->field($model, 'views') ?>
+		<?php echo $form->field($model, 'views');?>
 
-		<?= $form->field($model, 'view_date') ?>
+		<?php echo $form->field($model, 'view_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'view_ip') ?>
+		<?php echo $form->field($model, 'view_ip');?>
 
-		<?= $form->field($model, 'modified_date') ?>
+		<?php echo $form->field($model, 'modified_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'modified_id') ?>
+		<?php echo $form->field($model, 'modifiedDisplayname');?>
 
-		<?= $form->field($model, 'updated_date') ?>
+		<?php echo $form->field($model, 'updated_date')
+			->input('date');?>
+
+		<?php echo $form->field($model, 'publish')
+			->dropDownList($this->filterYesNo(), ['prompt'=>'']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
 			<?php echo Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
 		</div>
+
 	<?php ActiveForm::end(); ?>
+
 </div>

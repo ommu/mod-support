@@ -38,13 +38,13 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	// Search Variable
-	public $feedbackSubject;
 	public $feedbackDisplayname;
 	public $userDisplayname;
 	public $modifiedDisplayname;
+	public $feedbackSubject;
 
 	/**
 	 * @return string the associated database table name
@@ -81,10 +81,10 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'feedbackSubject' => Yii::t('app', 'Subject'),
 			'feedbackDisplayname' => Yii::t('app', 'Name'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'feedbackSubject' => Yii::t('app', 'Subject'),
 		];
 	}
 
@@ -134,16 +134,16 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 		];
 		if(!Yii::$app->request->get('feedback')) {
-			$this->templateColumns['feedbackSubject'] = [
-				'attribute' => 'feedbackSubject',
-				'value' => function($model, $key, $index, $column) {
-					return $model->feedbackSubject;
-				},
-			];
 			$this->templateColumns['feedbackDisplayname'] = [
 				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return $model->feedbackDisplayname;
+				},
+			];
+			$this->templateColumns['feedbackSubject'] = [
+				'attribute' => 'feedbackSubject',
+				'value' => function($model, $key, $index, $column) {
+					return $model->feedbackSubject;
 				},
 			];
 		}
@@ -223,10 +223,10 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 		$this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
 		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 	}
 
 	/**

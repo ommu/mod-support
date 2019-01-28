@@ -8,8 +8,7 @@
  * Reference start
  * TOC :
  *	Index
- *	Create
- *	Update
+ *	Manage
  *	View
  *	Delete
  *	RunAction
@@ -17,14 +16,15 @@
  *
  *	findModel
  *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
  * @created date 25 September 2017, 14:11 WIB
- * @contact (+62)857-2971-9487
+ * @modified date 28 January 2019, 12:20 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
- 
+
 namespace ommu\support\controllers\feedback;
 
 use Yii;
@@ -42,9 +42,9 @@ class ViewController extends Controller
 	public function behaviors()
 	{
 		return [
-            'access' => [
-                'class' => AccessControl::className(),
-            ],
+			'access' => [
+				'class' => AccessControl::className(),
+			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
@@ -82,73 +82,26 @@ class ViewController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
-		$this->view->title = Yii::t('app', 'Support Feedback Views');
+		$this->view->title = Yii::t('app', 'Feedback Views');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
-			'columns'	  => $columns,
+			'columns' => $columns,
 		]);
 	}
 
 	/**
-	 * Creates a new SupportFeedbackView model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 * @return mixed
-	 */
-	public function actionCreate()
-	{
-		$model = new SupportFeedbackView();
-
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			//return $this->redirect(['view', 'id' => $model->view_id]);
-			return $this->redirect(['index']);
-
-		} else {
-			$this->view->title = Yii::t('app', 'Create Support Feedback View');
-			$this->view->description = '';
-			$this->view->keywords = '';
-			return $this->render('admin_create', [
-				'model' => $model,
-			]);
-		}
-	}
-
-	/**
-	 * Updates an existing SupportFeedbackView model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param string $id
-	 * @return mixed
-	 */
-	public function actionUpdate($id)
-	{
-		$model = $this->findModel($id);
-
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			//return $this->redirect(['view', 'id' => $model->view_id]);
-			return $this->redirect(['index']);
-
-		} else {
-			$this->view->title = Yii::t('app', 'Update {modelClass}: {view_id}', ['modelClass' => 'Support Feedback View', 'view_id' => $model->view_id]);
-			$this->view->description = '';
-			$this->view->keywords = '';
-			return $this->render('admin_update', [
-				'model' => $model,
-			]);
-		}
-	}
-
-	/**
 	 * Displays a single SupportFeedbackView model.
-	 * @param string $id
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'View {modelClass}: {view_id}', ['modelClass' => 'Support Feedback View', 'view_id' => $model->view_id]);
+		$this->view->title = Yii::t('app', 'Detail {model-class}: {feedback-id}', ['model-class' => 'Feedback View', 'feedback-id' => $model->feedback->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_view', [
@@ -159,7 +112,7 @@ class ViewController extends Controller
 	/**
 	 * Deletes an existing SupportFeedbackView model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
-	 * @param string $id
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionDelete($id)
@@ -167,16 +120,16 @@ class ViewController extends Controller
 		$model = $this->findModel($id);
 		$model->publish = 2;
 
-		if ($model->save(false, ['publish'])) {
-			//return $this->redirect(['view', 'id' => $model->view_id]);
-			return $this->redirect(['index']);
+		if($model->save(false, ['publish','modified_id'])) {
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success deleted.'));
+			return $this->redirect(['manage']);
 		}
 	}
 
 	/**
-	 * Publish/Unpublish an existing SupportFeedbackView model.
-	 * If publish/unpublish is successful, the browser will be redirected to the 'index' page.
-	 * @param string $id
+	 * actionPublish an existing SupportFeedbackView model.
+	 * If publish is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
 	 * @return mixed
 	 */
 	public function actionPublish($id)
@@ -185,20 +138,22 @@ class ViewController extends Controller
 		$replace = $model->publish == 1 ? 0 : 1;
 		$model->publish = $replace;
 
-		if ($model->save(false, ['publish']))
-			return $this->redirect(['index']);
+		if($model->save(false, ['publish','modified_id'])) {
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success updated.'));
+			return $this->redirect(['manage']);
+		}
 	}
 
 	/**
 	 * Finds the SupportFeedbackView model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 * @param string $id
+	 * @param integer $id
 	 * @return SupportFeedbackView the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = SupportFeedbackView::findOne($id)) !== null)
+		if(($model = SupportFeedbackView::findOne($id)) !== null)
 			return $model;
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

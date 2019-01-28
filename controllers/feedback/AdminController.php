@@ -34,6 +34,7 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbacks;
 use ommu\support\models\search\SupportFeedbacks as SupportFeedbacksSearch;
+use ommu\support\models\SupportFeedbackView;
 
 class AdminController extends Controller
 {
@@ -161,6 +162,7 @@ class AdminController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
+		SupportFeedbackView::insertFeedbackView($model->feedback_id);
 
 		$this->view->title = Yii::t('app', 'Detail {model-class}: {displayname}', ['model-class' => 'Feedback', 'displayname' => $model->displayname]);
 		$this->view->description = '';

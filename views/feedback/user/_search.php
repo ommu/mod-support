@@ -6,11 +6,12 @@
  * @var $model ommu\support\models\search\SupportFeedbackUser
  * @var $form app\components\ActiveForm
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 15:40 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 15:40 WIB
+ * @modified date 28 January 2019, 12:21 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
@@ -18,30 +19,41 @@ use yii\helpers\Html;
 use app\components\ActiveForm;
 ?>
 
-<div class="search-form">
+<div class="support-feedback-user-search search-form">
+
 	<?php $form = ActiveForm::begin([
 		'action' => ['index'],
 		'method' => 'get',
+		'options' => [
+			'data-pjax' => 1
+		],
 	]); ?>
-		<?= $form->field($model, 'id') ?>
 
-		<?= $form->field($model, 'publish') ?>
+		<?php echo $form->field($model, 'feedbackDisplayname');?>
 
-		<?= $form->field($model, 'feedback_id') ?>
+		<?php echo $form->field($model, 'feedbackSubject');?>
 
-		<?= $form->field($model, 'user_id') ?>
+		<?php echo $form->field($model, 'userDisplayname');?>
 
-		<?= $form->field($model, 'creation_date') ?>
+		<?php echo $form->field($model, 'creation_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'modified_date') ?>
+		<?php echo $form->field($model, 'modified_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'modified_id') ?>
+		<?php echo $form->field($model, 'modifiedDisplayname');?>
 
-		<?= $form->field($model, 'updated_date') ?>
+		<?php echo $form->field($model, 'updated_date')
+			->input('date');?>
+
+		<?php echo $form->field($model, 'publish')
+			->dropDownList($this->filterYesNo(), ['prompt'=>'']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
 			<?php echo Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
 		</div>
+
 	<?php ActiveForm::end(); ?>
+
 </div>

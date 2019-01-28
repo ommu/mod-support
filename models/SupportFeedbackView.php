@@ -34,6 +34,7 @@
 namespace ommu\support\models;
 
 use Yii;
+use yii\helpers\Html;
 use yii\helpers\Url;
 use ommu\users\models\Users;
 
@@ -41,13 +42,13 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	// Search Variable
-	public $feedbackSubject;
 	public $feedbackDisplayname;
 	public $userDisplayname;
 	public $modifiedDisplayname;
+	public $feedbackSubject;
 
 	/**
 	 * @return string the associated database table name
@@ -88,10 +89,10 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'histories' => Yii::t('app', 'Histories'),
-			'feedbackSubject' => Yii::t('app', 'Subject'),
 			'feedbackDisplayname' => Yii::t('app', 'Name'),
 			'userDisplayname' => Yii::t('app', 'User'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'feedbackSubject' => Yii::t('app', 'Subject'),
 		];
 	}
 
@@ -156,16 +157,16 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 		];
 		if(!Yii::$app->request->get('feedback')) {
-			$this->templateColumns['feedbackSubject'] = [
-				'attribute' => 'feedbackSubject',
-				'value' => function($model, $key, $index, $column) {
-					return $model->feedbackSubject;
-				},
-			];
 			$this->templateColumns['feedbackDisplayname'] = [
 				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return $model->feedbackDisplayname;
+				},
+			];
+			$this->templateColumns['feedbackSubject'] = [
+				'attribute' => 'feedbackSubject',
+				'value' => function($model, $key, $index, $column) {
+					return $model->feedbackSubject;
 				},
 			];
 		}
@@ -256,20 +257,22 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	/**
 	 * {@inheritdoc}
 	 */
-	public function insertFeedbackView($feedback_id)
+	public static function insertFeedbackView($feedback_id)
 	{
 		$user_id = Yii::$app->user->id;
-		$feedback_view = SupportFeedbackView::find()->where(['feedback_id' => $feedback_id, 'user_id' => $user_id])->one();
+		$findView = self::find()
+			->where(['feedback_id' => $feedback_id, 'user_id' => $user_id])
+			->one();
 
-		if($feedback_view == null) {
-			$feedback_view = new SupportFeedbackView;
-			$feedback_view->feedback_id = $feedback_id;
-			$feedback_view->user_id = $user_id;
-			$feedback_view->view_ip = Yii::$app->request->userIP;
-		} else {
-			$feedback_view->views = $feedback_view->views+1;
+		if($findView != null)
+			$findView->updateAttributes(['views'=>$findView->views+1, 'view_ip'=>$_SERVER['REMOTE_ADDR']]);
+
+		else {
+			$feedbackView = new self();
+			$feedbackView->feedback_id = $feedback_id;
+			$feedbackView->user_id = $user_id;
+			$feedbackView->save();
 		}
-		$feedback_view->save();
 	}
 
 	/**
@@ -279,10 +282,10 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 		$this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
 		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 	}
 
 	/**
