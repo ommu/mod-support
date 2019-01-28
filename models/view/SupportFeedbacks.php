@@ -6,6 +6,7 @@
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
  * @created date 27 January 2019, 12:58 WIB
+ * @modified date 28 January 2019, 12:14 WIB
  * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "_support_feedbacks".
@@ -16,6 +17,8 @@
  * @property integer $view
  * @property string $views
  * @property string $view_all
+ * @property string $users
+ * @property integer $user_all
  *
  */
 
@@ -49,8 +52,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['feedback_id', 'reply', 'view'], 'integer'],
-			[['views', 'view_all'], 'number'],
+			[['feedback_id', 'reply', 'view', 'user_all'], 'integer'],
+			[['views', 'view_all', 'users'], 'number'],
 		];
 	}
 
@@ -65,6 +68,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'view' => Yii::t('app', 'View'),
 			'views' => Yii::t('app', 'Views'),
 			'view_all' => Yii::t('app', 'View All'),
+			'users' => Yii::t('app', 'Users'),
+			'user_all' => Yii::t('app', 'User All'),
 		];
 	}
 
@@ -108,6 +113,18 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'view_all',
 			'value' => function($model, $key, $index, $column) {
 				return $model->view_all;
+			},
+		];
+		$this->templateColumns['users'] = [
+			'attribute' => 'users',
+			'value' => function($model, $key, $index, $column) {
+				return $model->users;
+			},
+		];
+		$this->templateColumns['user_all'] = [
+			'attribute' => 'user_all',
+			'value' => function($model, $key, $index, $column) {
+				return $model->user_all;
 			},
 		];
 	}

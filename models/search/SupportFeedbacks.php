@@ -101,6 +101,10 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
+		$attributes['users'] = [
+			'asc' => ['view.users' => SORT_ASC],
+			'desc' => ['view.users' => SORT_DESC],
+		];
 		$attributes['views'] = [
 			'asc' => ['view.views' => SORT_ASC],
 			'desc' => ['view.views' => SORT_DESC],

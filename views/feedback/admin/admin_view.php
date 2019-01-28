@@ -44,10 +44,6 @@ $this->params['menu']['content'] = [
 			'format' => 'raw',
 		],
 		[
-			'attribute' => 'subject_id',
-			'value' => $model->subjectName,
-		],
-		[
 			'attribute' => 'userDisplayname',
 			'value' => $model->userDisplayname,
 		],
@@ -55,24 +51,28 @@ $this->params['menu']['content'] = [
 		'displayname',
 		'phone',
 		[
+			'attribute' => 'subject_id',
+			'value' => $model->subjectName,
+		],
+		[
 			'attribute' => 'message',
 			'value' => $model->message ? $model->message : '-',
+		],
+		[
+			'attribute' => 'creation_date',
+			'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
 		],
 		[
 			'attribute' => 'reply_message',
 			'value' => $model->reply_message ? $model->reply_message : '-',
 		],
 		[
-			'attribute' => 'replied_date',
-			'value' => Yii::$app->formatter->asDatetime($model->replied_date, 'medium'),
-		],
-		[
 			'attribute' => 'repliedDisplayname',
 			'value' => $model->repliedDisplayname,
 		],
 		[
-			'attribute' => 'creation_date',
-			'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
+			'attribute' => 'replied_date',
+			'value' => Yii::$app->formatter->asDatetime($model->replied_date, 'medium'),
 		],
 		[
 			'attribute' => 'modified_date',

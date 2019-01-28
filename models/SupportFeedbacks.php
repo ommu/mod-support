@@ -50,7 +50,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['phone', 'replied_date', 'repliedDisplayname', 'modified_date', 'updated_date', 'modifiedDisplayname'];
+	public $gridForbiddenColumn = ['phone', 'replied_date', 'repliedDisplayname', 'modified_date', 'updated_date', 'modifiedDisplayname', 'publish'];
 
 	public $subjectName;
 	public $userDisplayname;
@@ -330,15 +330,6 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['users'] = [
-			'attribute' => 'users',
-			'filter' => false,
-			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$model->users])]);
-			},
-			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
-		];
 		$this->templateColumns['views'] = [
 			'attribute' => 'views',
 			'filter' => false,
@@ -348,12 +339,21 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
+		$this->templateColumns['users'] = [
+			'attribute' => 'users',
+			'filter' => false,
+			'value' => function($model, $key, $index, $column) {
+				return Html::a($model->users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$model->users])]);
+			},
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
+		];
 		$this->templateColumns['reply'] = [
 			'attribute' => 'reply',
 			'filter' => $this->filterYesNo(),
 			'value' => function($model, $key, $index, $column) {
 				$reply = $this->filterYesNo($model->reply);
-				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey]) : $reply;
+				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply')]) : $reply;
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
@@ -412,7 +412,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 
 		$this->OldSubjectId = $this->subject_id;
 		$this->OldSubjectName = $this->subjectName;
-		
+
 		$this->reply = $this->getReplyStatus();
 	}
 
