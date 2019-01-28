@@ -1,45 +1,40 @@
 <?php
 /**
  * SupportFeedbacks
+ * 
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2018 OMMU (www.ommu.co)
+ * @created date 18 April 2018, 14:39 WIB
+ * @modified date 25 January 2019, 15:11 WIB
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedbacks".
  *
  * The followings are the available columns in table "ommu_support_feedbacks":
- * @property string $feedback_id
+ * @property integer $feedback_id
  * @property integer $publish
  * @property integer $subject_id
  * @property integer $user_id
  * @property string $email
  * @property string $displayname
  * @property string $phone
- * @property string $subject
  * @property string $message
  * @property string $reply_message
  * @property string $replied_date
- * @property string $replied_id
+ * @property integer $replied_id
  * @property string $creation_date
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
- * @property string $_inbox_id
- * @property string $_website
- * @property integer $_reply
- * @property integer $_read_flag
- * @property string $_reply_id
- * @property integer $_status
  *
  * The followings are the available model relations:
  * @property SupportFeedbackUser[] $users
  * @property SupportFeedbackView[] $views
  * @property Users $user
  * @property SupportFeedbackSubject $subject
- * @property Users $user
-
- * @copyright Copyright (c) 2018 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Eko Hariyanto <haryeko29@gmail.com>
- * @created date 18 April 2018, 14:39 WIB
- * @contact (+62)857-4381-4273
+ * @property Users $replied
+ * @property Users $modified
  *
  */
 
@@ -47,21 +42,26 @@ namespace ommu\support\models;
 
 use Yii;
 use yii\helpers\Url;
+use yii\helpers\Html;
 use ommu\users\models\Users;
-use app\models\SourceMessage;
-use app\modules\support\models\SupportFeedbackSubject;
-use app\components\grid\GridView;
-use app\components\Utility;
+use ommu\support\models\view\SupportFeedbacks as SupportFeedbacksView;
 
 class SupportFeedbacks extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['creation_date', 'modified_date', 'updated_date', 'modified_search'];
+	public $gridForbiddenColumn = ['phone', 'replied_date', 'repliedDisplayname', 'modified_date', 'updated_date', 'modifiedDisplayname'];
 
-  
-	public $subject_i;
-	public $verifyCode;
+	public $subjectName;
+	public $userDisplayname;
+	public $repliedDisplayname;
+	public $modifiedDisplayname;
+
+	public $OldSubjectId;
+	public $OldSubjectName;
+
+	const SCENARIO_REPLY = 'replyForm';
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -76,42 +76,101 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-		 [['publish', 'subject_id', 'user_id', 'replied_id', 'modified_id', '_inbox_id', '_reply', '_read_flag', '_reply_id', '_status'], 'integer'],
-			[['email', 'displayname', 'message', 'subject_i'], 'required'],
-			[['message', 'reply_message', 'subject_i', '_website'], 'string'],
-			[['subject_id', 'replied_date', 'creation_date', 'modified_date', 'updated_date', 'phone', 'subject', 'reply_message', 'modified_id'], 'safe'],
-			[['email', 'displayname'], 'string', 'max' => 32],
+			[['email', 'displayname', 'phone', 'message', 'subjectName'], 'required'],
+			[['reply_message'], 'required', 'on' => self::SCENARIO_REPLY],
+			[['publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
+			[['subject_id'], 'safe'],
+			[['message', 'reply_message'], 'string'],
+			[['email'], 'email'],
+			[['email', 'subjectName'], 'string', 'max' => 64],
+			[['displayname'], 'string', 'max' => 32],
 			[['phone'], 'string', 'max' => 15],
-			[['subject'], 'string', 'max' => 64],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'user_id']],
 			[['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbackSubject::className(), 'targetAttribute' => ['subject_id' => 'subject_id']],
 			[['replied_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['replied_id' => 'user_id']],
-			['email', 'email'],
-			// verifyCode needs to be entered correctly
-			['verifyCode', 'captcha'],
-	  ];
+		];
 	}
+
+	// get scenarios
 	public function scenarios()
 	{
+		$scenarios = parent::scenarios();
+		$scenarios[self::SCENARIO_REPLY] = ['reply_message'];
+		return $scenarios;
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels()
+	{
 		return [
-			'api_submit' => ['email', 'displayname', 'message', 'subject_i', 'publish', 'subject_id', 'user_id', 'replied_id', 'modified_id', '_inbox_id', '_reply', '_read_flag', '_reply_id', '_status'],
+			'feedback_id' => Yii::t('app', 'Feedback'),
+			'publish' => Yii::t('app', 'Publish'),
+			'subject_id' => Yii::t('app', 'Subject'),
+			'user_id' => Yii::t('app', 'User'),
+			'email' => Yii::t('app', 'Email'),
+			'displayname' => Yii::t('app', 'Name'),
+			'phone' => Yii::t('app', 'Phone'),
+			'message' => Yii::t('app', 'Message'),
+			'reply_message' => Yii::t('app', 'Reply Message'),
+			'replied_date' => Yii::t('app', 'Replied Date'),
+			'replied_id' => Yii::t('app', 'Replied'),
+			'creation_date' => Yii::t('app', 'Creation Date'),
+			'modified_date' => Yii::t('app', 'Modified Date'),
+			'modified_id' => Yii::t('app', 'Modified'),
+			'updated_date' => Yii::t('app', 'Updated Date'),
+			'users' => Yii::t('app', 'Users'),
+			'views' => Yii::t('app', 'Views'),
+			'subjectName' => Yii::t('app', 'Subject'),
+			'userDisplayname' => Yii::t('app', 'User'),
+			'repliedDisplayname' => Yii::t('app', 'Replied'),
+			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getUsers()
+	public function getUsers($count=true, $publish=1)
 	{
-		return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id']);
+		if($count == true) {
+			$model = SupportFeedbackUser::find()
+				->where(['feedback_id' => $this->feedback_id]);
+			if($publish == 0)
+				$model->unpublish();
+			elseif($publish == 1)
+				$model->published();
+			elseif($publish == 2)
+				$model->deleted();
+
+			return $model->count();
+		}
+
+		return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
+			->andOnCondition([sprintf('%s.publish', SupportFeedbackUser::tableName()) => $publish]);
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getViews()
+	public function getViews($count=true, $publish=1)
 	{
-		return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id']);
+		if($count == true) {
+			$model = SupportFeedbackView::find()
+				->where(['feedback_id' => $this->feedback_id]);
+			if($publish == 0)
+				$model->unpublish();
+			elseif($publish == 1)
+				$model->published();
+			elseif($publish == 2)
+				$model->deleted();
+
+			return $model->sum('views');
+		}
+
+		return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
+			->andOnCondition([sprintf('%s.publish', SupportFeedbackView::tableName()) => $publish]);
 	}
 
 	/**
@@ -133,7 +192,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getUserreplied()
+	public function getReplied()
 	{
 		return $this->hasOne(Users::className(), ['user_id' => 'replied_id']);
 	}
@@ -147,46 +206,26 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	}
 
 	/**
-	 * @return array customized attribute labels (name=>label)
+	 * @return \yii\db\ActiveQuery
 	 */
-	public function attributeLabels()
+	public function getView()
 	{
-		return [
-			'verifyCode' => 'Verification Code',
-			'feedback_id' => Yii::t('app', 'Feedback'),
-			'publish' => Yii::t('app', 'Publish'),
-			'subject_id' => Yii::t('app', 'Subject'),
-			'user_id' => Yii::t('app', 'User'),
-			'email' => Yii::t('app', 'Email'),
-			'displayname' => Yii::t('app', 'Name'),
-			'phone' => Yii::t('app', 'Phone'),
-			'subject' => Yii::t('app', 'Subject'),
-			'subject_i' => Yii::t('app', 'Subject'),
-			'message' => Yii::t('app', 'Message'),
-			'reply_message' => Yii::t('app', 'Reply Message'),
-			'replied_date' => Yii::t('app', 'Replied Date'),
-			'replied_id' => Yii::t('app', 'Replied'),
-			'creation_date' => Yii::t('app', 'Creation Date'),
-			'modified_date' => Yii::t('app', 'Modified Date'),
-			'modified_id' => Yii::t('app', 'Modified'),
-			'updated_date' => Yii::t('app', 'Updated Date'),
-			'_inbox_id' => Yii::t('app', 'Inbox'),
-			'_website' => Yii::t('app', 'Website'),
-			'_reply' => Yii::t('app', 'Reply'),
-			'_read_flag' => Yii::t('app', 'Read Flag'),
-			'_reply_id' => Yii::t('app', 'Reply'),
-			'_status' => Yii::t('app', 'Status'),
-			'subject_search' => Yii::t('app', 'Subject'),
-			'user_search' => Yii::t('app', 'User'),
-			'user_search' => Yii::t('app', 'User'),
-			'modified_search' => Yii::t('app', 'Modified'),
-		];
+		return $this->hasOne(SupportFeedbacksView::className(), ['feedback_id' => 'feedback_id']);
 	}
-	
+
+	/**
+	 * {@inheritdoc}
+	 * @return \ommu\support\models\query\SupportFeedbacks the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		return new \ommu\support\models\query\SupportFeedbacks(get_called_class());
+	}
+
 	/**
 	 * Set default columns to display
 	 */
-	public function init() 
+	public function init()
 	{
 		parent::init();
 
@@ -195,27 +234,53 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'class'  => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		if(!isset($_GET['subject'])) {
-			$this->templateColumns['subject_search'] = [
-				'attribute' => 'subject_search',
+		if(!Yii::$app->request->get('subject')) {
+			$this->templateColumns['subject_id'] = [
+				'attribute' => 'subject_id',
 				'value' => function($model, $key, $index, $column) {
-					return isset($model->subject) ? $model->subject->title->message : '-';
+					return $model->subjectName;
 				},
+				'filter' => SupportFeedbackSubject::getSubject(),
 			];
 		}
-		if(!isset($_GET['user'])) {
-			$this->templateColumns['user_search'] = [
-				'attribute' => 'user_search',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->user) ? $model->user->displayname : '-';
-				},
-			];
-		}
-		$this->templateColumns['email'] = 'email';
-		$this->templateColumns['displayname'] = 'displayname';
-		$this->templateColumns['phone'] = 'phone';
-		$this->templateColumns['message'] = 'message';
-		$this->templateColumns['reply_message'] = 'reply_message';
+		// if(!Yii::$app->request->get('user')) {
+		// 	$this->templateColumns['userDisplayname'] = [
+		// 		'attribute' => 'userDisplayname',
+		// 		'value' => function($model, $key, $index, $column) {
+		// 			return $model->userDisplayname;
+		// 		},
+		// 	];
+		// }
+		$this->templateColumns['email'] = [
+			'attribute' => 'email',
+			'value' => function($model, $key, $index, $column) {
+				return $model->email;
+			},
+		];
+		$this->templateColumns['displayname'] = [
+			'attribute' => 'displayname',
+			'value' => function($model, $key, $index, $column) {
+				return $model->displayname;
+			},
+		];
+		$this->templateColumns['phone'] = [
+			'attribute' => 'phone',
+			'value' => function($model, $key, $index, $column) {
+				return $model->phone;
+			},
+		];
+		// $this->templateColumns['message'] = [
+		// 	'attribute' => 'message',
+		// 	'value' => function($model, $key, $index, $column) {
+		// 		return $model->message;
+		// 	},
+		// ];
+		// $this->templateColumns['reply_message'] = [
+		// 	'attribute' => 'reply_message',
+		// 	'value' => function($model, $key, $index, $column) {
+		// 		return $model->reply_message;
+		// 	},
+		// ];
 		$this->templateColumns['replied_date'] = [
 			'attribute' => 'replied_date',
 			'value' => function($model, $key, $index, $column) {
@@ -223,11 +288,11 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'replied_date'),
 		];
-		if(!isset($_GET['user'])) {
-			$this->templateColumns['user_search'] = [
-				'attribute' => 'user_search',
+		if(!Yii::$app->request->get('replied')) {
+			$this->templateColumns['repliedDisplayname'] = [
+				'attribute' => 'repliedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return isset($model->user) ? $model->user->displayname : '-';
+					return $model->repliedDisplayname;
 				},
 			];
 		}
@@ -245,11 +310,11 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
-		if(!isset($_GET['modified'])) {
-			$this->templateColumns['modified_search'] = [
-				'attribute' => 'modified_search',
+		if(!Yii::$app->request->get('modified')) {
+			$this->templateColumns['modifiedDisplayname'] = [
+				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
-					return isset($model->modified) ? $model->modified->displayname : '-';
+					return $model->modifiedDisplayname;
 				},
 			];
 		}
@@ -260,31 +325,25 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['_inbox_id'] = '_inbox_id';
-		$this->templateColumns['_website'] = '_website';
-		$this->templateColumns['_reply_id'] = '_reply_id';
-		$this->templateColumns['_reply'] = [
-			'attribute' => '_reply',
+		$this->templateColumns['users'] = [
+			'attribute' => 'users',
+			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return $model->_reply;
+				return Html::a($model->users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$model->users])]);
 			},
 			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
 		];
-		$this->templateColumns['_read_flag'] = [
-			'attribute' => '_read_flag',
+		$this->templateColumns['views'] = [
+			'attribute' => 'views',
+			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return $model->_read_flag;
+				return Html::a($model->views ? $model->views : 0, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$model->views])]);
 			},
 			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
 		];
-		$this->templateColumns['_status'] = [
-			'attribute' => '_status',
-			'value' => function($model, $key, $index, $column) {
-				return $model->_status;
-			},
-			'contentOptions' => ['class'=>'center'],	
-		];
-		if(!isset($_GET['trash'])) {
+		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
 				'filter' => $this->filterYesNo(),
@@ -293,32 +352,72 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 					return $this->quickAction($url, $model->publish);
 				},
 				'contentOptions' => ['class'=>'center'],
-				'format'    => 'raw',
+				'format' => 'raw',
 			];
 		}
 	}
 
-	public function beforeSave($insert) 
+	/**
+	 * User get information
+	 */
+	public static function getInfo($id, $column=null)
 	{
-	   // print_r($this->attributeLabels);exit;
-		if(parent::beforeSave($insert)) {
-			$subject_i = Utility::getUrlTitle($this->subject_i);
-			$subject = SupportFeedbackSubject::find()
-				->where(['slug' =>  $subject_i])
+		if($column != null) {
+			$model = self::find()
+				->select([$column])
+				->where(['feedback_id' => $id])
 				->one();
-
-			if($subject != null) {
-				$this->subject_id = $subject->subject_id;
-
-			} else {
-				$data = new SupportFeedbackSubject();
-				$data->subject_name_i = $this->subject_i;
-				if($data->save())
-					$this->subject_id = $data->subject_id;
-			}
+			return $model->$column;
+			
+		} else {
+			$model = self::findOne($id);
+			return $model;
 		}
-		return true;    
 	}
 
+	/**
+	 * after find attributes
+	 */
+	public function afterFind()
+	{
+		parent::afterFind();
 
+		$this->subjectName = isset($this->subject) ? $this->subject->title->message : '-';
+		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
+		$this->repliedDisplayname = isset($this->replied) ? $this->replied->displayname : '-';
+		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+
+		$this->OldSubjectId = $this->subject_id;
+		$this->OldSubjectName = $this->subjectName;
+	}
+
+	/**
+	 * before validate attributes
+	 */
+	public function beforeValidate()
+	{
+		if(parent::beforeValidate()) {
+			if(!$this->isNewRecord) {
+				if($this->modified_id == null)
+					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * before save attributes
+	 */
+	public function beforeSave($insert)
+	{
+		if($insert) {
+			if(!$this->subject_id)
+				$this->subject_id = SupportFeedbackSubject::insertSubject($this->subjectName);
+		} else {
+			if($this->subject_id == $this->OldSubjectId && $this->subjectName != $this->OldSubjectName)
+				$this->subject_id = SupportFeedbackSubject::insertSubject($this->subjectName);
+		}
+
+		return true;
+	}
 }

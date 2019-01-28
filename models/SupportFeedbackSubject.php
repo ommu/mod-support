@@ -258,7 +258,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'attribute' => 'feedbacks',
 			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>'0,1'], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$model->feedbacks])]);
+				return Html::a($model->feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$model->feedbacks])]);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
@@ -311,6 +311,28 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subject_name_i');
 
 		return $model;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function insertSubject($subjectName)
+	{
+		$subject = self::find()
+			->alias('t')
+			->select(['subject_id'])
+			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
+			->andWhere(['title.message' => $subjectName])
+			->one();
+
+		if($subject != null)
+				return $subject->subject_id;
+		else {
+			$model = new self();
+			$model->subject_name_i = $subjectName;
+			if($model->save())
+				return $model->subject_id;
+		}
 	}
 
 	/**

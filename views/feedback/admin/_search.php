@@ -2,54 +2,74 @@
 /**
  * Support Feedbacks (support-feedbacks)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\AdminController
- * @var $model app\modules\support\models\search\SupportFeedbacks
+ * @var $this ommu\support\controllers\feedback\AdminController
+ * @var $model ommu\support\models\search\SupportFeedbacks
  * @var $form app\components\ActiveForm
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 13:55 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 13:55 WIB
+ * @modified date 27 January 2019, 09:55 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
 use yii\helpers\Html;
 use app\components\ActiveForm;
+use ommu\support\models\SupportFeedbackSubject;
 ?>
 
-<div class="search-form">
+<div class="support-feedbacks-search search-form">
+
 	<?php $form = ActiveForm::begin([
 		'action' => ['index'],
 		'method' => 'get',
+		'options' => [
+			'data-pjax' => 1
+		],
 	]); ?>
-		<?= $form->field($model, 'feedback_id') ?>
 
-		<?= $form->field($model, 'publish') ?>
+		<?php $subject = SupportFeedbackSubject::getSubject();
+		echo $form->field($model, 'subject_id')
+			->dropDownList($subject, ['prompt'=>'']);?>
 
-		<?= $form->field($model, 'user_id') ?>
+		<?php echo $form->field($model, 'userDisplayname');?>
 
-		<?= $form->field($model, 'email') ?>
+		<?php echo $form->field($model, 'email');?>
 
-		<?= $form->field($model, 'displayname') ?>
+		<?php echo $form->field($model, 'displayname');?>
 
-		<?= $form->field($model, 'phone') ?>
+		<?php echo $form->field($model, 'phone');?>
 
-		<?= $form->field($model, 'subject') ?>
+		<?php echo $form->field($model, 'message');?>
 
-		<?= $form->field($model, 'message') ?>
+		<?php echo $form->field($model, 'reply_message');?>
 
-		<?= $form->field($model, 'creation_date') ?>
+		<?php echo $form->field($model, 'replied_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'modified_date') ?>
+		<?php echo $form->field($model, 'repliedDisplayname');?>
 
-		<?= $form->field($model, 'modified_id') ?>
+		<?php echo $form->field($model, 'creation_date')
+			->input('date');?>
 
-		<?= $form->field($model, 'updated_date') ?>
+		<?php echo $form->field($model, 'modified_date')
+			->input('date');?>
+
+		<?php echo $form->field($model, 'modifiedDisplayname');?>
+
+		<?php echo $form->field($model, 'updated_date')
+			->input('date');?>
+
+		<?php echo $form->field($model, 'publish')
+			->dropDownList($this->filterYesNo(), ['prompt'=>'']);?>
 
 		<div class="form-group">
 			<?php echo Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
 			<?php echo Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
 		</div>
+
 	<?php ActiveForm::end(); ?>
+
 </div>

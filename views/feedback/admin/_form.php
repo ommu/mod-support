@@ -2,48 +2,45 @@
 /**
  * Support Feedbacks (support-feedbacks)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\AdminController
- * @var $model app\modules\support\models\SupportFeedbacks
+ * @var $this ommu\support\controllers\feedback\AdminController
+ * @var $model ommu\support\models\SupportFeedbacks
  * @var $form app\components\ActiveForm
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 13:55 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 13:55 WIB
+ * @modified date 27 January 2019, 09:55 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use app\components\ActiveForm;
-use yii\redactor\widgets\Redactor;
-use yii\helpers\ArrayHelper;
-use ommu\users\models\Users;
-
-$redactorOptions = [
-	'imageManagerJson' => ['/redactor/upload/image-json'],
-	'imageUpload'	  => ['/redactor/upload/image'],
-	'fileUpload'	   => ['/redactor/upload/file'],
-	'plugins'		  => ['clips', 'fontcolor','imagemanager']
-];
+use ommu\support\models\SupportFeedbackSubject;
+use yii\jui\AutoComplete;
+use yii\web\JsExpression;
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<div class="support-feedbacks-form">
 
-<!-- <?php echo $form->field($model, 'user_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength'=>true])
-	->label($model->getAttributeLabel('user_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?> -->
+<?php $form = ActiveForm::begin([
+	'enableClientValidation' => true,
+	'enableAjaxValidation' => false,
+	//'enableClientScript' => true,
+]); ?>
+
+<?php //echo $form->errorSummary($model);?>
 
 <?php 
-	$data = ArrayHelper::map(Users::find()->all(), 'user_id', 'displayname');
-	echo $form
-	->field($model, 'user_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->dropDownList($data, ['prompt' => 'Pilih User'])
-	->label($model->getAttributeLabel('user_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); 
-?>
+// $subject = SupportFeedbackSubject::getSubject();
+// echo $form->field($model, 'subject_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+// 	->dropDownList($subject, ['prompt'=>''])
+// 	->label($model->getAttributeLabel('subject_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'email', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->input('email')
+	->textInput(['type'=>'email'])
 	->label($model->getAttributeLabel('email'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'displayname', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
@@ -51,21 +48,39 @@ $redactorOptions = [
 	->label($model->getAttributeLabel('displayname'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'phone', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength'=>true])
+	->textInput(['type'=>'number', 'maxlength'=>true])
 	->label($model->getAttributeLabel('phone'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
-<?php echo $form->field($model, 'subject', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
-	->textInput(['maxlength'=>true])
-	->label($model->getAttributeLabel('subject'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+<?php
+$subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput()->label(false);
+echo $form->field($model, 'subjectName', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}'.$subject_id.'{error}</div>'])
+	// ->textInput(['maxlength'=>true])
+	->widget(AutoComplete::className(), [
+		'options' => [
+			'data-toggle' => 'tooltip', 'data-placement' => 'top',
+			'class' => 'ui-autocomplete-input form-control'
+		],
+		'clientOptions' => [
+			'source' => Url::to(['feedback/subject/suggest']),
+			'minLength' => 2,
+			'select' => new JsExpression("function(event, ui) {
+				\$('.field-subjectname #subject_id').val(ui.item.id);
+				\$('.field-subjectname #subjectname').val(ui.item.label);
+				return false;
+			}"),
+		]
+	])
+	->label($model->getAttributeLabel('subjectName'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
 <?php echo $form->field($model, 'message', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
 	->textarea(['rows'=>6, 'cols'=>50])
-	->widget(Redactor::className(), ['clientOptions' => $redactorOptions])
 	->label($model->getAttributeLabel('message'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
-<?php echo $form->field($model, 'publish', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12 checkbox">{input}{error}</div>'])
+<?php if(!$model->isNewRecord) {
+echo $form->field($model, 'publish', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12 checkbox">{input}{error}</div>'])
 	->checkbox(['label'=>''])
-	->label($model->getAttributeLabel('publish'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('publish'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']);
+} ?>
 
 <div class="ln_solid"></div>
 <div class="form-group">
@@ -75,3 +90,5 @@ $redactorOptions = [
 </div>
 
 <?php ActiveForm::end(); ?>
+
+</div>

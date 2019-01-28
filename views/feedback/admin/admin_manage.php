@@ -2,93 +2,76 @@
 /**
  * Support Feedbacks (support-feedbacks)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\AdminController
- * @var $model app\modules\support\models\SupportFeedbacks
+ * @var $this ommu\support\controllers\feedback\AdminController
+ * @var $model ommu\support\models\SupportFeedbacks
+ * @var $searchModel ommu\support\models\search\SupportFeedbacks
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 13:55 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 13:55 WIB
+ * @modified date 27 January 2019, 09:55 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use app\components\menu\MenuContent;
-use app\components\menu\MenuOption;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menu']['option'] = [
-	// ['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
-	['label' => Yii::t('app', 'Grid Options'), 'url' => 'javascript:void(0);'],
+	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
+	['label' => Yii::t('app', 'Grid Option'), 'url' => 'javascript:void(0);'],
 ];
 ?>
 
+<div class="support-feedbacks-index">
 <?php Pjax::begin(); ?>
-<div class="col-md-12 col-sm-12 col-xs-12">
-	<div class="x_panel">
-		<div class="x_title">
-			<h2><?php echo Html::encode($this->title); ?></h2>
-			<ul class="nav navbar-right panel_toolbox">
-				<li><a href="<?= Url::to(['export', Yii::$app->request->queryParams]) ?>" title="<?php echo Yii::t('app', 'Export');?>"><i class="fa fa-download"></i></a></li>
-				<li><a href="#" title="<?php echo Yii::t('app', 'Toggle');?>" class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-				<?php if($this->params['menu']['option']):?>
-				<li class="dropdown">
-					<a href="#" title="<?php echo Yii::t('app', 'Options');?>" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-					<?php echo MenuOption::widget(['items' => $this->params['menu']['option']]);?>
-				</li>
-				<?php endif;?>
-				<li><a href="#" title="<?php echo Yii::t('app', 'Close');?>" class="close-link"><i class="fa fa-close"></i></a></li>
-			</ul>
-			<div class="clearfix"></div>
-		</div>
-		<div class="x_content">
-			<?php echo $this->description != '' ? "<p class=\"text-muted font-13 m-b-30\">$this->description</p>" : '';?>
 
-			<?php // echo $this->render('_search', ['model'=>$searchModel]); ?>
+<?php echo $this->description != '' ? "<p class=\"text-muted font-13 m-b-30\">$this->description</p>" : '';?>
 
-			<?php echo $this->render('_option_form', ['model'=>$searchModel, 'gridColumns'=>$this->activeDefaultColumns($columns), 'route'=>$this->context->route]); ?>
+<?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 
-			<?php 
-			$columnData = $columns;
-			array_push($columnData, [
-				'class' => 'yii\grid\ActionColumn',
-				'header' => Yii::t('app', 'Options'),
-				'contentOptions' => [
-					'class'=>'action-column',
-				],
-				'buttons' => [
-					'view' => function ($url, $model, $key) {
-						$url = Url::to(['view', 'id'=>$model->primaryKey]);
-						return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'View Support Feedbacks'), 'data-pjax' => 0]);
-					},
-					'update' => function ($url, $model, $key) {
-						$url = Url::to(['update', 'id'=>$model->primaryKey]);
-						return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Support Feedbacks')]);
-					},
-					'delete' => function ($url, $model, $key) {
-						$url = Url::to(['delete', 'id'=>$model->primaryKey]);
-						return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-							'title' => Yii::t('app', 'Delete Support Feedbacks'),
-							'data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-							'data-method'  => 'post',
-						]);
-					},
-				],
-				'template' => '{view}{update}{delete}',
+<?php echo $this->render('_option_form', ['model'=>$searchModel, 'gridColumns'=>$this->activeDefaultColumns($columns), 'route'=>$this->context->route]); ?>
+
+<?php 
+$columnData = $columns;
+array_push($columnData, [
+	'class' => 'yii\grid\ActionColumn',
+	'header' => Yii::t('app', 'Option'),
+	'contentOptions' => [
+		'class'=>'action-column',
+	],
+	'buttons' => [
+		'view' => function ($url, $model, $key) {
+			$url = Url::to(['view', 'id'=>$model->primaryKey]);
+			return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, ['title' => Yii::t('app', 'Detail Feedback')]);
+		},
+		'update' => function ($url, $model, $key) {
+			$url = Url::to(['update', 'id'=>$model->primaryKey]);
+			return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, ['title' => Yii::t('app', 'Update Feedback')]);
+		},
+		'delete' => function ($url, $model, $key) {
+			$url = Url::to(['delete', 'id'=>$model->primaryKey]);
+			return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
+				'title' => Yii::t('app', 'Delete Feedback'),
+				'data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+				'data-method'  => 'post',
 			]);
-			
-			echo GridView::widget([
-				'dataProvider' => $dataProvider,
-				'filterModel' => $searchModel,
-				'layout' => '<div class="row"><div class="col-sm-12">{items}</div></div><div class="row sum-page"><div class="col-sm-5">{summary}</div><div class="col-sm-7">{pager}</div></div>',
-				'columns' => $columnData,
-			]); ?>
-		</div>
-	</div>
-</div>
+		},
+	],
+	'template' => '{view}{update}{delete}',
+]);
+
+echo GridView::widget([
+	'dataProvider' => $dataProvider,
+	'filterModel' => $searchModel,
+	'layout' => '<div class="row"><div class="col-sm-12">{items}</div></div><div class="row sum-page"><div class="col-sm-5">{summary}</div><div class="col-sm-7">{pager}</div></div>',
+	'columns' => $columnData,
+]); ?>
+
 <?php Pjax::end(); ?>
+</div>

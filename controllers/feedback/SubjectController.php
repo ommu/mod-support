@@ -34,6 +34,7 @@ use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbackSubject;
 use ommu\support\models\search\SupportFeedbackSubject as SupportFeedbackSubjectSearch;
+use app\models\SourceMessage;
 
 class SubjectController extends Controller
 {
@@ -208,6 +209,36 @@ class SubjectController extends Controller
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success updated.'));
 			return $this->redirect(['manage']);
 		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function actionSuggest()
+	{
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+		$term = Yii::$app->request->get('term');
+		$parent = Yii::$app->request->get('parent', null);
+
+		$model = SupportFeedbackSubject::find()
+			->alias('t')
+			->select(['subject_id', 'subject_name'])
+			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
+			->andWhere(['like', 'title.message', $term]);
+		if($parent != null)
+			$model->andWhere(['t.parent_id' => $parent]);
+		$model = $model->published()->limit(15)->all();
+		
+		$result = [];
+		$i = 0;
+		foreach($model as $val) {
+			$result[] = [
+				'id' => $val->subject_id, 
+				'label' => $val->subject_name_i,
+			];
+		}
+		return $result;
 	}
 
 	/**

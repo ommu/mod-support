@@ -2,13 +2,14 @@
 /**
  * SupportFeedbacks
  *
- * SupportFeedbacks represents the model behind the search form about `app\modules\support\models\SupportFeedbacks`.
+ * SupportFeedbacks represents the model behind the search form about `ommu\support\models\SupportFeedbacks`.
  *
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @created date 20 September 2017, 13:55 WIB
  * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 20 September 2017, 13:55 WIB
+ * @modified date 27 January 2019, 09:55 WIB
+ * @link https://github.com/ommu/mod-support
  *
  */
 
@@ -17,23 +18,19 @@ namespace ommu\support\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\support\models\SupportFeedbacks as SupportFeedbacksModel;
+use ommu\support\models\SupportFeedbacks as SupportFeedbacksModel;
 
 class SupportFeedbacks extends SupportFeedbacksModel
 {
-	// Variable Search	
-	public $user_search;
-	public $modified_search;
-
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['feedback_id', 'publish', 'user_id', 'modified_id'], 'integer'],
-            [['email', 'displayname', 'phone', 'subject_id_id', 'message', 'creation_date', 'modified_date', 'updated_date',
-				'user_search', 'modified_search'], 'safe'],
+			[['feedback_id', 'publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
+			[['email', 'displayname', 'phone', 'message', 'reply_message', 'replied_date', 'creation_date', 'modified_date', 'updated_date',
+				'subjectName', 'userDisplayname', 'repliedDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
 
@@ -60,24 +57,47 @@ class SupportFeedbacks extends SupportFeedbacksModel
 	 * Creates data provider instance with search query applied
 	 *
 	 * @param array $params
+	 *
 	 * @return ActiveDataProvider
 	 */
 	public function search($params)
 	{
 		$query = SupportFeedbacksModel::find()->alias('t');
-		$query->joinWith(['user user', 'modified modified']);
-
-		// add conditions that should always apply here
-		$dataProvider = new ActiveDataProvider([
-			'query' => $query,
+		$query->joinWith([
+			'view view', 
+			'subject.title subject', 
+			'user user', 
+			'replied replied', 
+			'modified modified'
 		]);
 
+		// add conditions that should always apply here
+		$dataParams = [
+			'query' => $query,
+		];
+		// disable pagination agar data pada api tampil semua
+		if(isset($params['pagination']) && $params['pagination'] == 0)
+			$dataParams['pagination'] = false;
+		$dataProvider = new ActiveDataProvider($dataParams);
+
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['user_search'] = [
+		$attributes['subject_id'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
+		$attributes['subjectName'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
+		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
 		];
-		$attributes['modified_search'] = [
+		$attributes['repliedDisplayname'] = [
+			'asc' => ['replied.displayname' => SORT_ASC],
+			'desc' => ['replied.displayname' => SORT_DESC],
+		];
+		$attributes['modifiedDisplayname'] = [
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
@@ -88,7 +108,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 
 		$this->load($params);
 
-		if (!$this->validate()) {
+		if(!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -97,13 +117,15 @@ class SupportFeedbacks extends SupportFeedbacksModel
 		// grid filtering conditions
 		$query->andFilterWhere([
 			't.feedback_id' => $this->feedback_id,
-			't.publish' => isset($params['publish']) ?$params['publish']: $this->publish,
-            't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
-            'cast(t.creation_date as date)' => $this->creation_date,
-            'cast(t.modified_date as date)' => $this->modified_date,
-            't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
-            'cast(t.updated_date as date)' => $this->updated_date,
-        ]);
+			't.subject_id' => isset($params['subject']) ? $params['subject'] : $this->subject_id,
+			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
+			'cast(t.replied_date as date)' => $this->replied_date,
+			't.replied_id' => isset($params['replied']) ? $params['replied'] : $this->replied_id,
+			'cast(t.creation_date as date)' => $this->creation_date,
+			'cast(t.modified_date as date)' => $this->modified_date,
+			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
+			'cast(t.updated_date as date)' => $this->updated_date,
+		]);
 
 		if(isset($params['trash']))
 			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
@@ -114,13 +136,15 @@ class SupportFeedbacks extends SupportFeedbacksModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-        $query->andFilterWhere(['like', 't.email', $this->email])
-            ->andFilterWhere(['like', 't.displayname', $this->displayname])
-            ->andFilterWhere(['like', 't.phone', $this->phone])
-            ->andFilterWhere(['like', 't.subject', $this->subject])
-            ->andFilterWhere(['like', 't.message', $this->message])
-            ->andFilterWhere(['like', 'user.displayname', $this->user_search])
-            ->andFilterWhere(['like', 'modified.displayname', $this->modified_search]);
+		$query->andFilterWhere(['like', 't.email', $this->email])
+			->andFilterWhere(['like', 't.displayname', $this->displayname])
+			->andFilterWhere(['like', 't.phone', $this->phone])
+			->andFilterWhere(['like', 't.message', $this->message])
+			->andFilterWhere(['like', 't.reply_message', $this->reply_message])
+			->andFilterWhere(['like', 'subject.message', $this->subjectName])
+			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
+			->andFilterWhere(['like', 'replied.displayname', $this->repliedDisplayname])
+			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);
 
 		return $dataProvider;
 	}
