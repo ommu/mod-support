@@ -29,7 +29,7 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 		return [
 			[['subject_id', 'publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
 			[['creation_date', 'modified_date', 'updated_date', 'slug',
-				'subject_name_i', 'parent_name_i', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
+				'subjectName', 'parentName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
 
@@ -80,11 +80,11 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
-		$attributes['subject_name_i'] = [
+		$attributes['subjectName'] = [
 			'asc' => ['title.message' => SORT_ASC],
 			'desc' => ['title.message' => SORT_DESC],
 		];
-		$attributes['parent_name_i'] = [
+		$attributes['parentName'] = [
 			'asc' => ['parent.message' => SORT_ASC],
 			'desc' => ['parent.message' => SORT_DESC],
 		];
@@ -135,8 +135,8 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 		}
 
 		$query->andFilterWhere(['like', 't.slug', $this->slug])
-			->andFilterWhere(['like', 'title.message', $this->subject_name_i])
-			->andFilterWhere(['like', 'parent.message', $this->parent_name_i])
+			->andFilterWhere(['like', 'title.message', $this->subjectName])
+			->andFilterWhere(['like', 'parent.message', $this->parentName])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])
 			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);
 

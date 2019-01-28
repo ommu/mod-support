@@ -43,12 +43,12 @@ $this->params['menu']['content'] = [
 			'format' => 'raw',
 		],
 		[
-			'attribute' => 'subject_name_i',
-			'value' => $model->subject_name_i,
+			'attribute' => 'subjectName',
+			'value' => $model->subjectName,
 		],
 		[
-			'attribute' => 'parent_name_i',
-			'value' => Html::a($model->parent_name_i, ['feedback/subject/manage', 'parent'=>$model->parent_id]),
+			'attribute' => 'parentName',
+			'value' => Html::a($model->parentName, ['feedback/subject/manage', 'parent'=>$model->parent_id]),
 			'format' => 'html',
 		],
 		[

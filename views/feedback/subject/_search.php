@@ -28,9 +28,9 @@ use app\components\ActiveForm;
 		],
 	]); ?>
 
-		<?php echo $form->field($model, 'subject_name_i');?>
+		<?php echo $form->field($model, 'subjectName');?>
 
-		<?php echo $form->field($model, 'parent_name_i');?>
+		<?php echo $form->field($model, 'parentName');?>
 
 		<?php echo $form->field($model, 'creation_date')
 			->input('date');?>

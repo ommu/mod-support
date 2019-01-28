@@ -47,8 +47,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 
 	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date', 'slug'];
 
-	public $subject_name_i;
-	public $parent_name_i;
+	public $subjectName;
+	public $parentName;
 	public $creationDisplayname;
 	public $modifiedDisplayname;
 
@@ -80,11 +80,11 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['subject_name_i'], 'required'],
+			[['subjectName'], 'required'],
 			[['publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
 			[['parent_id'], 'safe'],
-			[['subject_name_i', 'slug'], 'string'],
-			[['subject_name_i'], 'string', 'max' => 64],
+			[['subjectName', 'slug'], 'string'],
+			[['subjectName'], 'string', 'max' => 64],
 		];
 	}
 
@@ -104,8 +104,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'slug' => Yii::t('app', 'Slug'),
-			'subject_name_i' => Yii::t('app', 'Subject'),
-			'parent_name_i' => Yii::t('app', 'Paerent'),
+			'subjectName' => Yii::t('app', 'Subject'),
+			'parentName' => Yii::t('app', 'Paerent'),
 			'feedbacks' => Yii::t('app', 'Feedbacks'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
@@ -199,16 +199,16 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'class'  => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['subject_name_i'] = [
-			'attribute' => 'subject_name_i',
+		$this->templateColumns['subjectName'] = [
+			'attribute' => 'subjectName',
 			'value' => function($model, $key, $index, $column) {
-				return $model->subject_name_i;
+				return $model->subjectName;
 			},
 		];
-		$this->templateColumns['parent_name_i'] = [
-			'attribute' => 'parent_name_i',
+		$this->templateColumns['parentName'] = [
+			'attribute' => 'parentName',
 			'value' => function($model, $key, $index, $column) {
-				return $model->parent_name_i;
+				return $model->parentName;
 			},
 		];
 		$this->templateColumns['creation_date'] = [
@@ -308,7 +308,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		$model = $model->orderBy('title.message ASC')->all();
 
 		if($array == true)
-			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subject_name_i');
+			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subjectName');
 
 		return $model;
 	}
@@ -329,7 +329,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				return $subject->subject_id;
 		else {
 			$model = new self();
-			$model->subject_name_i = $subjectName;
+			$model->subjectName = $subjectName;
 			if($model->save())
 				return $model->subject_id;
 		}
@@ -342,8 +342,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		$this->subject_name_i = isset($this->title) ? $this->title->message : '';
-		$this->parent_name_i = isset($this->parent) ? $this->parent->title->message : '';
+		$this->subjectName = isset($this->title) ? $this->title->message : '';
+		$this->parentName = isset($this->parent) ? $this->parent->title->message : '';
 		$this->creationDisplayname = isset($this->creation) ? $this->creation->displayname : '-';
 		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 	}
@@ -380,15 +380,15 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			if($insert || (!$insert && !$this->subject_name)) {
 				$subject_name = new SourceMessage();
 				$subject_name->location = $location.'_title';
-				$subject_name->message = $this->subject_name_i;
+				$subject_name->message = $this->subjectName;
 				if($subject_name->save())
 					$this->subject_name = $subject_name->id;
 
-				$this->slug = $this->urlTitle($this->subject_name_i);
+				$this->slug = $this->urlTitle($this->subjectName);
 
 			} else {
 				$subject_name = SourceMessage::findOne($this->subject_name);
-				$subject_name->message = $this->subject_name_i;
+				$subject_name->message = $this->subjectName;
 				$subject_name->save();
 			}
 

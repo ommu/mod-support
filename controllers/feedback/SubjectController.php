@@ -235,7 +235,7 @@ class SubjectController extends Controller
 		foreach($model as $val) {
 			$result[] = [
 				'id' => $val->subject_id, 
-				'label' => $val->subject_name_i,
+				'label' => $val->subjectName,
 			];
 		}
 		return $result;
