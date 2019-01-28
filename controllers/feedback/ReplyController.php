@@ -2,7 +2,7 @@
 /**
  * ReplyController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportFeedbackReply
+ * @var $model ommu\support\models\SupportFeedbackReply
  *
  * ReplyController implements the CRUD actions for SupportFeedbackReply model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportFeedbackReply;
-use app\modules\support\models\search\SupportFeedbackReply as SupportFeedbackReplySearch;
+use ommu\support\models\SupportFeedbackReply;
+use ommu\support\models\search\SupportFeedbackReply as SupportFeedbackReplySearch;
 
 class ReplyController extends Controller
 {

@@ -2,8 +2,8 @@
 /**
  * Support Feedback Users (support-feedback-user)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\UserController
- * @var $model app\modules\support\models\SupportFeedbackUser
+ * @var $this ommu\support\controllers\feedback\UserController
+ * @var $model ommu\support\models\SupportFeedbackUser
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support

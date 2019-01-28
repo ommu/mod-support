@@ -1,30 +1,33 @@
 <?php
 /**
  * SupportFeedbackView
+ * 
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 25 September 2017, 14:10 WIB
+ * @modified date 27 January 2019, 10:56 WIB
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_view".
  *
  * The followings are the available columns in table "ommu_support_feedback_view":
- * @property string $view_id
+ * @property integer $view_id
  * @property integer $publish
- * @property string $feedback_id
- * @property string $user_id
+ * @property integer $feedback_id
+ * @property integer $user_id
  * @property integer $views
  * @property string $view_date
  * @property string $view_ip
  * @property string $modified_date
- * @property string $modified_id
+ * @property integer $modified_id
  * @property string $updated_date
  *
  * The followings are the available model relations:
- * @property SupportFeedbacks $feedbacks
- * @property SupportFeedbackViewHistory[] $feedbackViewHistories
-
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
- * @created date 25 September 2017, 14:10 WIB
- * @contact (+62)857-2971-9487
+ * @property SupportFeedbacks $feedback
+ * @property Users $user
+ * @property SupportFeedbackViewHistory[] $histories
+ * @property Users $modified
  *
  */
 
@@ -33,13 +36,18 @@ namespace ommu\support\models;
 use Yii;
 use yii\helpers\Url;
 use ommu\users\models\Users;
-use app\components\grid\GridView;
 
 class SupportFeedbackView extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
 	public $gridForbiddenColumn = [];
+
+	// Search Variable
+	public $feedbackSubject;
+	public $feedbackDisplayname;
+	public $userDisplayname;
+	public $modifiedDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -55,44 +63,12 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['publish', 'feedback_id', 'user_id', 'views', 'modified_id'], 'integer'],
 			[['feedback_id', 'user_id'], 'required'],
-			[['view_date', 'modified_date', 'updated_date', 'view_ip', 'modified_id'], 'safe'],
+			[['publish', 'feedback_id', 'user_id', 'views', 'modified_id'], 'integer'],
 			[['view_ip'], 'string', 'max' => 20],
 			[['feedback_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbacks::className(), 'targetAttribute' => ['feedback_id' => 'feedback_id']],
+			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'user_id']],
 		];
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getFeedbacks()
-	{
-		return $this->hasOne(SupportFeedbacks::className(), ['feedback_id' => 'feedback_id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getFeedbackViewHistories()
-	{
-		return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getUser()
-	{
-		return $this->hasOne(Users::className(), ['user_id' => 'user_id']);
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getModified()
-	{
-		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
 	}
 
 	/**
@@ -111,36 +87,96 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'feedbacks_search' => Yii::t('app', 'Feedbacks'),
-			'user_search' => Yii::t('app', 'User'),
-			'modified_search' => Yii::t('app', 'Modified'),
+			'histories' => Yii::t('app', 'Histories'),
+			'feedbackSubject' => Yii::t('app', 'Subject'),
+			'feedbackDisplayname' => Yii::t('app', 'Name'),
+			'userDisplayname' => Yii::t('app', 'User'),
+			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 		];
 	}
-	
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getFeedback()
+	{
+		return $this->hasOne(SupportFeedbacks::className(), ['feedback_id' => 'feedback_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getUser()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'user_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getHistories($count=true)
+	{
+		if($count == true) {
+			$model = SupportFeedbackViewHistory::find()
+				->where(['view_id' => $this->view_id]);
+
+			return $model->count();
+		}
+
+		return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
+	}
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getModified()
+	{
+		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * @return \ommu\support\models\query\SupportFeedbackView the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		return new \ommu\support\models\query\SupportFeedbackView(get_called_class());
+	}
+
 	/**
 	 * Set default columns to display
 	 */
-	public function init() 
+	public function init()
 	{
 		parent::init();
 
 		$this->templateColumns['_no'] = [
 			'header' => Yii::t('app', 'No'),
 			'class'  => 'yii\grid\SerialColumn',
+			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['feedbacks_search'] = [
-			'attribute' => 'feedbacks_search',
-			'value' => function($model, $key, $index, $column) {
-				return $model->feedbacks->displayname;
-			},
-		];
-		$this->templateColumns['user_search'] = [
-			'attribute' => 'user_search',
-			'value' => function($model, $key, $index, $column) {
-				return isset($model->user) ? $model->user->displayname : '-';
-			},
-		];
-		$this->templateColumns['views'] = 'views';
+		if(!Yii::$app->request->get('feedback')) {
+			$this->templateColumns['feedbackSubject'] = [
+				'attribute' => 'feedbackSubject',
+				'value' => function($model, $key, $index, $column) {
+					return $model->feedbackSubject;
+				},
+			];
+			$this->templateColumns['feedbackDisplayname'] = [
+				'attribute' => 'feedbackDisplayname',
+				'value' => function($model, $key, $index, $column) {
+					return $model->feedbackDisplayname;
+				},
+			];
+		}
+		if(!Yii::$app->request->get('user')) {
+			$this->templateColumns['userDisplayname'] = [
+				'attribute' => 'userDisplayname',
+				'value' => function($model, $key, $index, $column) {
+					return $model->userDisplayname;
+				},
+			];
+		}
 		$this->templateColumns['view_date'] = [
 			'attribute' => 'view_date',
 			'value' => function($model, $key, $index, $column) {
@@ -148,7 +184,12 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'view_date'),
 		];
-		$this->templateColumns['view_ip'] = 'view_ip';
+		$this->templateColumns['view_ip'] = [
+			'attribute' => 'view_ip',
+			'value' => function($model, $key, $index, $column) {
+				return $model->view_ip;
+			},
+		];
 		$this->templateColumns['modified_date'] = [
 			'attribute' => 'modified_date',
 			'value' => function($model, $key, $index, $column) {
@@ -156,18 +197,29 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
-		$this->templateColumns['modified_search'] = [
-			'attribute' => 'modified_search',
-			'value' => function($model, $key, $index, $column) {
-				return isset($model->modified) ? $model->modified->displayname : '-';
-			},
-		];
+		if(!Yii::$app->request->get('modified')) {
+			$this->templateColumns['modifiedDisplayname'] = [
+				'attribute' => 'modifiedDisplayname',
+				'value' => function($model, $key, $index, $column) {
+					return $model->modifiedDisplayname;
+				},
+			];
+		}
 		$this->templateColumns['updated_date'] = [
 			'attribute' => 'updated_date',
 			'value' => function($model, $key, $index, $column) {
 				return Yii::$app->formatter->asDatetime($model->updated_date, 'medium');
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
+		];
+		$this->templateColumns['views'] = [
+			'attribute' => 'views',
+			'filter' => false,
+			'value' => function($model, $key, $index, $column) {
+				return Html::a($model->views, ['feedback/view-detail/manage', 'view'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} views', ['count'=>$model->views])]);
+			},
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'html',
 		];
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
@@ -183,6 +235,27 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 		}
 	}
 
+	/**
+	 * User get information
+	 */
+	public static function getInfo($id, $column=null)
+	{
+		if($column != null) {
+			$model = self::find()
+				->select([$column])
+				->where(['view_id' => $id])
+				->one();
+			return $model->$column;
+			
+		} else {
+			$model = self::findOne($id);
+			return $model;
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function insertFeedbackView($feedback_id)
 	{
 		$user_id = Yii::$app->user->id;
@@ -200,16 +273,33 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	}
 
 	/**
+	 * after find attributes
+	 */
+	public function afterFind()
+	{
+		parent::afterFind();
+
+		$this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
+		$this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
+		$this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
+		$this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
+	}
+
+	/**
 	 * before validate attributes
 	 */
-	public function beforeValidate() 
+	public function beforeValidate()
 	{
 		if(parent::beforeValidate()) {
-			if(!$this->isNewRecord)
-				$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : '0';
-			// Create action
+			if($this->isNewRecord) {
+				if($this->user_id == null)
+					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+			} else {
+				if($this->modified_id == null)
+					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+			}
+			$this->view_ip = $_SERVER['REMOTE_ADDR'];
 		}
 		return true;
 	}
-
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\DefaultController
+ * @var $this ommu\support\controllers\DefaultController
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support

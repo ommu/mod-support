@@ -2,7 +2,7 @@
 /**
  * SupportFeedbackViewHistory
  *
- * SupportFeedbackViewHistory represents the model behind the search form about `app\modules\support\models\SupportFeedbackViewHistory`.
+ * SupportFeedbackViewHistory represents the model behind the search form about `ommu\support\models\SupportFeedbackViewHistory`.
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -17,8 +17,8 @@ namespace ommu\support\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\support\models\SupportFeedbackViewHistory as SupportFeedbackViewHistoryModel;
-//use app\modules\support\models\SupportFeedbackView;
+use ommu\support\models\SupportFeedbackViewHistory as SupportFeedbackViewHistoryModel;
+//use ommu\support\models\SupportFeedbackView;
 
 class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 {

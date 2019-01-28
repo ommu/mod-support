@@ -2,7 +2,7 @@
 /**
  * ViewDetailController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportFeedbackViewHistory
+ * @var $model ommu\support\models\SupportFeedbackViewHistory
  *
  * ViewDetailController implements the CRUD actions for SupportFeedbackViewHistory model.
  * Reference start
@@ -29,8 +29,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportFeedbackViewHistory;
-use app\modules\support\models\search\SupportFeedbackViewHistory as SupportFeedbackViewHistorySearch;
+use ommu\support\models\SupportFeedbackViewHistory;
+use ommu\support\models\search\SupportFeedbackViewHistory as SupportFeedbackViewHistorySearch;
 
 class ViewDetailController extends Controller
 {

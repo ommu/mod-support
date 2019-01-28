@@ -2,8 +2,8 @@
 /**
  * Support Feedback Replies (support-feedback-reply)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\ReplyController
- * @var $model app\modules\support\models\search\SupportFeedbackReply
+ * @var $this ommu\support\controllers\feedback\ReplyController
+ * @var $model ommu\support\models\search\SupportFeedbackReply
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)

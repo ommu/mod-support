@@ -2,8 +2,8 @@
 /**
  * Support Feedbacks (support-feedbacks)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\AdminController
- * @var $model app\modules\support\models\search\SupportFeedbacks
+ * @var $this ommu\support\controllers\AdminController
+ * @var $model ommu\support\models\search\SupportFeedbacks
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)

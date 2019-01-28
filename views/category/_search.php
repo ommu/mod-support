@@ -2,8 +2,8 @@
 /**
  * Support Contact Categories (support-contact-category)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\CategoryController
- * @var $model app\modules\support\models\search\SupportContactCategory
+ * @var $this ommu\support\controllers\CategoryController
+ * @var $model ommu\support\models\search\SupportContactCategory
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)

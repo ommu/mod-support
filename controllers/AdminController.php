@@ -2,7 +2,7 @@
 /**
  * AdminController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportFeedbacks
+ * @var $model ommu\support\models\SupportFeedbacks
  *
  * AdminController implements the CRUD actions for SupportFeedbacks model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportFeedbacks;
-use app\modules\support\models\search\SupportFeedbacks as SupportFeedbacksSearch;
+use ommu\support\models\SupportFeedbacks;
+use ommu\support\models\search\SupportFeedbacks as SupportFeedbacksSearch;
 
 class AdminController extends Controller
 {

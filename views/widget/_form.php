@@ -2,8 +2,8 @@
 /**
  * Support Widgets (support-widget)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\WidgetController
- * @var $model app\modules\support\models\SupportWidget
+ * @var $this ommu\support\controllers\WidgetController
+ * @var $model ommu\support\models\SupportWidget
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 use app\components\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\redactor\widgets\Redactor;
-use app\modules\support\models\SupportContactCategory;
+use ommu\support\models\SupportContactCategory;
 
 $redactorOptions = [
 	'imageManagerJson' => ['/redactor/upload/image-json'],

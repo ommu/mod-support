@@ -2,8 +2,8 @@
 /**
  * Support Feedback Views (support-feedback-view)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\ViewController
- * @var $model app\modules\support\models\SupportFeedbackView
+ * @var $this ommu\support\controllers\feedback\ViewController
+ * @var $model ommu\support\models\SupportFeedbackView
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support

@@ -2,7 +2,7 @@
 /**
  * UserController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportFeedbackUser
+ * @var $model ommu\support\models\SupportFeedbackUser
  *
  * UserController implements the CRUD actions for SupportFeedbackUser model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportFeedbackUser;
-use app\modules\support\models\search\SupportFeedbackUser as SupportFeedbackUserSearch;
+use ommu\support\models\SupportFeedbackUser;
+use ommu\support\models\search\SupportFeedbackUser as SupportFeedbackUserSearch;
 
 class UserController extends Controller
 {

@@ -2,8 +2,8 @@
 /**
  * Support Feedback Replies (support-feedback-reply)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\ReplyController
- * @var $model app\modules\support\models\SupportFeedbackReply
+ * @var $this ommu\support\controllers\feedback\ReplyController
+ * @var $model ommu\support\models\SupportFeedbackReply
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
@@ -18,7 +18,7 @@ use yii\helpers\Html;
 use app\components\ActiveForm;
 use yii\redactor\widgets\Redactor;
 use yii\helpers\ArrayHelper;
-use app\modules\support\models\SupportFeedbacks;
+use ommu\support\models\SupportFeedbacks;
 
 $redactorOptions = [
 	'imageManagerJson' => ['/redactor/upload/image-json'],

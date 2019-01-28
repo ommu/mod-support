@@ -2,7 +2,7 @@
 /**
  * CategoryController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportContactCategory
+ * @var $model ommu\support\models\SupportContactCategory
  *
  * CategoryController implements the CRUD actions for SupportContactCategory model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportContactCategory;
-use app\modules\support\models\search\SupportContactCategory as SupportContactCategorySearch;
+use ommu\support\models\SupportContactCategory;
+use ommu\support\models\search\SupportContactCategory as SupportContactCategorySearch;
 
 class CategoryController extends Controller
 {

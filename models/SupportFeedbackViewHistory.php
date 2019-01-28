@@ -1,34 +1,38 @@
 <?php
 /**
  * SupportFeedbackViewHistory
+ * 
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @contact (+62)856-299-4114
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @created date 25 September 2017, 11:22 WIB
+ * @modified date 25 January 2019, 15:13 WIB
+ * @link https://github.com/ommu/mod-support
  *
  * This is the model class for table "ommu_support_feedback_view_history".
  *
  * The followings are the available columns in table "ommu_support_feedback_view_history":
- * @property string $id
- * @property string $view_id
+ * @property integer $id
+ * @property integer $view_id
  * @property string $view_date
  * @property string $view_ip
  *
  * The followings are the available model relations:
- * @property SupportFeedbackView $feedbackView
-
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
- * @link https://github.com/ommu/mod-support
- * @author Arifin Avicena <avicenaarifin@gmail.com>
- * @created date 25 September 2017, 11:22 WIB
- * @contact (+62)857-2971-9487
+ * @property SupportFeedbackView $view
  *
  */
 
 namespace ommu\support\models;
 
 use Yii;
-use yii\helpers\Url;
 
 class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 {
 	public $gridForbiddenColumn = [];
+
+	// Search Variable
+	public $feedback_subject;
+	public $feedback_displayname;
 
 	/**
 	 * @return string the associated database table name
@@ -53,14 +57,6 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 	}
 
 	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getFeedbackView()
-	{
-		return $this->hasOne(SupportFeedbackView::className(), ['view_id' => 'view_id']);
-	}
-
-	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
 	public function attributeLabels()
@@ -70,27 +66,54 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			'view_id' => Yii::t('app', 'View'),
 			'view_date' => Yii::t('app', 'View Date'),
 			'view_ip' => Yii::t('app', 'View Ip'),
-			'feedbackView_search' => Yii::t('app', 'FeedbackView'),
+			'feedback_subject' => Yii::t('app', 'Subject'),
+			'feedback_displayname' => Yii::t('app', 'Name'),
 		];
 	}
-	
+
+	/**
+	 * @return \yii\db\ActiveQuery
+	 */
+	public function getView()
+	{
+		return $this->hasOne(SupportFeedbackView::className(), ['view_id' => 'view_id']);
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * @return \ommu\support\models\query\SupportFeedbackViewHistory the active query used by this AR class.
+	 */
+	public static function find()
+	{
+		return new \ommu\support\models\query\SupportFeedbackViewHistory(get_called_class());
+	}
+
 	/**
 	 * Set default columns to display
 	 */
-	public function init() 
+	public function init()
 	{
 		parent::init();
 
 		$this->templateColumns['_no'] = [
 			'header' => Yii::t('app', 'No'),
 			'class'  => 'yii\grid\SerialColumn',
+			'contentOptions' => ['class'=>'center'],
 		];
-		$this->templateColumns['feedbackView_search'] = [
-			'attribute' => 'feedbackView_search',
-			'value' => function($model, $key, $index, $column) {
-				return $model->feedbackView->view_id;
-			},
-		];
+		if(!Yii::$app->request->get('view')) {
+			$this->templateColumns['feedback_subject'] = [
+				'attribute' => 'feedback_subject',
+				'value' => function($model, $key, $index, $column) {
+					return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
+				},
+			];
+			$this->templateColumns['feedback_displayname'] = [
+				'attribute' => 'feedback_displayname',
+				'value' => function($model, $key, $index, $column) {
+					return isset($model->view) ? $model->view->feedback->displayname : '-';
+				},
+			];
+		}
 		$this->templateColumns['view_date'] = [
 			'attribute' => 'view_date',
 			'value' => function($model, $key, $index, $column) {
@@ -98,17 +121,29 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'view_date'),
 		];
-		$this->templateColumns['view_ip'] = 'view_ip';
+		$this->templateColumns['view_ip'] = [
+			'attribute' => 'view_ip',
+			'value' => function($model, $key, $index, $column) {
+				return $model->view_ip;
+			},
+		];
 	}
 
 	/**
-	 * before validate attributes
+	 * User get information
 	 */
-	public function beforeValidate() 
+	public static function getInfo($id, $column=null)
 	{
-		if(parent::beforeValidate()) {
-			// Create action
+		if($column != null) {
+			$model = self::find()
+				->select([$column])
+				->where(['id' => $id])
+				->one();
+			return $model->$column;
+			
+		} else {
+			$model = self::findOne($id);
+			return $model;
 		}
-		return true;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * ContactsController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportContacts
+ * @var $model ommu\support\models\SupportContacts
  *
  * ContactsController implements the CRUD actions for SupportContacts model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportContacts;
-use app\modules\support\models\search\SupportContacts as SupportContactsSearch;
+use ommu\support\models\SupportContacts;
+use ommu\support\models\search\SupportContacts as SupportContactsSearch;
 
 class ContactsController extends Controller
 {

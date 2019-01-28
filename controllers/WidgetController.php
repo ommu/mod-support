@@ -2,7 +2,7 @@
 /**
  * WidgetController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportWidget
+ * @var $model ommu\support\models\SupportWidget
  *
  * WidgetController implements the CRUD actions for SupportWidget model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportWidget;
-use app\modules\support\models\search\SupportWidget as SupportWidgetSearch;
+use ommu\support\models\SupportWidget;
+use ommu\support\models\search\SupportWidget as SupportWidgetSearch;
 
 class WidgetController extends Controller
 {

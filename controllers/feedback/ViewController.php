@@ -2,7 +2,7 @@
 /**
  * ViewController
  * @var $this app\components\View
- * @var $model app\modules\support\models\SupportFeedbackView
+ * @var $model ommu\support\models\SupportFeedbackView
  *
  * ViewController implements the CRUD actions for SupportFeedbackView model.
  * Reference start
@@ -31,8 +31,8 @@ use Yii;
 use yii\filters\VerbFilter;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
-use app\modules\support\models\SupportFeedbackView;
-use app\modules\support\models\search\SupportFeedbackView as SupportFeedbackViewSearch;
+use ommu\support\models\SupportFeedbackView;
+use ommu\support\models\search\SupportFeedbackView as SupportFeedbackViewSearch;
 
 class ViewController extends Controller
 {

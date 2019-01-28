@@ -2,7 +2,7 @@
 /**
  * SupportFeedbackUser
  *
- * SupportFeedbackUser represents the model behind the search form about `app\modules\support\models\SupportFeedbackUser`.
+ * SupportFeedbackUser represents the model behind the search form about `ommu\support\models\SupportFeedbackUser`.
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -17,15 +17,15 @@ namespace ommu\support\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\support\models\SupportFeedbackUser as SupportFeedbackUserModel;
-//use app\modules\support\models\SupportFeedbacks;
+use ommu\support\models\SupportFeedbackUser as SupportFeedbackUserModel;
+//use ommu\support\models\SupportFeedbacks;
 
 class SupportFeedbackUser extends SupportFeedbackUserModel
 {
 	// Variable Search	
 	public $feedbacks_search;
-	public $user_search;
-	public $modified_search;
+	public $userDisplayname;
+	public $modifiedDisplayname;
 
 	/**
 	 * {@inheritdoc}
@@ -35,7 +35,7 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		return [
 			[['id', 'publish', 'feedback_id', 'user_id', 'modified_id'], 'integer'],
             [['creation_date', 'modified_date', 'updated_date',
-				'feedbacks_search', 'user_search', 'modified_search'], 'safe'],
+				'feedbacks_search', 'userDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
 
@@ -79,11 +79,11 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 			'asc' => ['feedbacks.displayname' => SORT_ASC],
 			'desc' => ['feedbacks.displayname' => SORT_DESC],
 		];
-		$attributes['user_search'] = [
+		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
 		];
-		$attributes['modified_search'] = [
+		$attributes['modifiedDisplayname'] = [
 			'asc' => ['modified.displayname' => SORT_ASC],
 			'desc' => ['modified.displayname' => SORT_DESC],
 		];
@@ -121,8 +121,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		}
 
         $query->andFilterWhere(['like', 'feedbacks.displayname', $this->feedbacks_search])
-            ->andFilterWhere(['like', 'user.displayname', $this->user_search])
-            ->andFilterWhere(['like', 'modified.displayname', $this->modified_search]);
+            ->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
+            ->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);
 
 		return $dataProvider;
 	}

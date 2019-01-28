@@ -2,8 +2,8 @@
 /**
  * Support Feedback View Histories (support-feedback-view-history)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\feedback\ViewDetailController
- * @var $model app\modules\support\models\search\SupportFeedbackViewHistory
+ * @var $this ommu\support\controllers\feedback\ViewDetailController
+ * @var $model ommu\support\models\search\SupportFeedbackViewHistory
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)

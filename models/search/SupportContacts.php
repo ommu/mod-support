@@ -2,7 +2,7 @@
 /**
  * SupportContacts
  *
- * SupportContacts represents the model behind the search form about `app\modules\support\models\SupportContacts`.
+ * SupportContacts represents the model behind the search form about `ommu\support\models\SupportContacts`.
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
  * @link https://github.com/ommu/mod-support
@@ -17,8 +17,8 @@ namespace ommu\support\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\modules\support\models\SupportContacts as SupportContactsModel;
-//use app\modules\support\models\SupportContactCategory;
+use ommu\support\models\SupportContacts as SupportContactsModel;
+//use ommu\support\models\SupportContactCategory;
 
 class SupportContacts extends SupportContactsModel
 {

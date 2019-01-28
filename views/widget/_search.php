@@ -2,8 +2,8 @@
 /**
  * Support Widgets (support-widget)
  * @var $this app\components\View
- * @var $this app\modules\support\controllers\WidgetController
- * @var $model app\modules\support\models\search\SupportWidget
+ * @var $this ommu\support\controllers\WidgetController
+ * @var $model ommu\support\models\search\SupportWidget
  * @var $form app\components\ActiveForm
  *
  * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
