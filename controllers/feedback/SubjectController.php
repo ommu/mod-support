@@ -15,6 +15,7 @@
  *	Delete
  *	RunAction
  *	Publish
+ *	Suggest
  *
  *	findModel
  *
@@ -55,6 +56,13 @@ class SubjectController extends Controller
 				],
 			],
 		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function allowAction(): array {
+		return ['suggest'];
 	}
 
 	/**
