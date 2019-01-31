@@ -13,8 +13,8 @@
  *
  */
 
-use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback Subjects'), 'url' => ['index']];

@@ -229,6 +229,8 @@ class SubjectController extends Controller
 		$term = Yii::$app->request->get('term');
 		$parent = Yii::$app->request->get('parent', null);
 
+		if($term == null) return [];
+
 		$model = SupportFeedbackSubject::find()
 			->alias('t')
 			->select(['subject_id', 'subject_name'])
