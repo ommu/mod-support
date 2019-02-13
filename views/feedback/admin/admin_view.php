@@ -88,12 +88,19 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'users',
-			'value' => Html::a($model->users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$model->users])]),
+			'value' => function ($model) {
+				$users = $model->getUsers(true);
+				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
+			},
+			'value' => ,
 			'format' => 'html',
 		],
 		[
 			'attribute' => 'views',
-			'value' => Html::a($model->views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$model->views])]),
+			'value' => function ($model) {
+				$views = $model->getViews(true);
+				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
+			},
 			'format' => 'html',
 		],
 	],

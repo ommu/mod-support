@@ -18,20 +18,44 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\ActiveForm;
+use yii\widgets\DetailView;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedbacks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id'=>$model->feedback_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Reply');
 
 $this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Back To Manage'), 'url' => Url::to(['manage']), 'icon' => 'table'],
+	['label' => Yii::t('app', 'Back To Feedbacks'), 'url' => Url::to(['manage']), 'icon' => 'table'],
 	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->feedback_id]), 'icon' => 'eye'],
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->feedback_id]), 'icon' => 'pencil'],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->feedback_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post'], 'icon' => 'trash'],
 ];
 ?>
 
 <div class="support-feedbacks-reply">
+
+<?php echo DetailView::widget([
+	'model' => $model,
+	'options' => [
+		'class'=>'table table-striped detail-view',
+	],
+	'template' => '<tr><th{captionOptions} class="active">{label}</th><td{contentOptions}>{value}</td></tr>',
+	'attributes' => [
+		'displayname',
+		'email:email',
+		'phone',
+		[
+			'attribute' => 'subject_id',
+			'value' => isset($model->subject) ? $model->subject->title->message : '-',
+		],
+		[
+			'attribute' => 'message',
+			'value' => $model->message ? $model->message : '-',
+		],
+		[
+			'attribute' => 'creation_date',
+			'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
+		],
+	],
+]) ?>
 
 <?php $form = ActiveForm::begin([
 	'enableClientValidation' => true,

@@ -77,7 +77,10 @@ $this->params['menu']['content'] = [
 		],
 		[
 			'attribute' => 'feedbacks',
-			'value' => Html::a($model->feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>'0,1'], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$model->feedbacks])]),
+			'value' => function ($model) {
+				$feedbacks = $model->getFeedbacks(true);
+				return Html::a($feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>'0,1'], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$feedbacks])]);
+			},
 			'format' => 'html',
 		],
 	],

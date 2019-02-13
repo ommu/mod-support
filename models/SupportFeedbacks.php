@@ -137,45 +137,47 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getUsers($count=true, $publish=1)
+	public function getUsers($count=false, $publish=1)
 	{
-		if($count == true) {
-			$model = SupportFeedbackUser::find()
-				->where(['feedback_id' => $this->feedback_id]);
-			if($publish == 0)
-				$model->unpublish();
-			elseif($publish == 1)
-				$model->published();
-			elseif($publish == 2)
-				$model->deleted();
-
-			return $model->count();
+		if($count == false) {
+			return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
+				->andOnCondition([sprintf('%s.publish', SupportFeedbackUser::tableName()) => $publish]);
 		}
 
-		return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
-			->andOnCondition([sprintf('%s.publish', SupportFeedbackUser::tableName()) => $publish]);
+		$model = SupportFeedbackUser::find()
+			->where(['feedback_id' => $this->feedback_id]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
+		$users = $model->count();
+
+		return $users ? $users : 0;
 	}
 
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getViews($count=true, $publish=1)
+	public function getViews($count=false, $publish=1)
 	{
-		if($count == true) {
-			$model = SupportFeedbackView::find()
-				->where(['feedback_id' => $this->feedback_id]);
-			if($publish == 0)
-				$model->unpublish();
-			elseif($publish == 1)
-				$model->published();
-			elseif($publish == 2)
-				$model->deleted();
-
-			return $model->sum('views');
+		if($count == false) {
+			return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
+				->andOnCondition([sprintf('%s.publish', SupportFeedbackView::tableName()) => $publish]);
 		}
 
-		return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
-			->andOnCondition([sprintf('%s.publish', SupportFeedbackView::tableName()) => $publish]);
+		$model = SupportFeedbackView::find()
+			->where(['feedback_id' => $this->feedback_id]);
+		if($publish == 0)
+			$model->unpublish();
+		elseif($publish == 1)
+			$model->published();
+		elseif($publish == 2)
+			$model->deleted();
+		$views =$model->sum('views');
+
+		return $views ? $views : 0;
 	}
 
 	/**
@@ -334,7 +336,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->views ? $model->views : 0, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$model->views])]);
+				$views = $model->getViews(true);
+				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
@@ -343,7 +346,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'users',
 			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$model->users])]);
+				$users = $model->getUsers(true);
+				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',

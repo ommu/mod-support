@@ -115,27 +115,28 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getFeedbacks($count=true, $publish=null)
+	public function getFeedbacks($count=false, $publish=null)
 	{
-		if($count == true) {
-			$model = SupportFeedbacks::find()
-				->where(['subject_id' => $this->subject_id]);
-			if($publish === null)
-				$model->send();
-			else {
-				if($publish == 0)
-					$model->unpublish();
-				elseif($publish == 1)
-					$model->published();
-				elseif($publish == 2)
-					$model->deleted();
-			}
-
-			return $model->count();
+		if($count == false) {
+			return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
+				->andOnCondition([sprintf('%s.publish', SupportFeedbacks::tableName()) => $publish]);
 		}
 
-		return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
-			->andOnCondition([sprintf('%s.publish', SupportFeedbacks::tableName()) => $publish]);
+		$model = SupportFeedbacks::find()
+			->where(['subject_id' => $this->subject_id]);
+		if($publish === null)
+			$feedbacks = $model->send();
+		else {
+			if($publish == 0)
+				$model->unpublish();
+			elseif($publish == 1)
+				$model->published();
+			elseif($publish == 2)
+				$model->deleted();
+			$feedbacks = $model->count();
+		}
+
+		return $feedbacks ? $feedbacks : 0;
 	}
 
 	/**
@@ -258,7 +259,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'attribute' => 'feedbacks',
 			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$model->feedbacks])]);
+				$feedbacks = $model->getFeedbacks(true);
+				return Html::a($feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$feedbacks])]);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',

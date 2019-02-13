@@ -115,16 +115,16 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	/**
 	 * @return \yii\db\ActiveQuery
 	 */
-	public function getHistories($count=true)
+	public function getHistories($count=false)
 	{
-		if($count == true) {
-			$model = SupportFeedbackViewHistory::find()
-				->where(['view_id' => $this->view_id]);
+		if($count == false)
+			return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
 
-			return $model->count();
-		}
+		$model = SupportFeedbackViewHistory::find()
+			->where(['view_id' => $this->view_id]);
+		$histories = $model->count();
 
-		return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
+		return $histories ? $histories : 0;
 	}
 
 	/**
@@ -217,7 +217,8 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
-				return Html::a($model->views, ['feedback/view-detail/manage', 'view'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} views', ['count'=>$model->views])]);
+				$views = $model->views;
+				return Html::a($views, ['feedback/view-detail/manage', 'view'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
 			},
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
