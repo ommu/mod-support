@@ -125,7 +125,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		$model = SupportFeedbacks::find()
 			->where(['subject_id' => $this->subject_id]);
 		if($publish === null)
-			$feedbacks = $model->send();
+			$model->send();
 		else {
 			if($publish == 0)
 				$model->unpublish();
@@ -133,8 +133,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				$model->published();
 			elseif($publish == 2)
 				$model->deleted();
-			$feedbacks = $model->count();
 		}
+		$feedbacks = $model->count();
 
 		return $feedbacks ? $feedbacks : 0;
 	}
