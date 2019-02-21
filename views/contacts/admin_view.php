@@ -15,7 +15,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use app\components\menu\MenuContent;
+use app\components\widgets\MenuContent;
 use yii\widgets\DetailView;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support Contacts'), 'url' => ['index']];

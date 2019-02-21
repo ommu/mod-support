@@ -31,7 +31,7 @@ namespace ommu\support\models;
 use Yii;
 use yii\helpers\Url;
 use ommu\users\models\Users;
-use app\components\grid\GridView;
+use app\components\widgets\GridView;
 
 class SupportContacts extends \app\components\ActiveRecord
 {

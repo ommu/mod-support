@@ -34,7 +34,7 @@ use Yii;
 use yii\helpers\Url;
 use yii\behaviors\SluggableBehavior;
 use ommu\users\models\Users;
-use app\components\grid\GridView;
+use app\components\widgets\GridView;
 
 class SupportContactCategory extends \app\components\ActiveRecord
 {
