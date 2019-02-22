@@ -26,6 +26,7 @@ use yii\web\JsExpression;
 <div class="support-feedbacks-form">
 
 <?php $form = ActiveForm::begin([
+	'options' => ['class'=>'form-horizontal form-label-left'],
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -35,21 +36,21 @@ use yii\web\JsExpression;
 
 <?php 
 // $subject = SupportFeedbackSubject::getSubject();
-// echo $form->field($model, 'subject_id', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+// echo $form->field($model, 'subject_id')
 // 	->dropDownList($subject, ['prompt'=>''])
-// 	->label($model->getAttributeLabel('subject_id'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+// 	->label($model->getAttributeLabel('subject_id')); ?>
 
-<?php echo $form->field($model, 'email', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+<?php echo $form->field($model, 'email')
 	->textInput(['type'=>'email'])
-	->label($model->getAttributeLabel('email'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('email')); ?>
 
-<?php echo $form->field($model, 'displayname', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+<?php echo $form->field($model, 'displayname')
 	->textInput(['maxlength'=>true])
-	->label($model->getAttributeLabel('displayname'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('displayname')); ?>
 
-<?php echo $form->field($model, 'phone', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+<?php echo $form->field($model, 'phone')
 	->textInput(['type'=>'number', 'maxlength'=>true])
-	->label($model->getAttributeLabel('phone'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('phone')); ?>
 
 <?php
 $subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput()->label(false);
@@ -72,14 +73,14 @@ echo $form->field($model, 'subjectName', ['template' => '{label}<div class="col-
 	])
 	->label($model->getAttributeLabel('subjectName'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
 
-<?php echo $form->field($model, 'message', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}{error}</div>'])
+<?php echo $form->field($model, 'message')
 	->textarea(['rows'=>6, 'cols'=>50])
-	->label($model->getAttributeLabel('message'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('message')); ?>
 
 <?php if(!$model->isNewRecord) {
-echo $form->field($model, 'publish', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12 checkbox">{input}{error}</div>'])
+echo $form->field($model, 'publish')
 	->checkbox(['label'=>''])
-	->label($model->getAttributeLabel('publish'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']);
+	->label($model->getAttributeLabel('publish'));
 } ?>
 
 <div class="ln_solid"></div>
