@@ -40,7 +40,7 @@ echo $form->field($model, 'parent_id')
 	->label($model->getAttributeLabel('subjectName')); ?>
 
 <?php echo $form->field($model, 'publish')
-	->checkbox(['label'=>''])
+	->checkbox()
 	->label($model->getAttributeLabel('publish')); ?>
 
 <div class="ln_solid"></div>

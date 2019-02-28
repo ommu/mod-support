@@ -54,7 +54,7 @@ use yii\web\JsExpression;
 
 <?php
 $subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput()->label(false);
-echo $form->field($model, 'subjectName', ['template' => '{label}<div class="col-md-6 col-sm-9 col-xs-12">{input}'.$subject_id.'{error}</div>'])
+echo $form->field($model, 'subjectName', ['template' => '{label}{beginWrapper}{input}'.$subject_id.'{error}{hint}{endWrapper}'])
 	// ->textInput(['maxlength'=>true])
 	->widget(AutoComplete::className(), [
 		'options' => [
@@ -71,7 +71,7 @@ echo $form->field($model, 'subjectName', ['template' => '{label}<div class="col-
 			}"),
 		]
 	])
-	->label($model->getAttributeLabel('subjectName'), ['class'=>'control-label col-md-3 col-sm-3 col-xs-12']); ?>
+	->label($model->getAttributeLabel('subjectName')); ?>
 
 <?php echo $form->field($model, 'message')
 	->textarea(['rows'=>6, 'cols'=>50])
@@ -79,7 +79,7 @@ echo $form->field($model, 'subjectName', ['template' => '{label}<div class="col-
 
 <?php if(!$model->isNewRecord) {
 echo $form->field($model, 'publish')
-	->checkbox(['label'=>''])
+	->checkbox()
 	->label($model->getAttributeLabel('publish'));
 } ?>
 
