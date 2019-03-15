@@ -20,10 +20,6 @@ use app\components\widgets\MenuContent;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support Contacts'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Back To Manage'), 'url' => Url::to(['index']), 'icon' => 'table'],
-];
 ?>
 
 <div class="col-md-12 col-sm-12 col-xs-12 col-12">
