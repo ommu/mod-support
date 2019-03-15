@@ -64,9 +64,12 @@ class SupportWidget extends SupportWidgetModel
 	 * @param array $params
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $column=null)
 	{
-		$query = SupportWidgetModel::find()->alias('t');
+		if(!($column && is_array($column)))
+			$query = SupportWidgetModel::find()->alias('t');
+		else
+			$query = SupportWidgetModel::find()->alias('t')->select($column);
 		$query->joinWith(['contactCategory contactCategory', 'creation creation', 'modified modified']);
 
 		// add conditions that should always apply here

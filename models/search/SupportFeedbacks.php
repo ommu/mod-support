@@ -60,9 +60,12 @@ class SupportFeedbacks extends SupportFeedbacksModel
 	 *
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $column=null)
 	{
-		$query = SupportFeedbacksModel::find()->alias('t');
+		if(!($column && is_array($column)))
+			$query = SupportFeedbacksModel::find()->alias('t');
+		else
+			$query = SupportFeedbacksModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'view view', 
 			'subject.title subject', 

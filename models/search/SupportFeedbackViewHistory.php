@@ -59,9 +59,12 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 	 *
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $column=null)
 	{
-		$query = SupportFeedbackViewHistoryModel::find()->alias('t');
+		if(!($column && is_array($column)))
+			$query = SupportFeedbackViewHistoryModel::find()->alias('t');
+		else
+			$query = SupportFeedbackViewHistoryModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'view.feedback feedback',
 			'view.feedback.subject.title subject'

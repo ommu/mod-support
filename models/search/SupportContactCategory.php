@@ -62,9 +62,12 @@ class SupportContactCategory extends SupportContactCategoryModel
 	 * @param array $params
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $column=null)
 	{
-		$query = SupportContactCategoryModel::find()->alias('t');
+		if(!($column && is_array($column)))
+			$query = SupportContactCategoryModel::find()->alias('t');
+		else
+			$query = SupportContactCategoryModel::find()->alias('t')->select($column);
 		$query->joinWith(['creation creation', 'modified modified']);
 
 		// add conditions that should always apply here

@@ -60,9 +60,12 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 	 *
 	 * @return ActiveDataProvider
 	 */
-	public function search($params)
+	public function search($params, $column=null)
 	{
-		$query = SupportFeedbackViewModel::find()->alias('t');
+		if(!($column && is_array($column)))
+			$query = SupportFeedbackViewModel::find()->alias('t');
+		else
+			$query = SupportFeedbackViewModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'feedback feedback', 
 			'user user', 
