@@ -246,6 +246,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				'attribute' => 'subject_id',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->subject) ? $model->subject->title->message : '-';
+					// return $model->subjectName;
 				},
 				'filter' => SupportFeedbackSubject::getSubject(),
 			];
@@ -255,6 +256,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		// 		'attribute' => 'userDisplayname',
 		// 		'value' => function($model, $key, $index, $column) {
 		// 			return isset($model->user) ? $model->user->displayname : '-';
+		//			// return $model->userDisplayname;
 		// 		},
 		// 	];
 		// }
@@ -300,6 +302,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				'attribute' => 'repliedDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->replied) ? $model->replied->displayname : '-';
+					// return $model->repliedDisplayname;
 				},
 			];
 		}
@@ -322,6 +325,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->modified) ? $model->modified->displayname : '-';
+					// return $model->modifiedDisplayname;
 				},
 			];
 		}

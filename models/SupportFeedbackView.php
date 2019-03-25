@@ -44,7 +44,6 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 
 	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
 
-	// Search Variable
 	public $feedbackDisplayname;
 	public $userDisplayname;
 	public $modifiedDisplayname;
@@ -161,12 +160,14 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->feedback) ? $model->feedback->displayname : '-';
+					// return $model->feedbackDisplayname;
 				},
 			];
 			$this->templateColumns['feedbackSubject'] = [
 				'attribute' => 'feedbackSubject',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->feedback) ? $model->feedback->subject->title->message : '-';
+					// return $model->feedbackSubject;
 				},
 			];
 		}
@@ -175,6 +176,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 				'attribute' => 'userDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->user) ? $model->user->displayname : '-';
+					// return $model->userDisplayname;
 				},
 			];
 		}
@@ -203,6 +205,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->modified) ? $model->modified->displayname : '-';
+					// return $model->modifiedDisplayname;
 				},
 			];
 		}

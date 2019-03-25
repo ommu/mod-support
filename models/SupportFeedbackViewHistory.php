@@ -104,12 +104,14 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 				'attribute' => 'feedbackDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->view) ? $model->view->feedback->displayname : '-';
+					// return $model->feedbackDisplayname;
 				},
 			];
 			$this->templateColumns['feedbackSubject'] = [
 				'attribute' => 'feedbackSubject',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
+					// return $model->feedbackSubject;
 				},
 			];
 		}

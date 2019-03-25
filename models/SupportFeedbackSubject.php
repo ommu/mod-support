@@ -204,12 +204,14 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'attribute' => 'subjectName',
 			'value' => function($model, $key, $index, $column) {
 				return isset($model->title) ? $model->title->message : '-';
+				// return $model->subjectName;
 			},
 		];
 		$this->templateColumns['parentName'] = [
 			'attribute' => 'parentName',
 			'value' => function($model, $key, $index, $column) {
 				return isset($model->parent) ? $model->parent->title->message : '-';
+				// return $model->parentName;
 			},
 		];
 		$this->templateColumns['creation_date'] = [
@@ -224,6 +226,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				'attribute' => 'creationDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->creation) ? $model->creation->displayname : '-';
+					// return $model->creationDisplayname;
 				},
 			];
 		}
@@ -239,6 +242,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				'attribute' => 'modifiedDisplayname',
 				'value' => function($model, $key, $index, $column) {
 					return isset($model->modified) ? $model->modified->displayname : '-';
+					// return $model->modifiedDisplayname;
 				},
 			];
 		}
