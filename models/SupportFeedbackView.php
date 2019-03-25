@@ -218,11 +218,11 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['views'] = [
 			'attribute' => 'views',
-			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->views;
 				return Html::a($views, ['feedback/view-detail/manage', 'view'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
 			},
+			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];

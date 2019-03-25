@@ -338,31 +338,31 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['views'] = [
 			'attribute' => 'views',
-			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->getViews(true);
 				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
 			},
+			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['users'] = [
 			'attribute' => 'users',
-			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
 				$users = $model->getUsers(true);
 				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
 			},
+			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
 		$this->templateColumns['reply'] = [
 			'attribute' => 'reply',
-			'filter' => $this->filterYesNo(),
 			'value' => function($model, $key, $index, $column) {
 				$reply = $this->filterYesNo($model->reply);
 				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply')]) : $reply;
 			},
+			'filter' => $this->filterYesNo(),
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];

@@ -261,11 +261,11 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		];
 		$this->templateColumns['feedbacks'] = [
 			'attribute' => 'feedbacks',
-			'filter' => false,
 			'value' => function($model, $key, $index, $column) {
 				$feedbacks = $model->getFeedbacks(true);
 				return Html::a($feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$feedbacks])]);
 			},
+			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
