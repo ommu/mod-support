@@ -226,7 +226,7 @@ class SubjectController extends Controller
 	{
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-		$term = Yii::$app->request->get('term');
+		$term = Yii::$app->request->get('query');
 		$parent = Yii::$app->request->get('parent', null);
 
 		if($term == null) return [];
