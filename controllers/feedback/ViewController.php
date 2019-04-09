@@ -28,8 +28,8 @@
 namespace ommu\support\controllers\feedback;
 
 use Yii;
-use yii\filters\VerbFilter;
 use app\components\Controller;
+use yii\filters\VerbFilter;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbackView;
 use ommu\support\models\search\SupportFeedbackView as SupportFeedbackViewSearch;

@@ -29,8 +29,8 @@
 namespace ommu\support\controllers\feedback;
 
 use Yii;
-use yii\filters\VerbFilter;
 use app\components\Controller;
+use yii\filters\VerbFilter;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbacks;
 use ommu\support\models\search\SupportFeedbacks as SupportFeedbacksSearch;

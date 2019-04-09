@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Reply');
 
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Back To Feedbacks'), 'url' => Url::to(['manage']), 'icon' => 'table'],
-	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->feedback_id]), 'icon' => 'eye'],
+	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->feedback_id]), 'icon' => 'eye', 'htmlOptions' => ['class'=>'btn btn-info btn-sm']],
 ];
 ?>
 
