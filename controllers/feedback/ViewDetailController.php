@@ -98,7 +98,7 @@ class ViewDetailController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'Detail {model-class}: {view-id}', ['model-class' => 'Feedback View History', 'view-id' => $model->view->feedback->displayname]);
+		$this->view->title = Yii::t('app', 'Detail Feedback View History: {view-id}', ['view-id' => $model->view->feedback->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [

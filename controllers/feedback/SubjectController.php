@@ -159,7 +159,7 @@ class SubjectController extends Controller
 			}
 		}
 
-		$this->view->title = Yii::t('app', 'Update {model-class}: {subject-name}', ['model-class' => 'Feedback Subject', 'subject-name' => $model->title->message]);
+		$this->view->title = Yii::t('app', 'Update Feedback Subject: {subject-name}', ['subject-name' => $model->title->message]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_update', [
@@ -176,7 +176,7 @@ class SubjectController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'Detail {model-class}: {subject-name}', ['model-class' => 'Feedback Subject', 'subject-name' => $model->title->message]);
+		$this->view->title = Yii::t('app', 'Detail Feedback Subject: {subject-name}', ['subject-name' => $model->title->message]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [

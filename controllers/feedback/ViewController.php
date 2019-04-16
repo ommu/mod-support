@@ -101,7 +101,7 @@ class ViewController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'Detail {model-class}: {feedback-id}', ['model-class' => 'Feedback View', 'feedback-id' => $model->feedback->displayname]);
+		$this->view->title = Yii::t('app', 'Detail Feedback View: {feedback-id}', ['feedback-id' => $model->feedback->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [

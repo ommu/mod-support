@@ -53,7 +53,7 @@ use yii\web\JsExpression;
 	->label($model->getAttributeLabel('phone')); ?>
 
 <?php
-$subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput()->label(false);
+$subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput();
 echo $form->field($model, 'subjectName', ['template' => '{label}{beginWrapper}{input}'.$subject_id.'{error}{hint}{endWrapper}'])
 	// ->textInput(['maxlength'=>true])
 	->widget(AutoComplete::className(), [
