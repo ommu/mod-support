@@ -36,6 +36,7 @@ namespace ommu\support\models;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Inflector;
 use yii\behaviors\SluggableBehavior;
 use app\models\SourceMessage;
 use ommu\users\models\Users;
@@ -272,11 +273,11 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		if(!Yii::$app->request->get('trash')) {
 			$this->templateColumns['publish'] = [
 				'attribute' => 'publish',
-				'filter' => $this->filterYesNo(),
 				'value' => function($model, $key, $index, $column) {
 					$url = Url::to(['publish', 'id'=>$model->primaryKey]);
 					return $this->quickAction($url, $model->publish);
 				},
+				'filter' => $this->filterYesNo(),
 				'contentOptions' => ['class'=>'center'],
 				'format' => 'raw',
 			];
@@ -380,7 +381,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		$controller = strtolower(Yii::$app->controller->id);
 		$action = strtolower(Yii::$app->controller->action->id);
 
-		$location = $this->urlTitle($module.' '.$controller);
+		$location = Inflector::slug($module.' '.$controller);
 
 		if(parent::beforeSave($insert)) {
 			if($insert || (!$insert && !$this->subject_name)) {
@@ -390,7 +391,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				if($subject_name->save())
 					$this->subject_name = $subject_name->id;
 
-				$this->slug = $this->urlTitle($this->subjectName);
+				$this->slug = Inflector::slug($this->subjectName);
 
 			} else {
 				$subject_name = SourceMessage::findOne($this->subject_name);
