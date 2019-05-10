@@ -1,7 +1,7 @@
 <?php
 /**
  * SubjectController
- * @var $this app\components\View
+ * @var $this ommu\support\controllers\feedback\SubjectController
  * @var $model ommu\support\models\SupportFeedbackSubject
  *
  * SubjectController implements the CRUD actions for SupportFeedbackSubject model.

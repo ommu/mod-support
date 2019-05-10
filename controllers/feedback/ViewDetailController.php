@@ -1,7 +1,7 @@
 <?php
 /**
  * ViewDetailController
- * @var $this app\components\View
+ * @var $this ommu\support\controllers\feedback\ViewDetailController
  * @var $model ommu\support\models\SupportFeedbackViewHistory
  *
  * ViewDetailController implements the CRUD actions for SupportFeedbackViewHistory model.

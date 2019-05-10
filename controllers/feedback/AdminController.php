@@ -1,7 +1,7 @@
 <?php
 /**
  * AdminController
- * @var $this app\components\View
+ * @var $this ommu\support\controllers\feedback\AdminController
  * @var $model ommu\support\models\SupportFeedbacks
  *
  * AdminController implements the CRUD actions for SupportFeedbacks model.

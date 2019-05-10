@@ -1,7 +1,7 @@
 <?php
 /**
  * UserController
- * @var $this app\components\View
+ * @var $this ommu\support\controllers\feedback\UserController
  * @var $model ommu\support\models\SupportFeedbackUser
  *
  * UserController implements the CRUD actions for SupportFeedbackUser model.

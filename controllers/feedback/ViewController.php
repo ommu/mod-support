@@ -1,7 +1,7 @@
 <?php
 /**
  * ViewController
- * @var $this app\components\View
+ * @var $this ommu\support\controllers\feedback\ViewController
  * @var $model ommu\support\models\SupportFeedbackView
  *
  * ViewController implements the CRUD actions for SupportFeedbackView model.
