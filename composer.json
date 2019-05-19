@@ -1,6 +1,7 @@
 {
 	"name": "ommu/support",
 	"description": "Support Module from Ommu Platform",
+	"type": "ommu-module",
 	"keywords": [
 		"module",
 		"support",
@@ -11,9 +12,8 @@
 		"ommu-platform",
 		"yii2"
 	],
-	"homepage": "https://github.com/ommu/mod-support",
-	"type": "ommu-module",
 	"license": "Apache-2.0",
+	"homepage": "https://github.com/ommu/mod-support",
 	"support": {
 		"issues": "https://github.com/ommu/mod-support/issues",
 		"wiki": "https://github.com/ommu/mod-support/wiki",
@@ -37,5 +37,10 @@
 	"require": {
 		"php": "~7.0",
 		"yiisoft/yii2": "~2.0.13"
+	},
+	"autoload": {
+		"psr-4": {
+			"ommu\\support\\": ""
+		}
 	}
 }

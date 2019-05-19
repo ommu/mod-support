@@ -144,6 +144,7 @@ class SubjectController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+
 		if(Yii::$app->request->isPost) {
 			$postData = Yii::$app->request->post();
 			$model->load($postData);
