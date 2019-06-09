@@ -29,8 +29,8 @@
 namespace ommu\support\controllers\feedback;
 
 use Yii;
-use app\components\Controller;
 use yii\filters\VerbFilter;
+use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbacks;
 use ommu\support\models\search\SupportFeedbacks as SupportFeedbacksSearch;
@@ -105,6 +105,9 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			// $postData = Yii::$app->request->post();
+			// $model->load($postData);
+
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success created.'));
 				return $this->redirect(['manage']);
@@ -136,6 +139,8 @@ class AdminController extends Controller
 
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			// $postData = Yii::$app->request->post();
+			// $model->load($postData);
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success updated.'));
@@ -217,6 +222,8 @@ class AdminController extends Controller
 		$model->scenario = SupportFeedbacks::SCENARIO_REPLY;
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
+			// $postData = Yii::$app->request->post();
+			// $model->load($postData);
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success replied.'));

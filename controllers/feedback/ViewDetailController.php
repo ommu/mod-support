@@ -26,8 +26,8 @@
 namespace ommu\support\controllers\feedback;
 
 use Yii;
-use app\components\Controller;
 use yii\filters\VerbFilter;
+use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use ommu\support\models\SupportFeedbackViewHistory;
 use ommu\support\models\search\SupportFeedbackViewHistory as SupportFeedbackViewHistorySearch;
@@ -114,8 +114,9 @@ class ViewDetailController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->findModel($id)->delete();
-		
+		$model = $this->findModel($id);
+		$model->delete();
+
 		Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view history success deleted.'));
 		return $this->redirect(['manage']);
 	}

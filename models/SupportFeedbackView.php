@@ -83,7 +83,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'user_id' => Yii::t('app', 'User'),
 			'views' => Yii::t('app', 'Views'),
 			'view_date' => Yii::t('app', 'View Date'),
-			'view_ip' => Yii::t('app', 'View Ip'),
+			'view_ip' => Yii::t('app', 'View IP'),
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
