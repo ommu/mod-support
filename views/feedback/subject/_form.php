@@ -26,6 +26,11 @@ use ommu\support\models\SupportFeedbackSubject;
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
+	'fieldConfig' => [
+		'errorOptions' => [
+			'encode' => false,
+		],
+	],
 ]); ?>
 
 <?php //echo $form->errorSummary($model);?>
