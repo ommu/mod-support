@@ -141,7 +141,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	{
 		if($count == false) {
 			return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
-				->andOnCondition([sprintf('%s.publish', SupportFeedbackUser::tableName()) => $publish]);
+				->alias('users')
+				->andOnCondition([sprintf('%s.publish', 'users') => $publish]);
 		}
 
 		$model = SupportFeedbackUser::find()
@@ -164,7 +165,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	{
 		if($count == false) {
 			return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
-				->andOnCondition([sprintf('%s.publish', SupportFeedbackView::tableName()) => $publish]);
+				->alias('views')
+				->andOnCondition([sprintf('%s.publish', 'views') => $publish]);
 		}
 
 		$model = SupportFeedbackView::find()
