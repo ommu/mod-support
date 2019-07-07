@@ -71,7 +71,8 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 			'parent.title parent', 
 			'creation creation', 
 			'modified modified'
-		]);
+		])
+		->groupBy(['subject_id']);
 
 		// add conditions that should always apply here
 		$dataParams = [

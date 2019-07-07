@@ -71,7 +71,8 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 			'user user', 
 			'modified modified',
 			'feedback.subject.title subject', 
-		]);
+		])
+		->groupBy(['view_id']);
 
 		// add conditions that should always apply here
 		$dataParams = [

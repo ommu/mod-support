@@ -68,7 +68,8 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 		$query->joinWith([
 			'view.feedback feedback',
 			'view.feedback.subject.title subject'
-		]);
+		])
+		->groupBy(['id']);
 
 		// add conditions that should always apply here
 		$dataParams = [

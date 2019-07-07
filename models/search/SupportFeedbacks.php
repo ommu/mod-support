@@ -72,7 +72,8 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'user user', 
 			'replied replied', 
 			'modified modified'
-		]);
+		])
+		->groupBy(['feedback_id']);
 
 		// add conditions that should always apply here
 		$dataParams = [
