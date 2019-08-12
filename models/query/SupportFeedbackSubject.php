@@ -5,7 +5,7 @@
  * This is the ActiveQuery class for [[\ommu\support\models\SupportFeedbackSubject]].
  * @see \ommu\support\models\SupportFeedbackSubject
  * 
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
  * @created date 25 January 2019, 15:12 WIB

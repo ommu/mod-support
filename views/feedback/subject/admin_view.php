@@ -5,7 +5,7 @@
  * @var $this ommu\support\controllers\feedback\SubjectController
  * @var $model ommu\support\models\SupportFeedbackSubject
  *
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
  * @created date 27 January 2019, 18:54 WIB
