@@ -4,7 +4,7 @@
  * @var $this ContactController
  * @var $model SupportContacts
  *
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2012 Ommu Platform (www.ommu.co)
  * @modified date 27 September 2018, 11:46 WIB

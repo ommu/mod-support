@@ -4,7 +4,7 @@
  * @var $this WidgetController
  * @var $model SupportWidget
  *
- * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @author Putra Sudaryanto <putra@ommu.co>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2016 Ommu Platform (www.ommu.co)
  * @created date 3 February 2016, 12:26 WIB
