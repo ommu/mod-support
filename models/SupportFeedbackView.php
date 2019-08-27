@@ -19,8 +19,6 @@
  * @property integer $views
  * @property string $view_date
  * @property string $view_ip
- * @property string $modified_date
- * @property integer $modified_id
  * @property string $updated_date
  *
  * The followings are the available model relations:
@@ -42,11 +40,10 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['updated_date'];
 
 	public $feedbackDisplayname;
 	public $userDisplayname;
-	public $modifiedDisplayname;
 	public $feedbackSubject;
 
 	/**
@@ -64,7 +61,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		return [
 			[['feedback_id', 'user_id'], 'required'],
-			[['publish', 'feedback_id', 'user_id', 'views', 'modified_id'], 'integer'],
+			[['publish', 'feedback_id', 'user_id', 'views'], 'integer'],
 			[['view_ip'], 'string', 'max' => 20],
 			[['feedback_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbacks::className(), 'targetAttribute' => ['feedback_id' => 'feedback_id']],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'user_id']],
@@ -84,13 +81,10 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'views' => Yii::t('app', 'Views'),
 			'view_date' => Yii::t('app', 'View Date'),
 			'view_ip' => Yii::t('app', 'View IP'),
-			'modified_date' => Yii::t('app', 'Modified Date'),
-			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'histories' => Yii::t('app', 'Histories'),
 			'feedbackDisplayname' => Yii::t('app', 'Name'),
 			'userDisplayname' => Yii::t('app', 'User'),
-			'modifiedDisplayname' => Yii::t('app', 'Modified'),
 			'feedbackSubject' => Yii::t('app', 'Subject'),
 		];
 	}
@@ -124,14 +118,6 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 		$histories = $model->count();
 
 		return $histories ? $histories : 0;
-	}
-
-	/**
-	 * @return \yii\db\ActiveQuery
-	 */
-	public function getModified()
-	{
-		return $this->hasOne(Users::className(), ['user_id' => 'modified_id']);
 	}
 
 	/**
@@ -196,22 +182,6 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 				return $model->view_ip;
 			},
 		];
-		$this->templateColumns['modified_date'] = [
-			'attribute' => 'modified_date',
-			'value' => function($model, $key, $index, $column) {
-				return Yii::$app->formatter->asDatetime($model->modified_date, 'medium');
-			},
-			'filter' => $this->filterDatepicker($this, 'modified_date'),
-		];
-		if(!Yii::$app->request->get('modified')) {
-			$this->templateColumns['modifiedDisplayname'] = [
-				'attribute' => 'modifiedDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->modified) ? $model->modified->displayname : '-';
-					// return $model->modifiedDisplayname;
-				},
-			];
-		}
 		$this->templateColumns['updated_date'] = [
 			'attribute' => 'updated_date',
 			'value' => function($model, $key, $index, $column) {
@@ -293,7 +263,6 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 
 		// $this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
 		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
-		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 		// $this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
 	}
 
@@ -306,9 +275,6 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			if($this->isNewRecord) {
 				if($this->user_id == null)
 					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 			}
 			$this->view_ip = $_SERVER['REMOTE_ADDR'];
 		}
