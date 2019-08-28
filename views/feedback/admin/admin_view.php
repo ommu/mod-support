@@ -61,6 +61,7 @@ $this->params['menu']['content'] = [
 		[
 			'attribute' => 'creation_date',
 			'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
+			'visible' => !$small,
 		],
 		[
 			'attribute' => 'reply_message',
@@ -77,14 +78,17 @@ $this->params['menu']['content'] = [
 		[
 			'attribute' => 'modified_date',
 			'value' => Yii::$app->formatter->asDatetime($model->modified_date, 'medium'),
+			'visible' => !$small,
 		],
 		[
 			'attribute' => 'modifiedDisplayname',
 			'value' => isset($model->modified) ? $model->modified->displayname : '-',
+			'visible' => !$small,
 		],
 		[
 			'attribute' => 'updated_date',
 			'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
+			'visible' => !$small,
 		],
 		[
 			'attribute' => 'users',
@@ -102,6 +106,7 @@ $this->params['menu']['content'] = [
 				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
 			},
 			'format' => 'html',
+			'visible' => !$small,
 		],
 	],
 ]) ?>
