@@ -125,7 +125,8 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 		}
 
 		$model = SupportFeedbacks::find()
-			->where(['subject_id' => $this->subject_id]);
+			->alias('t')
+			->where(['t.subject_id' => $this->subject_id]);
 		if($publish === null)
 			$model->send();
 		else {

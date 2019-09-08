@@ -56,7 +56,7 @@ $this->params['menu']['content'] = [
 			'visible' => !$small,
 		],
 	],
-]) ?>
+]); ?>
 
 <?php $form = ActiveForm::begin([
 	'options' => ['class'=>'form-horizontal form-label-left'],

@@ -50,6 +50,6 @@ $this->params['menu']['content'] = [
 		],
 		'view_ip',
 	],
-]) ?>
+]); ?>
 
 </div>

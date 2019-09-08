@@ -146,7 +146,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		}
 
 		$model = SupportFeedbackUser::find()
-			->where(['feedback_id' => $this->feedback_id]);
+			->alias('t')
+			->where(['t.feedback_id' => $this->feedback_id]);
 		if($publish == 0)
 			$model->unpublish();
 		elseif($publish == 1)
@@ -170,7 +171,8 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		}
 
 		$model = SupportFeedbackView::find()
-			->where(['feedback_id' => $this->feedback_id]);
+			->alias('t')
+			->where(['t.feedback_id' => $this->feedback_id]);
 		if($publish == 0)
 			$model->unpublish();
 		elseif($publish == 1)

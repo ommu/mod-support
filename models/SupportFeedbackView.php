@@ -114,7 +114,8 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
 
 		$model = SupportFeedbackViewHistory::find()
-			->where(['view_id' => $this->view_id]);
+			->alias('t')
+			->where(['t.view_id' => $this->view_id]);
 		$histories = $model->count();
 
 		return $histories ? $histories : 0;
@@ -240,7 +241,8 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		$user_id = Yii::$app->user->id;
 		$findView = self::find()
-			->where(['feedback_id' => $feedback_id, 'user_id' => $user_id])
+			->alias('t')
+			->where(['t.feedback_id' => $feedback_id, 'user_id' => $user_id])
 			->one();
 
 		if($findView != null)
