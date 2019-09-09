@@ -21,7 +21,6 @@
  * @property string $modified_date
  * @property integer $modified_id
  * @property string $updated_date
- * @property string $slug
  *
  * The followings are the available model relations:
  * @property SupportFeedbacks[] $feedbacks
@@ -37,7 +36,6 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\Inflector;
-use yii\behaviors\SluggableBehavior;
 use app\models\SourceMessage;
 use ommu\users\models\Users;
 use ommu\support\models\view\SupportFeedbackSubject as SupportFeedbackSubjectView;
@@ -46,7 +44,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date', 'slug'];
+	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $subjectName;
 	public $parentName;
@@ -62,20 +60,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	}
 
 	/**
-	 * behaviors model class.
-	 */
-	public function behaviors() {
-		return [
-			[
-				'class' => SluggableBehavior::className(),
-				'attribute' => 'title.message',
-				'immutable' => true,
-				'ensureUnique' => true,
-			],
-		];
-	}
-
-	/**
 	 * @return array validation rules for model attributes.
 	 */
 	public function rules()
@@ -84,7 +68,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			[['subjectName'], 'required'],
 			[['publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
 			[['parent_id'], 'safe'],
-			[['subjectName', 'slug'], 'string'],
+			[['subjectName'], 'string'],
 			[['subjectName'], 'string', 'max' => 64],
 		];
 	}
@@ -104,7 +88,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'modified_date' => Yii::t('app', 'Modified Date'),
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'slug' => Yii::t('app', 'Slug'),
 			'subjectName' => Yii::t('app', 'Subject'),
 			'parentName' => Yii::t('app', 'Paerent'),
 			'feedbacks' => Yii::t('app', 'Feedbacks'),
@@ -259,12 +242,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		$this->templateColumns['slug'] = [
-			'attribute' => 'slug',
-			'value' => function($model, $key, $index, $column) {
-				return $model->slug;
-			},
-		];
 		$this->templateColumns['feedbacks'] = [
 			'attribute' => 'feedbacks',
 			'value' => function($model, $key, $index, $column) {
@@ -397,8 +374,6 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 				$subject_name->message = $this->subjectName;
 				if($subject_name->save())
 					$this->subject_name = $subject_name->id;
-
-				$this->slug = Inflector::slug($this->subjectName);
 
 			} else {
 				$subject_name = SourceMessage::findOne($this->subject_name);

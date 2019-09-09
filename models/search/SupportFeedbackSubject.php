@@ -28,7 +28,7 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 	{
 		return [
 			[['subject_id', 'publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
-			[['creation_date', 'modified_date', 'updated_date', 'slug',
+			[['creation_date', 'modified_date', 'updated_date',
 				'subjectName', 'parentName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
@@ -138,8 +138,7 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-		$query->andFilterWhere(['like', 't.slug', $this->slug])
-			->andFilterWhere(['like', 'title.message', $this->subjectName])
+		$query->andFilterWhere(['like', 'title.message', $this->subjectName])
 			->andFilterWhere(['like', 'parent.message', $this->parentName])
 			->andFilterWhere(['like', 'creation.displayname', $this->creationDisplayname])
 			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname]);

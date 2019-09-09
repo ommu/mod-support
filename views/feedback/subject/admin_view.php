@@ -77,11 +77,6 @@ $this->params['menu']['content'] = [
 			'visible' => !$small,
 		],
 		[
-			'attribute' => 'slug',
-			'value' => $model->slug ? $model->slug : '-',
-			'visible' => !$small,
-		],
-		[
 			'attribute' => 'feedbacks',
 			'value' => function ($model) {
 				$feedbacks = $model->getFeedbacks(true);
