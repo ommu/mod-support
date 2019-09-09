@@ -29,7 +29,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 	{
 		return [
 			[['feedback_id', 'publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
-			[['email', 'displayname', 'phone', 'message', 'reply_message', 'replied_date', 'creation_date', 'modified_date', 'updated_date',
+			[['app', 'email', 'displayname', 'phone', 'message', 'reply_message', 'replied_date', 'creation_date', 'modified_date', 'updated_date',
 				'subjectName', 'userDisplayname', 'repliedDisplayname', 'modifiedDisplayname', 'reply'], 'safe'],
 		];
 	}
@@ -133,6 +133,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 		// grid filtering conditions
 		$query->andFilterWhere([
 			't.feedback_id' => $this->feedback_id,
+			't.app' => $this->app,
 			't.subject_id' => isset($params['subject']) ? $params['subject'] : $this->subject_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
 			'cast(t.replied_date as date)' => $this->replied_date,
