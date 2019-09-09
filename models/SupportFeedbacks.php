@@ -57,10 +57,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public $userDisplayname;
 	public $repliedDisplayname;
 	public $modifiedDisplayname;
-
-	public $OldSubjectId;
-	public $OldSubjectName;
-
+	public $verifyCode;
 	public $reply;
 
 	const SCENARIO_REPLY = 'replyForm';
@@ -79,17 +76,18 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['email', 'displayname', 'phone', 'message', 'subjectName'], 'required'],
+			[['subject_id', 'email', 'displayname', 'phone', 'message'], 'required'],
 			[['reply_message'], 'required', 'on' => self::SCENARIO_REPLY],
-			[['publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
+			[['publish', 'user_id', 'replied_id', 'modified_id'], 'integer'],
 			[['app', 'message', 'reply_message'], 'string'],
 			[['app', 'subject_id'], 'safe'],
 			[['email'], 'email'],
-			[['email', 'subjectName'], 'string', 'max' => 64],
-			[['app, displayname'], 'string', 'max' => 32],
+			// ['verifyCode', 'captcha'],
+			[['subject_id', 'email'], 'string', 'max' => 64],
+			[['app', 'displayname'], 'string', 'max' => 32],
 			[['phone'], 'string', 'max' => 15],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'user_id']],
-			[['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbackSubject::className(), 'targetAttribute' => ['subject_id' => 'subject_id']],
+			// [['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbackSubject::className(), 'targetAttribute' => ['subject_id' => 'subject_id']],
 			[['replied_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['replied_id' => 'user_id']],
 		];
 	}
@@ -133,6 +131,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'userDisplayname' => Yii::t('app', 'User'),
 			'repliedDisplayname' => Yii::t('app', 'Replied'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
+			'verifyCode' => 'Verification Code',
 		];
 	}
 
@@ -375,7 +374,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'reply',
 			'value' => function($model, $key, $index, $column) {
 				$reply = $this->filterYesNo($model->reply);
-				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply')]) : $reply;
+				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply'), 'class'=>'modal-btn']) : $reply;
 			},
 			'filter' => $this->filterYesNo(),
 			'contentOptions' => ['class'=>'center'],
@@ -435,9 +434,6 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		// $this->repliedDisplayname = isset($this->replied) ? $this->replied->displayname : '-';
 		// $this->modifiedDisplayname = isset($this->modified) ? $this->modified->displayname : '-';
 
-		$this->OldSubjectId = $this->subject_id;
-		$this->OldSubjectName = $this->subjectName;
-
 		$this->reply = $this->getReplyStatus();
 	}
 
@@ -451,11 +447,13 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				if($this->modified_id == null)
 					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 
-				if($this->scenario = self::SCENARIO_REPLY) {
+				if($this->scenario == self::SCENARIO_REPLY) {
 					if($this->replied_id == null)
 						$this->replied_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
 				}
 			}
+			if($this->subject_id == '')
+				$this->addError('subject_id', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('subject_id')]));
 		}
 		return true;
 	}
@@ -465,14 +463,9 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	 */
 	public function beforeSave($insert)
 	{
-		if($insert) {
-			if(!$this->subject_id)
-				$this->subject_id = SupportFeedbackSubject::insertSubject($this->subjectName);
-		} else {
-			if($this->subject_id == $this->OldSubjectId && $this->subjectName != $this->OldSubjectName)
-				$this->subject_id = SupportFeedbackSubject::insertSubject($this->subjectName);
-		}
 		$this->app = Yii::$app->id;
+		if(!isset($this->subject))
+			$this->subject_id = SupportFeedbackSubject::insertSubject($this->subject_id);
 
 		return true;
 	}

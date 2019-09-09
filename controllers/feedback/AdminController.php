@@ -222,6 +222,7 @@ class AdminController extends Controller
 	{
 		$model = $this->findModel($id);
 		$model->scenario = SupportFeedbacks::SCENARIO_REPLY;
+
 		if(Yii::$app->request->isPost) {
 			$model->load(Yii::$app->request->post());
 			// $postData = Yii::$app->request->post();

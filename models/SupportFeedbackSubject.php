@@ -291,12 +291,13 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	 */
 	public static function getSubject($publish=null, $array=true) 
 	{
-		$model = self::find()->alias('t');
-		$model->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id');
+		$model = self::find()
+			->alias('t')
+			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id');
 		if($publish != null)
 			$model->andWhere(['t.publish' => $publish]);
 
-		$model = $model->orderBy('title.message ASC')->all();
+		$model = $model->orderBy('t.subject_id DESC')->all();
 
 		if($array == true)
 			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subjectName');
@@ -317,7 +318,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			->one();
 
 		if($subject != null)
-				return $subject->subject_id;
+			return $subject->subject_id;
 		else {
 			$model = new self();
 			$model->subjectName = $subjectName;

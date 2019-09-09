@@ -76,6 +76,23 @@ $this->params['menu']['content'] = [
 			'value' => Yii::$app->formatter->asDatetime($model->replied_date, 'medium'),
 		],
 		[
+			'attribute' => 'users',
+			'value' => function ($model) {
+				$users = $model->getUsers(true);
+				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
+			},
+			'format' => 'html',
+		],
+		[
+			'attribute' => 'views',
+			'value' => function ($model) {
+				$views = $model->getViews(true);
+				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
+			},
+			'format' => 'html',
+			'visible' => !$small,
+		],
+		[
 			'attribute' => 'modified_date',
 			'value' => Yii::$app->formatter->asDatetime($model->modified_date, 'medium'),
 			'visible' => !$small,
@@ -88,24 +105,6 @@ $this->params['menu']['content'] = [
 		[
 			'attribute' => 'updated_date',
 			'value' => Yii::$app->formatter->asDatetime($model->updated_date, 'medium'),
-			'visible' => !$small,
-		],
-		[
-			'attribute' => 'users',
-			'value' => function ($model) {
-				$users = $model->getUsers(true);
-				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
-			},
-			'value' => ,
-			'format' => 'html',
-		],
-		[
-			'attribute' => 'views',
-			'value' => function ($model) {
-				$views = $model->getViews(true);
-				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
-			},
-			'format' => 'html',
 			'visible' => !$small,
 		],
 	],

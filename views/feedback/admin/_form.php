@@ -19,15 +19,15 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use app\components\widgets\ActiveForm;
 use ommu\support\models\SupportFeedbackSubject;
-use yii\jui\AutoComplete;
-use yii\web\JsExpression;
+use ommu\selectize\Selectize;
+use yii\helpers\ArrayHelper;
 ?>
 
 <div class="support-feedbacks-form">
 
 <?php $form = ActiveForm::begin([
 	'options' => ['class'=>'form-horizontal form-label-left'],
-	'enableClientValidation' => true,
+	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
 	'fieldConfig' => [
@@ -39,44 +39,36 @@ use yii\web\JsExpression;
 
 <?php //echo $form->errorSummary($model);?>
 
-<?php 
-// $subject = SupportFeedbackSubject::getSubject();
-// echo $form->field($model, 'subject_id')
-// 	->dropDownList($subject, ['prompt'=>''])
-// 	->label($model->getAttributeLabel('subject_id')); ?>
+<?php echo $form->field($model, 'displayname')
+	->textInput(['maxlength'=>true])
+	->label($model->getAttributeLabel('displayname')); ?>
 
 <?php echo $form->field($model, 'email')
 	->textInput(['type'=>'email'])
 	->label($model->getAttributeLabel('email')); ?>
 
-<?php echo $form->field($model, 'displayname')
-	->textInput(['maxlength'=>true])
-	->label($model->getAttributeLabel('displayname')); ?>
-
 <?php echo $form->field($model, 'phone')
 	->textInput(['type'=>'number', 'maxlength'=>true])
 	->label($model->getAttributeLabel('phone')); ?>
 
-<?php
-$subject_id = $form->field($model, 'subject_id', ['template' => '{input}', 'options' => ['tag' => null]])->hiddenInput();
-echo $form->field($model, 'subjectName', ['template' => '{label}{beginWrapper}{input}'.$subject_id.'{error}{hint}{endWrapper}'])
-	// ->textInput(['maxlength'=>true])
-	->widget(AutoComplete::className(), [
+<?php echo $form->field($model, 'subject_id', ['template' => '{label}{beginWrapper}{input}{error}{hint}{endWrapper}'])
+	->widget(Selectize::className(), [
 		'options' => [
-			'data-toggle' => 'tooltip', 'data-placement' => 'top',
-			'class' => 'ui-autocomplete-input form-control'
+			'placeholder' => Yii::t('app', 'Select a subject..'),
 		],
-		'clientOptions' => [
-			'source' => Url::to(['feedback/subject/suggest']),
-			'minLength' => 2,
-			'select' => new JsExpression("function(event, ui) {
-				\$('.field-subjectname #subject_id').val(ui.item.id);
-				\$('.field-subjectname #subjectname').val(ui.item.label);
-				return false;
-			}"),
-		]
+		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a subject..')], SupportFeedbackSubject::getSubject()),
+		'url' => Url::to(['feedback/subject/suggest']),
+		'queryParam' => 'term',
+		'pluginOptions' => [
+			'valueField' => 'id',
+			'labelField' => 'label',
+			'searchField' => ['label'],
+			'persist' => false,
+			'createOnBlur' => false,
+			'create' => true,
+		],
 	])
-	->label($model->getAttributeLabel('subjectName')); ?>
+	->label($model->getAttributeLabel('subject_id')); ?>
 
 <?php echo $form->field($model, 'message')
 	->textarea(['rows'=>6, 'cols'=>50])
