@@ -25,7 +25,6 @@
  * @property SupportFeedbacks $feedback
  * @property Users $user
  * @property SupportFeedbackViewHistory[] $histories
- * @property Users $modified
  *
  */
 

@@ -29,8 +29,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 	{
 		return [
 			[['id', 'publish', 'feedback_id', 'user_id', 'modified_id'], 'integer'],
-			[['creation_date', 'modified_date', 'updated_date',
-				'feedbackDisplayname', 'userDisplayname', 'modifiedDisplayname', 'feedbackSubject'], 'safe'],
+			[['creation_date', 'updated_date',
+				'feedbackDisplayname', 'userDisplayname', 'feedbackSubject'], 'safe'],
 		];
 	}
 
@@ -69,7 +69,6 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		$query->joinWith([
 			'feedback feedback', 
 			'user user', 
-			'modified modified',
 			'feedback.subject.title subject', 
 		])
 		->groupBy(['id']);
@@ -91,10 +90,6 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
-		];
-		$attributes['modifiedDisplayname'] = [
-			'asc' => ['modified.displayname' => SORT_ASC],
-			'desc' => ['modified.displayname' => SORT_DESC],
 		];
 		$attributes['feedbackSubject'] = [
 			'asc' => ['subject.message' => SORT_ASC],
@@ -121,7 +116,6 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 			't.feedback_id' => isset($params['feedback']) ? $params['feedback'] : $this->feedback_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
 			'cast(t.creation_date as date)' => $this->creation_date,
-			'cast(t.modified_date as date)' => $this->modified_date,
 			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
 		]);
@@ -137,7 +131,6 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 
 		$query->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
 			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-			->andFilterWhere(['like', 'modified.displayname', $this->modifiedDisplayname])
 			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject]);
 
 		return $dataProvider;
