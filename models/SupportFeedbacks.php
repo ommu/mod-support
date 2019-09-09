@@ -13,6 +13,7 @@
  *
  * The followings are the available columns in table "ommu_support_feedbacks":
  * @property integer $feedback_id
+ * @property string $app
  * @property integer $publish
  * @property integer $subject_id
  * @property integer $user_id
@@ -81,11 +82,11 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			[['email', 'displayname', 'phone', 'message', 'subjectName'], 'required'],
 			[['reply_message'], 'required', 'on' => self::SCENARIO_REPLY],
 			[['publish', 'subject_id', 'user_id', 'replied_id', 'modified_id'], 'integer'],
-			[['subject_id'], 'safe'],
-			[['message', 'reply_message'], 'string'],
+			[['app', 'message', 'reply_message'], 'string'],
+			[['app', 'subject_id'], 'safe'],
 			[['email'], 'email'],
 			[['email', 'subjectName'], 'string', 'max' => 64],
-			[['displayname'], 'string', 'max' => 32],
+			[['app, displayname'], 'string', 'max' => 32],
 			[['phone'], 'string', 'max' => 15],
 			[['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::className(), 'targetAttribute' => ['user_id' => 'user_id']],
 			[['subject_id'], 'exist', 'skipOnError' => true, 'targetClass' => SupportFeedbackSubject::className(), 'targetAttribute' => ['subject_id' => 'subject_id']],
@@ -110,6 +111,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	{
 		return [
 			'feedback_id' => Yii::t('app', 'Feedback'),
+			'app' => Yii::t('app', 'Application'),
 			'publish' => Yii::t('app', 'Publish'),
 			'subject_id' => Yii::t('app', 'Subject'),
 			'user_id' => Yii::t('app', 'User'),
@@ -247,6 +249,12 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'header' => '#',
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
+		];
+		$this->templateColumns['app'] = [
+			'attribute' => 'app',
+			'value' => function($model, $key, $index, $column) {
+				return $model->app;
+			},
 		];
 		if(!Yii::$app->request->get('subject')) {
 			$this->templateColumns['subject_id'] = [
@@ -464,6 +472,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			if($this->subject_id == $this->OldSubjectId && $this->subjectName != $this->OldSubjectName)
 				$this->subject_id = SupportFeedbackSubject::insertSubject($this->subjectName);
 		}
+		$this->app = Yii::$app->id;
 
 		return true;
 	}
