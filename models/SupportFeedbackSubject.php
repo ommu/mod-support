@@ -293,11 +293,16 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	{
 		$model = self::find()
 			->alias('t')
-			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id');
+			->select(['t.subject_id', 't.subject_name'])
+			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
+			->leftJoin(sprintf('%s feedback', SupportFeedbacks::tableName()), 't.subject_id=feedback.subject_id');
 		if($publish != null)
 			$model->andWhere(['t.publish' => $publish]);
+		$model->limit(10);
 
-		$model = $model->orderBy('t.subject_id DESC')->all();
+		$model = $model->groupBy(['t.subject_id'])
+			->orderBy('feedback.creation_date DESC, feedback.feedback_id DESC')
+			->all();
 
 		if($array == true)
 			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subjectName');
