@@ -258,25 +258,23 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				return $model->app;
 			},
 		];
-		if(!Yii::$app->request->get('subject')) {
-			$this->templateColumns['subject_id'] = [
-				'attribute' => 'subject_id',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->subject) ? $model->subject->title->message : '-';
-					// return $model->subjectName;
-				},
-				'filter' => SupportFeedbackSubject::getSubject(),
-			];
-		}
-		// if(!Yii::$app->request->get('user')) {
-		// 	$this->templateColumns['userDisplayname'] = [
-		// 		'attribute' => 'userDisplayname',
-		// 		'value' => function($model, $key, $index, $column) {
-		// 			return isset($model->user) ? $model->user->displayname : '-';
-		//			// return $model->userDisplayname;
-		// 		},
-		// 	];
-		// }
+		$this->templateColumns['subject_id'] = [
+			'attribute' => 'subject_id',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->subject) ? $model->subject->title->message : '-';
+				// return $model->subjectName;
+			},
+			'filter' => SupportFeedbackSubject::getSubject(),
+			'visible' => !Yii::$app->request->get('subject') ? true : false,
+		];
+		// $this->templateColumns['userDisplayname'] = [
+		// 	'attribute' => 'userDisplayname',
+		// 	'value' => function($model, $key, $index, $column) {
+		// 		return isset($model->user) ? $model->user->displayname : '-';
+		// 		// return $model->userDisplayname;
+		// 	},
+		// 	'visible' => !Yii::$app->request->get('user') ? true : false,
+		// ];
 		$this->templateColumns['email'] = [
 			'attribute' => 'email',
 			'value' => function($model, $key, $index, $column) {
@@ -314,15 +312,14 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'replied_date'),
 		];
-		if(!Yii::$app->request->get('replied')) {
-			$this->templateColumns['repliedDisplayname'] = [
-				'attribute' => 'repliedDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->replied) ? $model->replied->displayname : '-';
-					// return $model->repliedDisplayname;
-				},
-			];
-		}
+		$this->templateColumns['repliedDisplayname'] = [
+			'attribute' => 'repliedDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->replied) ? $model->replied->displayname : '-';
+				// return $model->repliedDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('replied') ? true : false,
+		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
 			'value' => function($model, $key, $index, $column) {
@@ -337,15 +334,14 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'modified_date'),
 		];
-		if(!Yii::$app->request->get('modified')) {
-			$this->templateColumns['modifiedDisplayname'] = [
-				'attribute' => 'modifiedDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->modified) ? $model->modified->displayname : '-';
-					// return $model->modifiedDisplayname;
-				},
-			];
-		}
+		$this->templateColumns['modifiedDisplayname'] = [
+			'attribute' => 'modifiedDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->modified) ? $model->modified->displayname : '-';
+				// return $model->modifiedDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('modified') ? true : false,
+		];
 		$this->templateColumns['updated_date'] = [
 			'attribute' => 'updated_date',
 			'value' => function($model, $key, $index, $column) {
@@ -383,18 +379,17 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'contentOptions' => ['class'=>'center'],
 			'format' => 'html',
 		];
-		if(!Yii::$app->request->get('trash')) {
-			$this->templateColumns['publish'] = [
-				'attribute' => 'publish',
-				'value' => function($model, $key, $index, $column) {
-					$url = Url::to(['publish', 'id'=>$model->primaryKey]);
-					return $this->quickAction($url, $model->publish);
-				},
-				'filter' => $this->filterYesNo(),
-				'contentOptions' => ['class'=>'center'],
-				'format' => 'raw',
-			];
-		}
+		$this->templateColumns['publish'] = [
+			'attribute' => 'publish',
+			'value' => function($model, $key, $index, $column) {
+				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				return $this->quickAction($url, $model->publish);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'raw',
+			'visible' => !Yii::$app->request->get('trash') ? true : false,
+		];
 	}
 
 	/**

@@ -123,31 +123,30 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		if(!Yii::$app->request->get('feedback')) {
-			$this->templateColumns['feedbackDisplayname'] = [
-				'attribute' => 'feedbackDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->feedback) ? $model->feedback->displayname : '-';
-					// return $model->feedbackDisplayname;
-				},
-			];
-			$this->templateColumns['feedbackSubject'] = [
-				'attribute' => 'feedbackSubject',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->feedback) ? $model->feedback->subject->title->message : '-';
-					// return $model->feedbackSubject;
-				},
-			];
-		}
-		if(!Yii::$app->request->get('user')) {
-			$this->templateColumns['userDisplayname'] = [
-				'attribute' => 'userDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->user) ? $model->user->displayname : '-';
-					// return $model->userDisplayname;
-				},
-			];
-		}
+		$this->templateColumns['feedbackDisplayname'] = [
+			'attribute' => 'feedbackDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->feedback) ? $model->feedback->displayname : '-';
+				// return $model->feedbackDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('feedback') ? true : false,
+		];
+		$this->templateColumns['feedbackSubject'] = [
+			'attribute' => 'feedbackSubject',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->feedback) ? $model->feedback->subject->title->message : '-';
+				// return $model->feedbackSubject;
+			},
+			'visible' => !Yii::$app->request->get('feedback') ? true : false,
+		];
+		$this->templateColumns['userDisplayname'] = [
+			'attribute' => 'userDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->user) ? $model->user->displayname : '-';
+				// return $model->userDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('user') ? true : false,
+		];
 		$this->templateColumns['creation_date'] = [
 			'attribute' => 'creation_date',
 			'value' => function($model, $key, $index, $column) {
@@ -162,18 +161,17 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			},
 			'filter' => $this->filterDatepicker($this, 'updated_date'),
 		];
-		if(!Yii::$app->request->get('trash')) {
-			$this->templateColumns['publish'] = [
-				'attribute' => 'publish',
-				'value' => function($model, $key, $index, $column) {
-					$url = Url::to(['publish', 'id'=>$model->primaryKey]);
-					return $this->quickAction($url, $model->publish);
-				},
-				'filter' => $this->filterYesNo(),
-				'contentOptions' => ['class'=>'center'],
-				'format' => 'raw',
-			];
-		}
+		$this->templateColumns['publish'] = [
+			'attribute' => 'publish',
+			'value' => function($model, $key, $index, $column) {
+				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				return $this->quickAction($url, $model->publish);
+			},
+			'filter' => $this->filterYesNo(),
+			'contentOptions' => ['class'=>'center'],
+			'format' => 'raw',
+			'visible' => !Yii::$app->request->get('trash') ? true : false,
+		];
 	}
 
 	/**

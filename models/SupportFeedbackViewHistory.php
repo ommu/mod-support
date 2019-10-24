@@ -105,22 +105,22 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			'class' => 'yii\grid\SerialColumn',
 			'contentOptions' => ['class'=>'center'],
 		];
-		if(!Yii::$app->request->get('view')) {
-			$this->templateColumns['feedbackDisplayname'] = [
-				'attribute' => 'feedbackDisplayname',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->view) ? $model->view->feedback->displayname : '-';
-					// return $model->feedbackDisplayname;
-				},
-			];
-			$this->templateColumns['feedbackSubject'] = [
-				'attribute' => 'feedbackSubject',
-				'value' => function($model, $key, $index, $column) {
-					return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
-					// return $model->feedbackSubject;
-				},
-			];
-		}
+		$this->templateColumns['feedbackDisplayname'] = [
+			'attribute' => 'feedbackDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? $model->view->feedback->displayname : '-';
+				// return $model->feedbackDisplayname;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
+		$this->templateColumns['feedbackSubject'] = [
+			'attribute' => 'feedbackSubject',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
+				// return $model->feedbackSubject;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
 		$this->templateColumns['view_date'] = [
 			'attribute' => 'view_date',
 			'value' => function($model, $key, $index, $column) {
