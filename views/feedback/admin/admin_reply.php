@@ -76,7 +76,7 @@ $this->params['menu']['content'] = [
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('reply_message')); ?>
 
-<div class="ln_solid"></div>
+<hr/>
 
 <?php echo $form->field($model, 'submitButton')
 	->submitButton(); ?>
