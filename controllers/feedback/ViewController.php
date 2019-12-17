@@ -82,6 +82,9 @@ class ViewController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
+		if(($feedback = Yii::$app->request->get('feedback')) != null)
+			$feedback = \ommu\support\models\SupportFeedbacks::findOne($feedback);
+
 		$this->view->title = Yii::t('app', 'Feedback Views');
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -89,6 +92,7 @@ class ViewController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
+			'feedback' => $feedback,
 		]);
 	}
 

@@ -44,7 +44,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['modified_date', 'modifiedDisplayname', 'updated_date'];
+	public $gridForbiddenColumn = ['creation_date', 'creationDisplayname', 'modified_date', 'modifiedDisplayname', 'updated_date'];
 
 	public $subjectName;
 	public $parentName;
@@ -89,7 +89,7 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'modified_id' => Yii::t('app', 'Modified'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
 			'subjectName' => Yii::t('app', 'Subject'),
-			'parentName' => Yii::t('app', 'Paerent'),
+			'parentName' => Yii::t('app', 'Parent'),
 			'feedbacks' => Yii::t('app', 'Feedbacks'),
 			'creationDisplayname' => Yii::t('app', 'Creation'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
@@ -247,11 +247,11 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 			'attribute' => 'feedbacks',
 			'value' => function($model, $key, $index, $column) {
 				$feedbacks = $model->getFeedbacks(true);
-				return Html::a($feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$feedbacks])]);
+				return Html::a($feedbacks, ['feedback/admin/manage', 'subject'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} feedbacks', ['count'=>$feedbacks]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',

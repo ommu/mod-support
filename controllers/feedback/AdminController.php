@@ -84,6 +84,11 @@ class AdminController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
+		if(($subject = Yii::$app->request->get('subject')) != null)
+			$subject = \ommu\support\models\SupportFeedbackSubject::findOne($subject);
+		if(($user = Yii::$app->request->get('user')) != null)
+			$user = \ommu\users\models\Users::findOne($user);
+
 		$this->view->title = Yii::t('app', 'Feedbacks');
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -91,6 +96,8 @@ class AdminController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
+			'subject' => $subject,
+			'user' => $user,
 		]);
 	}
 
@@ -111,8 +118,9 @@ class AdminController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success created.'));
-				return $this->redirect(['manage']);
-				//return $this->redirect(['view', 'id'=>$model->feedback_id]);
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['manage']);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -123,7 +131,7 @@ class AdminController extends Controller
 		$this->view->title = Yii::t('app', 'Create Feedback');
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_create', [
+		return $this->oRender('admin_create', [
 			'model' => $model,
 		]);
 	}
@@ -146,7 +154,9 @@ class AdminController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success updated.'));
-				return $this->redirect(['manage']);
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['manage']);
+				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
 			} else {
 				if(Yii::$app->request->isAjax)
@@ -157,7 +167,7 @@ class AdminController extends Controller
 		$this->view->title = Yii::t('app', 'Update Feedback: {displayname}', ['displayname' => $model->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
-		return $this->render('admin_update', [
+		return $this->oRender('admin_update', [
 			'model' => $model,
 		]);
 	}
@@ -231,6 +241,8 @@ class AdminController extends Controller
 
 			if($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback success replied.'));
+				if(!Yii::$app->request->isAjax)
+					return $this->redirect(['manage']);
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
 			} else {

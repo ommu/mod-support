@@ -35,11 +35,14 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 {
 	use \ommu\traits\UtilityTrait;
 
-	public $gridForbiddenColumn = ['updated_date'];
+	public $gridForbiddenColumn = ['updated_date', 'feedbackEmail', 'feedbackDisplayname', 'feedbackPhone'];
 
-	public $feedbackDisplayname;
-	public $userDisplayname;
 	public $feedbackSubject;
+	public $feedbackEmail;
+	public $feedbackDisplayname;
+	public $feedbackPhone;
+	public $feedbackMessage;
+	public $userDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -74,9 +77,12 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			'user_id' => Yii::t('app', 'User'),
 			'creation_date' => Yii::t('app', 'Creation Date'),
 			'updated_date' => Yii::t('app', 'Updated Date'),
-			'feedbackDisplayname' => Yii::t('app', 'Name'),
-			'userDisplayname' => Yii::t('app', 'User'),
 			'feedbackSubject' => Yii::t('app', 'Subject'),
+			'feedbackEmail' => Yii::t('app', 'Email'),
+			'feedbackDisplayname' => Yii::t('app', 'Name'),
+			'feedbackPhone' => Yii::t('app', 'Phone'),
+			'feedbackMessage' => Yii::t('app', 'Message'),
+			'userDisplayname' => Yii::t('app', 'User'),
 		];
 	}
 
@@ -131,6 +137,22 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('feedback') ? true : false,
 		];
+		$this->templateColumns['feedbackEmail'] = [
+			'attribute' => 'feedbackEmail',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->feedback) ? Yii::$app->formatter->asEmail($model->feedback->email) : '-';
+				// return $model->feedbackEmail;
+			},
+			'visible' => !Yii::$app->request->get('feedback') ? true : false,
+		];
+		$this->templateColumns['feedbackPhone'] = [
+			'attribute' => 'feedbackPhone',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->feedback) ? $model->feedback->phone : '-';
+				// return $model->feedbackPhone;
+			},
+			'visible' => !Yii::$app->request->get('feedback') ? true : false,
+		];
 		$this->templateColumns['feedbackSubject'] = [
 			'attribute' => 'feedbackSubject',
 			'value' => function($model, $key, $index, $column) {
@@ -139,10 +161,18 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('feedback') ? true : false,
 		];
+		$this->templateColumns['feedbackMessage'] = [
+			'attribute' => 'feedbackMessage',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->feedback) ? $model->feedback->message : '-';
+				// return $model->feedbackMessage;
+			},
+			'visible' => !Yii::$app->request->get('feedback') ? true : false,
+		];
 		$this->templateColumns['userDisplayname'] = [
 			'attribute' => 'userDisplayname',
 			'value' => function($model, $key, $index, $column) {
-				return isset($model->user) ? $model->user->displayname : '-';
+				return isset($model->feedback) ? $model->user->displayname : '-';
 				// return $model->userDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('user') ? true : false,
@@ -201,9 +231,12 @@ class SupportFeedbackUser extends \app\components\ActiveRecord
 	{
 		parent::afterFind();
 
-		// $this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
-		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 		// $this->feedbackSubject = isset($this->feedback) ? $this->feedback->subject->title->message : '-';
+		// $this->feedbackEmail = isset($this->feedback) ? $this->feedback->email : '-';
+		// $this->feedbackDisplayname = isset($this->feedback) ? $this->feedback->displayname : '-';
+		// $this->feedbackPhone = isset($this->feedback) ? $this->feedback->phone : '-';
+		// $this->feedbackMessage = isset($this->feedback) ? $this->feedback->message : '-';
+		// $this->userDisplayname = isset($this->user) ? $this->user->displayname : '-';
 	}
 
 	/**

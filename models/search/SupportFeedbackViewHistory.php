@@ -29,7 +29,7 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 	{
 		return [
 			[['id', 'view_id'], 'integer'],
-			[['view_date', 'view_ip', 'feedbackSubject', 'feedbackDisplayname'], 'safe'],
+			[['view_date', 'view_ip', 'feedbackSubject', 'feedbackEmail', 'feedbackDisplayname', 'feedbackPhone', 'feedbackMessage', 'userDisplayname'], 'safe'],
 		];
 	}
 
@@ -67,7 +67,8 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 			$query = SupportFeedbackViewHistoryModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'view.feedback feedback',
-			'view.feedback.subject.title subject'
+			'view.feedback.subject.title subject',
+			'view.user user',
 		])
 		->groupBy(['id']);
 
@@ -81,13 +82,29 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
+		$attributes['feedbackSubject'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
+		$attributes['feedbackEmail'] = [
+			'asc' => ['feedback.email' => SORT_ASC],
+			'desc' => ['feedback.email' => SORT_DESC],
+		];
 		$attributes['feedbackDisplayname'] = [
 			'asc' => ['feedback.displayname' => SORT_ASC],
 			'desc' => ['feedback.displayname' => SORT_DESC],
 		];
-		$attributes['feedbackSubject'] = [
-			'asc' => ['subject.message' => SORT_ASC],
-			'desc' => ['subject.message' => SORT_DESC],
+		$attributes['feedbackPhone'] = [
+			'asc' => ['feedback.phone' => SORT_ASC],
+			'desc' => ['feedback.phone' => SORT_DESC],
+		];
+		$attributes['feedbackMessage'] = [
+			'asc' => ['feedback.message' => SORT_ASC],
+			'desc' => ['feedback.message' => SORT_DESC],
+		];
+		$attributes['userDisplayname'] = [
+			'asc' => ['user.displayname' => SORT_ASC],
+			'desc' => ['user.displayname' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -112,8 +129,12 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
 		]);
 
 		$query->andFilterWhere(['like', 't.view_ip', $this->view_ip])
+			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject])
+			->andFilterWhere(['like', 'feedback.email', $this->feedbackEmail])
 			->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
-			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject]);
+			->andFilterWhere(['like', 'feedback.phone', $this->feedbackPhone])
+			->andFilterWhere(['like', 'feedback.message', $this->feedbackMessage])
+			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname]);
 
 		return $dataProvider;
 	}

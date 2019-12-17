@@ -28,9 +28,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 	public function rules()
 	{
 		return [
-			[['id', 'publish', 'feedback_id', 'user_id', 'modified_id'], 'integer'],
-			[['creation_date', 'updated_date',
-				'feedbackDisplayname', 'userDisplayname', 'feedbackSubject'], 'safe'],
+			[['id', 'publish', 'feedback_id', 'user_id'], 'integer'],
+			[['creation_date', 'updated_date', 'feedbackSubject', 'feedbackEmail', 'feedbackDisplayname', 'feedbackPhone', 'feedbackMessage', 'userDisplayname'], 'safe'],
 		];
 	}
 
@@ -68,8 +67,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 			$query = SupportFeedbackUserModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'feedback feedback', 
-			'user user', 
 			'feedback.subject.title subject', 
+			'user user', 
 		])
 		->groupBy(['id']);
 
@@ -83,17 +82,29 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
+		$attributes['feedbackSubject'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
+		$attributes['feedbackEmail'] = [
+			'asc' => ['feedback.email' => SORT_ASC],
+			'desc' => ['feedback.email' => SORT_DESC],
+		];
 		$attributes['feedbackDisplayname'] = [
 			'asc' => ['feedback.displayname' => SORT_ASC],
 			'desc' => ['feedback.displayname' => SORT_DESC],
 		];
+		$attributes['feedbackPhone'] = [
+			'asc' => ['feedback.phone' => SORT_ASC],
+			'desc' => ['feedback.phone' => SORT_DESC],
+		];
+		$attributes['feedbackMessage'] = [
+			'asc' => ['feedback.message' => SORT_ASC],
+			'desc' => ['feedback.message' => SORT_DESC],
+		];
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
-		];
-		$attributes['feedbackSubject'] = [
-			'asc' => ['subject.message' => SORT_ASC],
-			'desc' => ['subject.message' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -116,7 +127,6 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 			't.feedback_id' => isset($params['feedback']) ? $params['feedback'] : $this->feedback_id,
 			't.user_id' => isset($params['user']) ? $params['user'] : $this->user_id,
 			'cast(t.creation_date as date)' => $this->creation_date,
-			't.modified_id' => isset($params['modified']) ? $params['modified'] : $this->modified_id,
 			'cast(t.updated_date as date)' => $this->updated_date,
 		]);
 
@@ -129,9 +139,12 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
 				$query->andFilterWhere(['t.publish' => $this->publish]);
 		}
 
-		$query->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
-			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject]);
+		$query->andFilterWhere(['like', 'subject.message', $this->feedbackSubject])
+			->andFilterWhere(['like', 'feedback.email', $this->feedbackEmail])
+			->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
+			->andFilterWhere(['like', 'feedback.phone', $this->feedbackPhone])
+			->andFilterWhere(['like', 'feedback.message', $this->feedbackMessage])
+			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname]);
 
 		return $dataProvider;
 	}

@@ -29,8 +29,7 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 	{
 		return [
 			[['view_id', 'publish', 'feedback_id', 'user_id', 'views'], 'integer'],
-			[['view_date', 'view_ip', 'updated_date',
-				'feedbackDisplayname', 'userDisplayname', 'feedbackSubject'], 'safe'],
+			[['view_date', 'view_ip', 'updated_date', 'feedbackSubject', 'feedbackEmail', 'feedbackDisplayname', 'feedbackPhone', 'feedbackMessage', 'userDisplayname'], 'safe'],
 		];
 	}
 
@@ -68,8 +67,8 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 			$query = SupportFeedbackViewModel::find()->alias('t')->select($column);
 		$query->joinWith([
 			'feedback feedback', 
-			'user user', 
 			'feedback.subject.title subject', 
+			'user user', 
 		])
 		->groupBy(['view_id']);
 
@@ -83,17 +82,29 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
+		$attributes['feedbackSubject'] = [
+			'asc' => ['subject.message' => SORT_ASC],
+			'desc' => ['subject.message' => SORT_DESC],
+		];
+		$attributes['feedbackEmail'] = [
+			'asc' => ['feedback.email' => SORT_ASC],
+			'desc' => ['feedback.email' => SORT_DESC],
+		];
 		$attributes['feedbackDisplayname'] = [
 			'asc' => ['feedback.displayname' => SORT_ASC],
 			'desc' => ['feedback.displayname' => SORT_DESC],
 		];
+		$attributes['feedbackPhone'] = [
+			'asc' => ['feedback.phone' => SORT_ASC],
+			'desc' => ['feedback.phone' => SORT_DESC],
+		];
+		$attributes['feedbackMessage'] = [
+			'asc' => ['feedback.message' => SORT_ASC],
+			'desc' => ['feedback.message' => SORT_DESC],
+		];
 		$attributes['userDisplayname'] = [
 			'asc' => ['user.displayname' => SORT_ASC],
 			'desc' => ['user.displayname' => SORT_DESC],
-		];
-		$attributes['feedbackSubject'] = [
-			'asc' => ['subject.message' => SORT_ASC],
-			'desc' => ['subject.message' => SORT_DESC],
 		];
 		$dataProvider->setSort([
 			'attributes' => $attributes,
@@ -128,9 +139,12 @@ class SupportFeedbackView extends SupportFeedbackViewModel
 		}
 
 		$query->andFilterWhere(['like', 't.view_ip', $this->view_ip])
+			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject])
+			->andFilterWhere(['like', 'feedback.email', $this->feedbackEmail])
 			->andFilterWhere(['like', 'feedback.displayname', $this->feedbackDisplayname])
-			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname])
-			->andFilterWhere(['like', 'subject.message', $this->feedbackSubject]);
+			->andFilterWhere(['like', 'feedback.phone', $this->feedbackPhone])
+			->andFilterWhere(['like', 'feedback.message', $this->feedbackMessage])
+			->andFilterWhere(['like', 'user.displayname', $this->userDisplayname]);
 
 		return $dataProvider;
 	}

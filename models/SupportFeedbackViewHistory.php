@@ -28,10 +28,14 @@ use Yii;
 
 class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 {
-	public $gridForbiddenColumn = [];
+	public $gridForbiddenColumn = ['feedbackEmail', 'feedbackDisplayname', 'feedbackPhone'];
 
 	public $feedbackSubject;
+	public $feedbackEmail;
 	public $feedbackDisplayname;
+	public $feedbackPhone;
+	public $feedbackMessage;
+	public $userDisplayname;
 
 	/**
 	 * @return string the associated database table name
@@ -66,7 +70,11 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			'view_date' => Yii::t('app', 'View Date'),
 			'view_ip' => Yii::t('app', 'View IP'),
 			'feedbackSubject' => Yii::t('app', 'Subject'),
+			'feedbackEmail' => Yii::t('app', 'Email'),
 			'feedbackDisplayname' => Yii::t('app', 'Name'),
+			'feedbackPhone' => Yii::t('app', 'Phone'),
+			'feedbackMessage' => Yii::t('app', 'Message'),
+			'userDisplayname' => Yii::t('app', 'Viewer'),
 		];
 	}
 
@@ -113,11 +121,43 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 			},
 			'visible' => !Yii::$app->request->get('view') ? true : false,
 		];
+		$this->templateColumns['feedbackEmail'] = [
+			'attribute' => 'feedbackEmail',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? Yii::$app->formatter->asEmail($model->view->feedback->email) : '-';
+				// return $model->feedbackEmail;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
+		$this->templateColumns['feedbackPhone'] = [
+			'attribute' => 'feedbackPhone',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? $model->view->feedback->phone : '-';
+				// return $model->feedbackPhone;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
 		$this->templateColumns['feedbackSubject'] = [
 			'attribute' => 'feedbackSubject',
 			'value' => function($model, $key, $index, $column) {
 				return isset($model->view) ? $model->view->feedback->subject->title->message : '-';
 				// return $model->feedbackSubject;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
+		$this->templateColumns['feedbackMessage'] = [
+			'attribute' => 'feedbackMessage',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? $model->view->feedback->message : '-';
+				// return $model->feedbackMessage;
+			},
+			'visible' => !Yii::$app->request->get('view') ? true : false,
+		];
+		$this->templateColumns['userDisplayname'] = [
+			'attribute' => 'userDisplayname',
+			'value' => function($model, $key, $index, $column) {
+				return isset($model->view) ? $model->view->user->displayname : '-';
+				// return $model->userDisplayname;
 			},
 			'visible' => !Yii::$app->request->get('view') ? true : false,
 		];
@@ -164,6 +204,10 @@ class SupportFeedbackViewHistory extends \app\components\ActiveRecord
 		parent::afterFind();
 
 		// $this->feedbackSubject = isset($this->view) ? $this->view->feedback->subject->title->message : '-';
+		// $this->feedbackEmail = isset($this->view) ? $this->view->feedback->email : '-';
 		// $this->feedbackDisplayname = isset($this->view) ? $this->view->feedback->displayname : '-';
+		// $this->feedbackPhone = isset($this->view) ? $this->view->feedback->phone : '-';
+		// $this->feedbackMessage = isset($this->view) ? $this->view->feedback->message : '-';
+		// $this->userDisplayname = isset($this->view) ? $this->view->user->displayname : '-';
 	}
 }

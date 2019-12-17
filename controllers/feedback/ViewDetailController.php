@@ -79,6 +79,9 @@ class ViewDetailController extends Controller
 		}
 		$columns = $searchModel->getGridColumn($cols);
 
+		if(($view = Yii::$app->request->get('view')) != null)
+			$view = \ommu\support\models\SupportFeedbackView::findOne($view);
+
 		$this->view->title = Yii::t('app', 'Feedback View Histories');
 		$this->view->description = '';
 		$this->view->keywords = '';
@@ -86,6 +89,7 @@ class ViewDetailController extends Controller
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
+			'view' => $view,
 		]);
 	}
 

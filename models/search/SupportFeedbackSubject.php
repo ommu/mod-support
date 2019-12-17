@@ -28,8 +28,7 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
 	{
 		return [
 			[['subject_id', 'publish', 'parent_id', 'subject_name', 'creation_id', 'modified_id'], 'integer'],
-			[['creation_date', 'modified_date', 'updated_date',
-				'subjectName', 'parentName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
+			[['creation_date', 'modified_date', 'updated_date', 'subjectName', 'parentName', 'creationDisplayname', 'modifiedDisplayname'], 'safe'],
 		];
 	}
 

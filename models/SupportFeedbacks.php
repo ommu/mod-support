@@ -131,7 +131,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'userDisplayname' => Yii::t('app', 'User'),
 			'repliedDisplayname' => Yii::t('app', 'Replied'),
 			'modifiedDisplayname' => Yii::t('app', 'Modified'),
-			'verifyCode' => 'Verification Code',
+			'verifyCode' => Yii::t('app', 'Verification Code'),
 		];
 	}
 
@@ -353,31 +353,31 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->getViews(true);
-				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
+				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['users'] = [
 			'attribute' => 'users',
 			'value' => function($model, $key, $index, $column) {
 				$users = $model->getUsers(true);
-				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users])]);
+				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users]), 'data-pjax'=>0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['reply'] = [
 			'attribute' => 'reply',
 			'value' => function($model, $key, $index, $column) {
 				$reply = $this->filterYesNo($model->reply);
-				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply'), 'class'=>'modal-btn']) : $reply;
+				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply'), 'class'=>'modal-btn', 'data-pjax'=>0]) : $reply;
 			},
 			'filter' => $this->filterYesNo(),
 			'contentOptions' => ['class'=>'center'],
-			'format' => 'html',
+			'format' => 'raw',
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
