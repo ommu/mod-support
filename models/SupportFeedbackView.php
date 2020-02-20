@@ -150,7 +150,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
-			'class' => 'yii\grid\SerialColumn',
+			'class' => 'app\components\grid\SerialColumn',
 			'contentOptions' => ['class'=>'text-center'],
 		];
 		$this->templateColumns['feedbackDisplayname'] = [
