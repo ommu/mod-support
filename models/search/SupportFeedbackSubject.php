@@ -4,9 +4,9 @@
  *
  * SupportFeedbackSubject represents the model behind the search form about `ommu\support\models\SupportFeedbackSubject`.
  *
- * @author Putra Sudaryanto <putra@ommu.co>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2019 OMMU (www.ommu.co)
+ * @copyright Copyright (c) 2019 OMMU (www.ommu.id)
  * @created date 27 January 2019, 18:54 WIB
  * @link https://github.com/ommu/mod-support
  *

@@ -2,9 +2,9 @@
 /**
  * SupportFeedbackUser
  * 
- * @author Putra Sudaryanto <putra@ommu.co>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
- * @copyright Copyright (c) 2017 OMMU (www.ommu.co)
+ * @copyright Copyright (c) 2017 OMMU (www.ommu.id)
  * @created date 20 September 2017, 15:37 WIB
  * @modified date 27 January 2019, 10:56 WIB
  * @link https://github.com/ommu/mod-support
