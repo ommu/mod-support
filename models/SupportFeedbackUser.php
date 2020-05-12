@@ -29,7 +29,7 @@ namespace ommu\support\models;
 
 use Yii;
 use yii\helpers\Url;
-use ommu\users\models\Users;
+use app\models\Users;
 
 class SupportFeedbackUser extends \app\components\ActiveRecord
 {

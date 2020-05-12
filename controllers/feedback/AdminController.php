@@ -87,7 +87,7 @@ class AdminController extends Controller
 		if(($subject = Yii::$app->request->get('subject')) != null)
 			$subject = \ommu\support\models\SupportFeedbackSubject::findOne($subject);
 		if(($user = Yii::$app->request->get('user')) != null)
-			$user = \ommu\users\models\Users::findOne($user);
+			$user = \app\models\Users::findOne($user);
 
 		$this->view->title = Yii::t('app', 'Feedbacks');
 		$this->view->description = '';
