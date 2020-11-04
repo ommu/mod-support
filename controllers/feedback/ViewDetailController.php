@@ -39,17 +39,17 @@ class ViewDetailController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -57,7 +57,7 @@ class ViewDetailController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -81,7 +81,7 @@ class ViewDetailController extends Controller
         $columns = $searchModel->getGridColumn($cols);
 
         if (($view = Yii::$app->request->get('view')) != null) {
-			$view = \ommu\support\models\SupportFeedbackView::findOne($view);
+            $view = \ommu\support\models\SupportFeedbackView::findOne($view);
         }
 
 		$this->view->title = Yii::t('app', 'Feedback View Histories');
@@ -102,7 +102,7 @@ class ViewDetailController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 
 		$this->view->title = Yii::t('app', 'Detail Feedback View History: {view-id}', ['view-id' => $model->view->feedback->displayname]);
 		$this->view->description = '';

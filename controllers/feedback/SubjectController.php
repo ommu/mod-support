@@ -44,18 +44,18 @@ class SubjectController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-					'publish' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'publish' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -70,7 +70,7 @@ class SubjectController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -110,26 +110,26 @@ class SubjectController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new SupportFeedbackSubject();
+        $model = new SupportFeedbackSubject();
 
         if (Yii::$app->request->isPost) {
-			$postData = Yii::$app->request->post();
-			$model->load($postData);
-			$model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
+            $postData = Yii::$app->request->post();
+            $model->load($postData);
+            $model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success created.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success created.'));
                 if (!Yii::$app->request->isAjax) {
                     return $this->redirect(['manage']);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Create Feedback Subject');
 		$this->view->description = '';
@@ -150,23 +150,23 @@ class SubjectController extends Controller
 		$model = $this->findModel($id);
 
         if (Yii::$app->request->isPost) {
-			$postData = Yii::$app->request->post();
-			$model->load($postData);
-			$model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
+            $postData = Yii::$app->request->post();
+            $model->load($postData);
+            $model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
 
             if ($model->save()) {
-				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success updated.'));
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success updated.'));
                 if (!Yii::$app->request->isAjax) {
                     return $this->redirect(['manage']);
                 }
-				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
+                return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
             } else {
                 if (Yii::$app->request->isAjax) {
                     return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
                 }
-			}
-		}
+            }
+        }
 
 		$this->view->title = Yii::t('app', 'Update Feedback Subject: {subject-name}', ['subject-name' => $model->title->message]);
 		$this->view->description = '';
@@ -183,7 +183,7 @@ class SubjectController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 
 		$this->view->title = Yii::t('app', 'Detail Feedback Subject: {subject-name}', ['subject-name' => $model->title->message]);
 		$this->view->description = '';
@@ -246,7 +246,7 @@ class SubjectController extends Controller
 			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
 			->andWhere(['like', 'title.message', $term]);
         if ($parent != null) {
-			$model->andWhere(['t.parent_id' => $parent]);
+            $model->andWhere(['t.parent_id' => $parent]);
         }
 		$model = $model->published()->limit(15)->all();
 		

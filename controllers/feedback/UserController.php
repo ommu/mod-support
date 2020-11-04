@@ -41,18 +41,18 @@ class UserController extends Controller
 	 */
 	public function behaviors()
 	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-			],
-			'verbs' => [
-				'class' => VerbFilter::className(),
-				'actions' => [
-					'delete' => ['POST'],
-					'publish' => ['POST'],
-				],
-			],
-		];
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                    'publish' => ['POST'],
+                ],
+            ],
+        ];
 	}
 
 	/**
@@ -60,7 +60,7 @@ class UserController extends Controller
 	 */
 	public function actionIndex()
 	{
-		return $this->redirect(['manage']);
+        return $this->redirect(['manage']);
 	}
 
 	/**
@@ -84,7 +84,7 @@ class UserController extends Controller
         $columns = $searchModel->getGridColumn($cols);
 
         if (($feedback = Yii::$app->request->get('feedback')) != null) {
-			$feedback = \ommu\support\models\SupportFeedbacks::findOne($feedback);
+            $feedback = \ommu\support\models\SupportFeedbacks::findOne($feedback);
         }
 
 		$this->view->title = Yii::t('app', 'Feedback Users');
@@ -105,7 +105,7 @@ class UserController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+        $model = $this->findModel($id);
 
 		$this->view->title = Yii::t('app', 'Detail Feedback User: {feedback-id}', ['feedback-id' => $model->feedback->displayname]);
 		$this->view->description = '';
