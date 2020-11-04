@@ -17,16 +17,16 @@
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['/support/feedback/admin/index']];
-$this->params['breadcrumbs'][] = ['label' => $model->feedback->displayname, 'url' => ['view', 'id'=>$model->feedback->feedback_id]];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['manage', 'feedback'=>$model->feedback_id]];
-$this->params['breadcrumbs'][] = $model->user->displayname;
+if (!$small) {
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['/support/feedback/admin/index']];
+    $this->params['breadcrumbs'][] = ['label' => $model->feedback->displayname, 'url' => ['view', 'id'=>$model->feedback->feedback_id]];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['manage', 'feedback'=>$model->feedback_id]];
+    $this->params['breadcrumbs'][] = $model->user->displayname;
 
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
+    $this->params['menu']['content'] = [
+        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+    ];
 } ?>
 
 <div class="support-feedback-user-view">

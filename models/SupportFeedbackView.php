@@ -115,12 +115,13 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	 */
 	public function getHistories($count=false)
 	{
-		if($count == false)
-			return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
+        if ($count == false) {
+            return $this->hasMany(SupportFeedbackViewHistory::className(), ['view_id' => 'view_id']);
+        }
 
 		$model = SupportFeedbackViewHistory::find()
-			->alias('t')
-			->where(['t.view_id' => $this->view_id]);
+            ->alias('t')
+            ->where(['t.view_id' => $this->view_id]);
 		$histories = $model->count();
 
 		return $histories ? $histories : 0;
@@ -142,11 +143,13 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -249,19 +252,20 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['view_id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['view_id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -271,14 +275,13 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	{
 		$user_id = Yii::$app->user->id;
 		$findView = self::find()
-			->alias('t')
-			->where(['t.feedback_id' => $feedback_id, 'user_id' => $user_id])
-			->one();
+            ->alias('t')
+            ->where(['t.feedback_id' => $feedback_id, 'user_id' => $user_id])
+            ->one();
 
-		if($findView != null)
-			$findView->updateAttributes(['views'=>$findView->views+1, 'view_ip'=>$_SERVER['REMOTE_ADDR']]);
-
-		else {
+        if ($findView != null) {
+            $findView->updateAttributes(['views'=>$findView->views+1, 'view_ip'=>$_SERVER['REMOTE_ADDR']]);
+        } else {
 			$feedbackView = new self();
 			$feedbackView->feedback_id = $feedback_id;
 			$feedbackView->user_id = $user_id;
@@ -306,13 +309,14 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->user_id == null)
-					$this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-			$this->view_ip = $_SERVER['REMOTE_ADDR'];
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->user_id == null) {
+                    $this->user_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+            $this->view_ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return true;
 	}
 }

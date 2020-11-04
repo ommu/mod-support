@@ -62,10 +62,11 @@ class SupportFeedbacks extends SupportFeedbacksModel
 	 */
 	public function search($params, $column=null)
 	{
-		if(!($column && is_array($column)))
-			$query = SupportFeedbacksModel::find()->alias('t');
-		else
-			$query = SupportFeedbacksModel::find()->alias('t')->select($column);
+        if (!($column && is_array($column))) {
+            $query = SupportFeedbacksModel::find()->alias('t');
+        } else {
+            $query = SupportFeedbacksModel::find()->alias('t')->select($column);
+        }
 		$query->joinWith([
 			'view view', 
 			'subject.title subject', 
@@ -80,8 +81,9 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'query' => $query,
 		];
 		// disable pagination agar data pada api tampil semua
-		if(isset($params['pagination']) && $params['pagination'] == 0)
-			$dataParams['pagination'] = false;
+        if (isset($params['pagination']) && $params['pagination'] == 0) {
+            $dataParams['pagination'] = false;
+        }
 		$dataProvider = new ActiveDataProvider($dataParams);
 
 		$attributes = array_keys($this->getTableSchema()->columns);
@@ -124,7 +126,7 @@ class SupportFeedbacks extends SupportFeedbacksModel
 
 		$this->load($params);
 
-		if(!$this->validate()) {
+        if (!$this->validate()) {
 			// uncomment the following line if you do not want to return any records when validation fails
 			// $query->where('0=1');
 			return $dataProvider;
@@ -145,13 +147,14 @@ class SupportFeedbacks extends SupportFeedbacksModel
 			'view.reply' => isset($params['reply']) ? $params['reply'] : $this->reply,
 		]);
 
-		if(isset($params['trash']))
-			$query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
-		else {
-			if(!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == ''))
-				$query->andFilterWhere(['IN', 't.publish', [0,1]]);
-			else
-				$query->andFilterWhere(['t.publish' => $this->publish]);
+        if (isset($params['trash'])) {
+            $query->andFilterWhere(['NOT IN', 't.publish', [0,1]]);
+        } else {
+            if (!isset($params['publish']) || (isset($params['publish']) && $params['publish'] == '')) {
+                $query->andFilterWhere(['IN', 't.publish', [0,1]]);
+            } else {
+                $query->andFilterWhere(['t.publish' => $this->publish]);
+            }
 		}
 
 		$query->andFilterWhere(['like', 't.email', $this->email])

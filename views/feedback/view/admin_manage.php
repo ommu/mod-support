@@ -22,8 +22,9 @@ use yii\widgets\Pjax;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['/support/feedback/admin/index']];
-if($feedback != null)
+if ($feedback != null) {
 	$this->params['breadcrumbs'][] = ['label' => $feedback->displayname, 'url' => ['view', 'id'=>$feedback->feedback_id]];
+}
 $this->params['breadcrumbs'][] = Yii::t('app', 'Views');
 
 $this->params['menu']['option'] = [
@@ -35,8 +36,9 @@ $this->params['menu']['option'] = [
 <div class="support-feedback-view-manage">
 <?php Pjax::begin(); ?>
 
-<?php if($feedback != null)
-	echo $this->render('/feedback/admin/admin_view', ['model'=>$feedback, 'small'=>true]); ?>
+<?php if ($feedback != null) {
+	echo $this->render('/feedback/admin/admin_view', ['model'=>$feedback, 'small'=>true]);
+} ?>
 
 <?php //echo $this->render('_search', ['model'=>$searchModel]); ?>
 
@@ -48,12 +50,15 @@ array_push($columnData, [
 	'class' => 'app\components\grid\ActionColumn',
 	'header' => Yii::t('app', 'Option'),
 	'urlCreator' => function($action, $model, $key, $index) {
-		if($action == 'view')
-			return Url::to(['view', 'id'=>$key]);
-		if($action == 'update')
-			return Url::to(['update', 'id'=>$key]);
-		if($action == 'delete')
-			return Url::to(['delete', 'id'=>$key]);
+        if ($action == 'view') {
+            return Url::to(['view', 'id'=>$key]);
+        }
+        if ($action == 'update') {
+            return Url::to(['update', 'id'=>$key]);
+        }
+        if ($action == 'delete') {
+            return Url::to(['delete', 'id'=>$key]);
+        }
 	},
 	'buttons' => [
 		'view' => function ($url, $model, $key) {

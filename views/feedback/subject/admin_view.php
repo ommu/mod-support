@@ -17,16 +17,16 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\DetailView;
 
-if(!$small) {
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings'), 'url' => ['/setting/update']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support'), 'url' => ['feedback/subject/index']];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->title->message;
+if (!$small) {
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Settings'), 'url' => ['/setting/update']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Support'), 'url' => ['feedback/subject/index']];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Subject'), 'url' => ['index']];
+    $this->params['breadcrumbs'][] = $model->title->message;
 
-$this->params['menu']['content'] = [
-	['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->subject_id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
-	['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->subject_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
-];
+    $this->params['menu']['content'] = [
+        ['label' => Yii::t('app', 'Update'), 'url' => Url::to(['update', 'id'=>$model->subject_id]), 'icon' => 'pencil', 'htmlOptions' => ['class'=>'btn btn-primary']],
+        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->subject_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+    ];
 } ?>
 
 <div class="support-feedback-subject-view">

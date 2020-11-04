@@ -74,10 +74,11 @@ use yii\helpers\ArrayHelper;
 	->textarea(['rows'=>6, 'cols'=>50])
 	->label($model->getAttributeLabel('message')); ?>
 
-<?php if(!$model->isNewRecord) {
-echo $form->field($model, 'publish')
-	->checkbox()
-	->label($model->getAttributeLabel('publish'));
+<?php 
+if (!$model->isNewRecord) {
+    echo $form->field($model, 'publish')
+        ->checkbox()
+        ->label($model->getAttributeLabel('publish'));
 } ?>
 
 <hr/>

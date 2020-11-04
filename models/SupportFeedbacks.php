@@ -140,21 +140,22 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	 */
 	public function getUsers($count=false, $publish=1)
 	{
-		if($count == false) {
-			return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
-				->alias('users')
-				->andOnCondition([sprintf('%s.publish', 'users') => $publish]);
-		}
+        if ($count == false) {
+            return $this->hasMany(SupportFeedbackUser::className(), ['feedback_id' => 'feedback_id'])
+                ->alias('users')
+                ->andOnCondition([sprintf('%s.publish', 'users') => $publish]);
+        }
 
 		$model = SupportFeedbackUser::find()
-			->alias('t')
-			->where(['t.feedback_id' => $this->feedback_id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.feedback_id' => $this->feedback_id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 		$users = $model->count();
 
 		return $users ? $users : 0;
@@ -165,21 +166,22 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	 */
 	public function getViews($count=false, $publish=1)
 	{
-		if($count == false) {
-			return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
-				->alias('views')
-				->andOnCondition([sprintf('%s.publish', 'views') => $publish]);
-		}
+        if ($count == false) {
+            return $this->hasMany(SupportFeedbackView::className(), ['feedback_id' => 'feedback_id'])
+                ->alias('views')
+                ->andOnCondition([sprintf('%s.publish', 'views') => $publish]);
+        }
 
 		$model = SupportFeedbackView::find()
-			->alias('t')
-			->where(['t.feedback_id' => $this->feedback_id]);
-		if($publish == 0)
-			$model->unpublish();
-		elseif($publish == 1)
-			$model->published();
-		elseif($publish == 2)
-			$model->deleted();
+            ->alias('t')
+            ->where(['t.feedback_id' => $this->feedback_id]);
+        if ($publish == 0) {
+            $model->unpublish();
+        } else if ($publish == 1) {
+            $model->published();
+        } else if ($publish == 2) {
+            $model->deleted();
+        }
 		$views =$model->sum('views');
 
 		return $views ? $views : 0;
@@ -241,11 +243,13 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -397,19 +401,20 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['feedback_id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['feedback_id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
@@ -440,20 +445,23 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if(!$this->isNewRecord) {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+        if (parent::beforeValidate()) {
+            if (!$this->isNewRecord) {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
 
-				if($this->scenario == self::SCENARIO_REPLY) {
-					if($this->replied_id == null)
-						$this->replied_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                if ($this->scenario == self::SCENARIO_REPLY) {
+                    if ($this->replied_id == null) {
+                        $this->replied_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                    }
 				}
 			}
-			if($this->subject_id == '')
-				$this->addError('subject_id', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('subject_id')]));
-		}
-		return true;
+            if ($this->subject_id == '') {
+                $this->addError('subject_id', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('subject_id')]));
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -462,8 +470,9 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 	public function beforeSave($insert)
 	{
 		$this->app = Yii::$app->id;
-		if(!isset($this->subject))
-			$this->subject_id = SupportFeedbackSubject::insertSubject($this->subject_id);
+        if (!isset($this->subject)) {
+            $this->subject_id = SupportFeedbackSubject::insertSubject($this->subject_id);
+        }
 
 		return true;
 	}

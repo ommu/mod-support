@@ -69,21 +69,23 @@ class ViewController extends Controller
 	 */
 	public function actionManage()
 	{
-		$searchModel = new SupportFeedbackViewSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new SupportFeedbackViewSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$gridColumn = Yii::$app->request->get('GridColumn', null);
-		$cols = [];
-		if($gridColumn != null && count($gridColumn) > 0) {
-			foreach($gridColumn as $key => $val) {
-				if($gridColumn[$key] == 1)
-					$cols[] = $key;
-			}
-		}
-		$columns = $searchModel->getGridColumn($cols);
+        $gridColumn = Yii::$app->request->get('GridColumn', null);
+        $cols = [];
+        if ($gridColumn != null && count($gridColumn) > 0) {
+            foreach ($gridColumn as $key => $val) {
+                if ($gridColumn[$key] == 1) {
+                    $cols[] = $key;
+                }
+            }
+        }
+        $columns = $searchModel->getGridColumn($cols);
 
-		if(($feedback = Yii::$app->request->get('feedback')) != null)
+        if (($feedback = Yii::$app->request->get('feedback')) != null) {
 			$feedback = \ommu\support\models\SupportFeedbacks::findOne($feedback);
+        }
 
 		$this->view->title = Yii::t('app', 'Feedback Views');
 		$this->view->description = '';
@@ -124,7 +126,7 @@ class ViewController extends Controller
 		$model = $this->findModel($id);
 		$model->publish = 2;
 
-		if($model->save(false, ['publish'])) {
+        if ($model->save(false, ['publish'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success deleted.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -142,7 +144,7 @@ class ViewController extends Controller
 		$replace = $model->publish == 1 ? 0 : 1;
 		$model->publish = $replace;
 
-		if($model->save(false, ['publish'])) {
+        if ($model->save(false, ['publish'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -157,8 +159,9 @@ class ViewController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if(($model = SupportFeedbackView::findOne($id)) !== null)
-			return $model;
+        if (($model = SupportFeedbackView::findOne($id)) !== null) {
+            return $model;
+        }
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}

@@ -79,18 +79,19 @@ class SubjectController extends Controller
 	 */
 	public function actionManage()
 	{
-		$searchModel = new SupportFeedbackSubjectSearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new SupportFeedbackSubjectSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$gridColumn = Yii::$app->request->get('GridColumn', null);
-		$cols = [];
-		if($gridColumn != null && count($gridColumn) > 0) {
-			foreach($gridColumn as $key => $val) {
-				if($gridColumn[$key] == 1)
-					$cols[] = $key;
-			}
-		}
-		$columns = $searchModel->getGridColumn($cols);
+        $gridColumn = Yii::$app->request->get('GridColumn', null);
+        $cols = [];
+        if ($gridColumn != null && count($gridColumn) > 0) {
+            foreach ($gridColumn as $key => $val) {
+                if ($gridColumn[$key] == 1) {
+                    $cols[] = $key;
+                }
+            }
+        }
+        $columns = $searchModel->getGridColumn($cols);
 
 		$this->view->title = Yii::t('app', 'Feedback Subjects');
 		$this->view->description = '';
@@ -111,20 +112,22 @@ class SubjectController extends Controller
 	{
 		$model = new SupportFeedbackSubject();
 
-		if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
 			$postData = Yii::$app->request->post();
 			$model->load($postData);
 			$model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
 
-			if($model->save()) {
+            if ($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success created.'));
-				if(!Yii::$app->request->isAjax)
-					return $this->redirect(['manage']);
+                if (!Yii::$app->request->isAjax) {
+                    return $this->redirect(['manage']);
+                }
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
 			}
 		}
 
@@ -146,20 +149,22 @@ class SubjectController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if(Yii::$app->request->isPost) {
+        if (Yii::$app->request->isPost) {
 			$postData = Yii::$app->request->post();
 			$model->load($postData);
 			$model->parent_id = $postData['parent_id'] ? $postData['parent_id'] : 0;
 
-			if($model->save()) {
+            if ($model->save()) {
 				Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success updated.'));
-				if(!Yii::$app->request->isAjax)
-					return $this->redirect(['manage']);
+                if (!Yii::$app->request->isAjax) {
+                    return $this->redirect(['manage']);
+                }
 				return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 
-			} else {
-				if(Yii::$app->request->isAjax)
-					return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+            } else {
+                if (Yii::$app->request->isAjax) {
+                    return \yii\helpers\Json::encode(\app\components\widgets\ActiveForm::validate($model));
+                }
 			}
 		}
 
@@ -199,7 +204,7 @@ class SubjectController extends Controller
 		$model = $this->findModel($id);
 		$model->publish = 2;
 
-		if($model->save(false, ['publish','modified_id'])) {
+        if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success deleted.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -217,7 +222,7 @@ class SubjectController extends Controller
 		$replace = $model->publish == 1 ? 0 : 1;
 		$model->publish = $replace;
 
-		if($model->save(false, ['publish','modified_id'])) {
+        if ($model->save(false, ['publish', 'modified_id'])) {
 			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback subject success updated.'));
 			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
 		}
@@ -233,20 +238,21 @@ class SubjectController extends Controller
 		$term = Yii::$app->request->get('query');
 		$parent = Yii::$app->request->get('parent', null);
 
-		if($term == null) return [];
+        if ($term == null) return [];
 
 		$model = SupportFeedbackSubject::find()
-			->alias('t')
+            ->alias('t')
 			->select(['subject_id', 'subject_name'])
 			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
 			->andWhere(['like', 'title.message', $term]);
-		if($parent != null)
+        if ($parent != null) {
 			$model->andWhere(['t.parent_id' => $parent]);
+        }
 		$model = $model->published()->limit(15)->all();
 		
 		$result = [];
 		$i = 0;
-		foreach($model as $val) {
+        foreach ($model as $val) {
 			$result[] = [
 				'id' => $val->subject_id, 
 				'label' => $val->subjectName,
@@ -264,8 +270,9 @@ class SubjectController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if(($model = SupportFeedbackSubject::findOne($id)) !== null)
-			return $model;
+        if (($model = SupportFeedbackSubject::findOne($id)) !== null) {
+            return $model;
+        }
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}

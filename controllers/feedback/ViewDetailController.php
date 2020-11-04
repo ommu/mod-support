@@ -66,21 +66,23 @@ class ViewDetailController extends Controller
 	 */
 	public function actionManage()
 	{
-		$searchModel = new SupportFeedbackViewHistorySearch();
-		$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new SupportFeedbackViewHistorySearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-		$gridColumn = Yii::$app->request->get('GridColumn', null);
-		$cols = [];
-		if($gridColumn != null && count($gridColumn) > 0) {
-			foreach($gridColumn as $key => $val) {
-				if($gridColumn[$key] == 1)
-					$cols[] = $key;
-			}
-		}
-		$columns = $searchModel->getGridColumn($cols);
+        $gridColumn = Yii::$app->request->get('GridColumn', null);
+        $cols = [];
+        if ($gridColumn != null && count($gridColumn) > 0) {
+            foreach ($gridColumn as $key => $val) {
+                if ($gridColumn[$key] == 1) {
+                    $cols[] = $key;
+                }
+            }
+        }
+        $columns = $searchModel->getGridColumn($cols);
 
-		if(($view = Yii::$app->request->get('view')) != null)
+        if (($view = Yii::$app->request->get('view')) != null) {
 			$view = \ommu\support\models\SupportFeedbackView::findOne($view);
+        }
 
 		$this->view->title = Yii::t('app', 'Feedback View Histories');
 		$this->view->description = '';
@@ -134,8 +136,9 @@ class ViewDetailController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if(($model = SupportFeedbackViewHistory::findOne($id)) !== null)
-			return $model;
+        if (($model = SupportFeedbackViewHistory::findOne($id)) !== null) {
+            return $model;
+        }
 
 		throw new \yii\web\NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
 	}

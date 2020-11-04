@@ -101,24 +101,25 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	 */
 	public function getFeedbacks($count=false, $publish=null)
 	{
-		if($count == false) {
-			return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
-				->alias('feedbacks')
-				->andOnCondition([sprintf('%s.publish', 'feedbacks') => $publish]);
-		}
+        if ($count == false) {
+            return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
+                ->alias('feedbacks')
+                ->andOnCondition([sprintf('%s.publish', 'feedbacks') => $publish]);
+        }
 
 		$model = SupportFeedbacks::find()
-			->alias('t')
-			->where(['t.subject_id' => $this->subject_id]);
-		if($publish === null)
-			$model->send();
-		else {
-			if($publish == 0)
-				$model->unpublish();
-			elseif($publish == 1)
-				$model->published();
-			elseif($publish == 2)
-				$model->deleted();
+            ->alias('t')
+            ->where(['t.subject_id' => $this->subject_id]);
+        if ($publish === null) {
+            $model->send();
+        } else {
+            if ($publish == 0) {
+                $model->unpublish();
+            } else if ($publish == 1) {
+                $model->published();
+            } else if ($publish == 2) {
+                $model->deleted();
+            }
 		}
 		$feedbacks = $model->count();
 
@@ -181,11 +182,13 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	{
 		parent::init();
 
-		if(!(Yii::$app instanceof \app\components\Application))
-			return;
+        if (!(Yii::$app instanceof \app\components\Application)) {
+            return;
+        }
 
-		if(!$this->hasMethod('search'))
-			return;
+        if (!$this->hasMethod('search')) {
+            return;
+        }
 
 		$this->templateColumns['_no'] = [
 			'header' => '#',
@@ -271,41 +274,44 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	 */
 	public static function getInfo($id, $column=null)
 	{
-		if($column != null) {
-			$model = self::find();
-			if(is_array($column))
-				$model->select($column);
-			else
-				$model->select([$column]);
-			$model = $model->where(['subject_id' => $id])->one();
-			return is_array($column) ? $model : $model->$column;
-			
-		} else {
-			$model = self::findOne($id);
-			return $model;
-		}
+        if ($column != null) {
+            $model = self::find();
+            if (is_array($column)) {
+                $model->select($column);
+            } else {
+                $model->select([$column]);
+            }
+            $model = $model->where(['subject_id' => $id])->one();
+            return is_array($column) ? $model : $model->$column;
+
+        } else {
+            $model = self::findOne($id);
+            return $model;
+        }
 	}
 
 	/**
 	 * function getSubject
 	 */
-	public static function getSubject($publish=null, $array=true) 
+	public static function getSubject($publish=null, $array=true)
 	{
 		$model = self::find()
-			->alias('t')
+            ->alias('t')
 			->select(['t.subject_id', 't.subject_name'])
 			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
 			->leftJoin(sprintf('%s feedback', SupportFeedbacks::tableName()), 't.subject_id=feedback.subject_id');
-		if($publish != null)
-			$model->andWhere(['t.publish' => $publish]);
+        if ($publish != null) {
+            $model->andWhere(['t.publish' => $publish]);
+        }
 		$model->limit(10);
 
 		$model = $model->groupBy(['t.subject_id'])
 			->orderBy('feedback.creation_date DESC, feedback.feedback_id DESC')
 			->all();
 
-		if($array == true)
-			return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subjectName');
+        if ($array == true) {
+            return \yii\helpers\ArrayHelper::map($model, 'subject_id', 'subjectName');
+        }
 
 		return $model;
 	}
@@ -316,19 +322,20 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	public static function insertSubject($subjectName)
 	{
 		$subject = self::find()
-			->alias('t')
+            ->alias('t')
 			->select(['subject_id'])
 			->leftJoin(sprintf('%s title', SourceMessage::tableName()), 't.subject_name=title.id')
 			->andWhere(['title.message' => $subjectName])
-			->one();
+            ->one();
 
-		if($subject != null)
-			return $subject->subject_id;
-		else {
+        if ($subject != null) {
+            return $subject->subject_id;
+        } else {
 			$model = new self();
 			$model->subjectName = $subjectName;
-			if($model->save())
-				return $model->subject_id;
+            if ($model->save()) {
+                return $model->subject_id;
+            }
 		}
 	}
 
@@ -350,16 +357,18 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	 */
 	public function beforeValidate()
 	{
-		if(parent::beforeValidate()) {
-			if($this->isNewRecord) {
-				if($this->creation_id == null)
-					$this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			} else {
-				if($this->modified_id == null)
-					$this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
-			}
-		}
-		return true;
+        if (parent::beforeValidate()) {
+            if ($this->isNewRecord) {
+                if ($this->creation_id == null) {
+                    $this->creation_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            } else {
+                if ($this->modified_id == null) {
+                    $this->modified_id = !Yii::$app->user->isGuest ? Yii::$app->user->id : null;
+                }
+            }
+        }
+        return true;
 	}
 
 	/**
@@ -367,27 +376,27 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	 */
 	public function beforeSave($insert)
 	{
-		$module = strtolower(Yii::$app->controller->module->id);
-		$controller = strtolower(Yii::$app->controller->id);
-		$action = strtolower(Yii::$app->controller->action->id);
+        $module = strtolower(Yii::$app->controller->module->id);
+        $controller = strtolower(Yii::$app->controller->id);
+        $action = strtolower(Yii::$app->controller->action->id);
 
-		$location = Inflector::slug($module.' '.$controller);
+        $location = Inflector::slug($module.' '.$controller);
 
-		if(parent::beforeSave($insert)) {
-			if($insert || (!$insert && !$this->subject_name)) {
-				$subject_name = new SourceMessage();
-				$subject_name->location = $location.'_title';
-				$subject_name->message = $this->subjectName;
-				if($subject_name->save())
-					$this->subject_name = $subject_name->id;
+        if (parent::beforeSave($insert)) {
+            if ($insert || (!$insert && !$this->subject_name)) {
+                $subject_name = new SourceMessage();
+                $subject_name->location = $location.'_title';
+                $subject_name->message = $this->subjectName;
+                if ($subject_name->save()) {
+                    $this->subject_name = $subject_name->id;
+                }
 
-			} else {
-				$subject_name = SourceMessage::findOne($this->subject_name);
-				$subject_name->message = $this->subjectName;
-				$subject_name->save();
-			}
-
-		}
-		return true;
+            } else {
+                $subject_name = SourceMessage::findOne($this->subject_name);
+                $subject_name->message = $this->subjectName;
+                $subject_name->save();
+            }
+        }
+        return true;
 	}
 }
