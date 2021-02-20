@@ -254,7 +254,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 		$this->templateColumns['_no'] = [
 			'header' => '#',
 			'class' => 'app\components\grid\SerialColumn',
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 		];
 		$this->templateColumns['app'] = [
 			'attribute' => 'app',
@@ -357,40 +357,40 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->getViews(true);
-				return Html::a($views, ['feedback/view/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} views', ['count'=>$views]), 'data-pjax'=>0]);
+				return Html::a($views, ['feedback/view/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} views', ['count' => $views]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['users'] = [
 			'attribute' => 'users',
 			'value' => function($model, $key, $index, $column) {
 				$users = $model->getUsers(true);
-				return Html::a($users, ['feedback/user/manage', 'feedback'=>$model->primaryKey, 'publish'=>1], ['title'=>Yii::t('app', '{count} users', ['count'=>$users]), 'data-pjax'=>0]);
+				return Html::a($users, ['feedback/user/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} users', ['count' => $users]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['reply'] = [
 			'attribute' => 'reply',
 			'value' => function($model, $key, $index, $column) {
 				$reply = $this->filterYesNo($model->reply);
-				return $model->reply == 0 ? Html::a($reply, ['reply', 'id'=>$model->primaryKey], ['title'=>Yii::t('app', 'Click to reply'), 'class'=>'modal-btn', 'data-pjax'=>0]) : $reply;
+				return $model->reply == 0 ? Html::a($reply, ['reply', 'id' => $model->primaryKey], ['title' => Yii::t('app', 'Click to reply'), 'class' => 'modal-btn', 'data-pjax' => 0]) : $reply;
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 		];
 		$this->templateColumns['publish'] = [
 			'attribute' => 'publish',
 			'value' => function($model, $key, $index, $column) {
-				$url = Url::to(['publish', 'id'=>$model->primaryKey]);
+				$url = Url::to(['publish', 'id' => $model->primaryKey]);
 				return $this->quickAction($url, $model->publish);
 			},
 			'filter' => $this->filterYesNo(),
-			'contentOptions' => ['class'=>'text-center'],
+			'contentOptions' => ['class' => 'text-center'],
 			'format' => 'raw',
 			'visible' => !Yii::$app->request->get('trash') ? true : false,
 		];
@@ -458,7 +458,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 				}
 			}
             if ($this->subject_id == '') {
-                $this->addError('subject_id', Yii::t('app', '{attribute} cannot be blank.', ['attribute'=>$this->getAttributeLabel('subject_id')]));
+                $this->addError('subject_id', Yii::t('app', '{attribute} cannot be blank.', ['attribute' => $this->getAttributeLabel('subject_id')]));
             }
         }
         return true;

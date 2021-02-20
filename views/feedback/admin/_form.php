@@ -26,7 +26,7 @@ use yii\helpers\ArrayHelper;
 <div class="support-feedbacks-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -40,15 +40,15 @@ use yii\helpers\ArrayHelper;
 <?php //echo $form->errorSummary($model);?>
 
 <?php echo $form->field($model, 'displayname')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('displayname')); ?>
 
 <?php echo $form->field($model, 'email')
-	->textInput(['type'=>'email'])
+	->textInput(['type' => 'email'])
 	->label($model->getAttributeLabel('email')); ?>
 
 <?php echo $form->field($model, 'phone')
-	->textInput(['type'=>'number', 'maxlength'=>true])
+	->textInput(['type' => 'number', 'maxlength' => true])
 	->label($model->getAttributeLabel('phone')); ?>
 
 <?php echo $form->field($model, 'subject_id', ['template' => '{label}{beginWrapper}{input}{error}{hint}{endWrapper}'])
@@ -56,7 +56,7 @@ use yii\helpers\ArrayHelper;
 		'options' => [
 			'placeholder' => Yii::t('app', 'Select a subject..'),
 		],
-		'items' => ArrayHelper::merge([''=>Yii::t('app', 'Select a subject..')], SupportFeedbackSubject::getSubject()),
+		'items' => ArrayHelper::merge(['' => Yii::t('app', 'Select a subject..')], SupportFeedbackSubject::getSubject()),
 		'url' => Url::to(['feedback/subject/suggest']),
 		'queryParam' => 'term',
 		'pluginOptions' => [
@@ -71,7 +71,7 @@ use yii\helpers\ArrayHelper;
 	->label($model->getAttributeLabel('subject_id')); ?>
 
 <?php echo $form->field($model, 'message')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('message')); ?>
 
 <?php 

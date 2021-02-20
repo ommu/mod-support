@@ -22,12 +22,12 @@ use yii\widgets\DetailView;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id'=>$model->feedback_id]];
+$this->params['breadcrumbs'][] = ['label' => $model->displayname, 'url' => ['view', 'id' => $model->feedback_id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Reply');
 
 $this->params['menu']['content'] = [
 	['label' => Yii::t('app', 'Back To Feedbacks'), 'url' => Url::to(['manage']), 'icon' => 'table'],
-	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id'=>$model->feedback_id]), 'icon' => 'eye', 'htmlOptions' => ['class'=>'btn btn-success']],
+	['label' => Yii::t('app', 'Detail'), 'url' => Url::to(['view', 'id' => $model->feedback_id]), 'icon' => 'eye', 'htmlOptions' => ['class' => 'btn btn-success']],
 ];
 ?>
 
@@ -56,14 +56,14 @@ $attributes = [
 echo DetailView::widget([
 	'model' => $model,
 	'options' => [
-		'class'=>'table table-striped detail-view',
+		'class' => 'table table-striped detail-view',
 	],
 	'template' => '<tr><th{captionOptions} class="active">{label}</th><td{contentOptions}>{value}</td></tr>',
 	'attributes' => $attributes,
 ]); ?>
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => false,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -77,13 +77,13 @@ echo DetailView::widget([
 <?php //echo $form->errorSummary($model);?>
 
 <?php echo $form->field($model, 'reply_message')
-	->textarea(['rows'=>6, 'cols'=>50])
+	->textarea(['rows' => 6, 'cols' => 50])
 	->label($model->getAttributeLabel('reply_message')); ?>
 
 <hr/>
 
 <?php echo $form->field($model, 'submitButton')
-	->submitButton(['button'=>Html::submitButton(Yii::t('app', 'Reply this Message'), ['class' => 'btn btn-primary'])]); ?>
+	->submitButton(['button' => Html::submitButton(Yii::t('app', 'Reply this Message'), ['class' => 'btn btn-primary'])]); ?>
 
 <?php ActiveForm::end(); ?>
 

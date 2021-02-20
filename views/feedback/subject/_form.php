@@ -22,7 +22,7 @@ use ommu\support\models\SupportFeedbackSubject;
 <div class="support-feedback-subject-form">
 
 <?php $form = ActiveForm::begin([
-	'options' => ['class'=>'form-horizontal form-label-left'],
+	'options' => ['class' => 'form-horizontal form-label-left'],
 	'enableClientValidation' => true,
 	'enableAjaxValidation' => false,
 	//'enableClientScript' => true,
@@ -37,11 +37,11 @@ use ommu\support\models\SupportFeedbackSubject;
 
 <?php $parent = SupportFeedbackSubject::getSubject();
 echo $form->field($model, 'parent_id')
-	->dropDownList($parent, ['prompt'=>''])
+	->dropDownList($parent, ['prompt' => ''])
 	->label($model->getAttributeLabel('parent_id')); ?>
 
 <?php echo $form->field($model, 'subjectName')
-	->textInput(['maxlength'=>true])
+	->textInput(['maxlength' => true])
 	->label($model->getAttributeLabel('subjectName')); ?>
 
 <?php 

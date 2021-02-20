@@ -21,12 +21,12 @@ use yii\widgets\DetailView;
 if (!$small) {
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
     $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['/support/feedback/admin/index']];
-    $this->params['breadcrumbs'][] = ['label' => $model->feedback->displayname, 'url' => ['view', 'id'=>$model->feedback->feedback_id]];
-    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'View'), 'url' => ['manage', 'feedback'=>$model->feedback_id]];
+    $this->params['breadcrumbs'][] = ['label' => $model->feedback->displayname, 'url' => ['view', 'id' => $model->feedback->feedback_id]];
+    $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'View'), 'url' => ['manage', 'feedback' => $model->feedback_id]];
     $this->params['breadcrumbs'][] = $model->user->displayname;
 
     $this->params['menu']['content'] = [
-        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id'=>$model->view_id]), 'htmlOptions' => ['data-confirm'=>Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method'=>'post', 'class'=>'btn btn-danger'], 'icon' => 'trash'],
+        ['label' => Yii::t('app', 'Delete'), 'url' => Url::to(['delete', 'id' => $model->view_id]), 'htmlOptions' => ['data-confirm' => Yii::t('app', 'Are you sure you want to delete this item?'), 'data-method' => 'post', 'class' => 'btn btn-danger'], 'icon' => 'trash'],
     ];
 } ?>
 
@@ -41,7 +41,7 @@ $attributes = [
 	],
 	[
 		'attribute' => 'publish',
-		'value' => $model->quickAction(Url::to(['publish', 'id'=>$model->primaryKey]), $model->publish),
+		'value' => $model->quickAction(Url::to(['publish', 'id' => $model->primaryKey]), $model->publish),
 		'format' => 'raw',
 		'visible' => !$small,
 	],
@@ -74,7 +74,7 @@ $attributes = [
 		'attribute' => 'views',
 		'value' => function ($model) {
 			$views = $model->views;
-			return Html::a($views, ['feedback/view-detail/manage', 'view'=>$model->primaryKey], ['title'=>Yii::t('app', '{count} views', ['count'=>$views])]);
+			return Html::a($views, ['feedback/view-detail/manage', 'view' => $model->primaryKey], ['title' => Yii::t('app', '{count} views', ['count' => $views])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,
@@ -99,7 +99,7 @@ $attributes = [
 echo DetailView::widget([
 	'model' => $model,
 	'options' => [
-		'class'=>'table table-striped detail-view',
+		'class' => 'table table-striped detail-view',
 	],
 	'attributes' => $attributes,
 ]); ?>
