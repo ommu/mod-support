@@ -102,9 +102,15 @@ class SupportFeedbackSubject extends \app\components\ActiveRecord
 	public function getFeedbacks($count=false, $publish=null)
 	{
         if ($count == false) {
-            return $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
-                ->alias('feedbacks')
-                ->andOnCondition([sprintf('%s.publish', 'feedbacks') => $publish]);
+            $model = $this->hasMany(SupportFeedbacks::className(), ['subject_id' => 'subject_id'])
+                ->alias('feedbacks');
+            if ($publish != null) {
+                $model->andOnCondition([sprintf('%s.publish', 'feedbacks') => $publish]);
+            } else {
+                $model->andOnCondition(['IN', sprintf('%s.publish', 'feedbacks'), [0,1]]);
+            }
+
+            return $model;
         }
 
 		$model = SupportFeedbacks::find()
