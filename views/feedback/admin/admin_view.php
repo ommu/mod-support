@@ -73,7 +73,7 @@ $attributes = [
 		'attribute' => 'views',
 		'value' => function ($model) {
 			$views = $model->getViews(true);
-			return Html::a($views, ['feedback/view/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} views', ['count' => $views])]);
+			return Html::a($views, ['feedback/view/admin/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} views', ['count' => $views])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

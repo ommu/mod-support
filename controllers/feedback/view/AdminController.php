@@ -1,38 +1,40 @@
 <?php
 /**
- * ViewDetailController
- * @var $this ommu\support\controllers\feedback\ViewDetailController
- * @var $model ommu\support\models\SupportFeedbackViewHistory
+ * AdminController
+ * @var $this ommu\support\controllers\feedback\view\AdminController
+ * @var $model ommu\support\models\SupportFeedbackView
  *
- * ViewDetailController implements the CRUD actions for SupportFeedbackViewHistory model.
+ * AdminController implements the CRUD actions for SupportFeedbackView model.
  * Reference start
  * TOC :
  *	Index
  *	Manage
  *	View
  *	Delete
+ *	RunAction
+ *	Publish
  *
  *	findModel
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.id)
- * @created date 25 September 2017, 14:32 WIB
- * @modified date 28 January 2019, 14:18 WIB
+ * @created date 25 September 2017, 14:11 WIB
+ * @modified date 28 January 2019, 12:20 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
 
-namespace ommu\support\controllers\feedback;
+namespace ommu\support\controllers\feedback\view;
 
 use Yii;
 use app\components\Controller;
 use mdm\admin\components\AccessControl;
 use yii\filters\VerbFilter;
-use ommu\support\models\SupportFeedbackViewHistory;
-use ommu\support\models\search\SupportFeedbackViewHistory as SupportFeedbackViewHistorySearch;
+use ommu\support\models\SupportFeedbackView;
+use ommu\support\models\search\SupportFeedbackView as SupportFeedbackViewSearch;
 
-class ViewDetailController extends Controller
+class AdminController extends Controller
 {
 	/**
 	 * {@inheritdoc}
@@ -47,6 +49,7 @@ class ViewDetailController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'publish' => ['POST'],
                 ],
             ],
         ];
@@ -61,12 +64,12 @@ class ViewDetailController extends Controller
 	}
 
 	/**
-	 * Lists all SupportFeedbackViewHistory models.
+	 * Lists all SupportFeedbackView models.
 	 * @return mixed
 	 */
 	public function actionManage()
 	{
-        $searchModel = new SupportFeedbackViewHistorySearch();
+        $searchModel = new SupportFeedbackViewSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $gridColumn = Yii::$app->request->get('GridColumn', null);
@@ -80,23 +83,23 @@ class ViewDetailController extends Controller
         }
         $columns = $searchModel->getGridColumn($cols);
 
-        if (($view = Yii::$app->request->get('view')) != null) {
-            $view = \ommu\support\models\SupportFeedbackView::findOne($view);
+        if (($feedback = Yii::$app->request->get('feedback')) != null) {
+            $feedback = \ommu\support\models\SupportFeedbacks::findOne($feedback);
         }
 
-		$this->view->title = Yii::t('app', 'Feedback View Histories');
+		$this->view->title = Yii::t('app', 'Feedback Views');
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->render('admin_manage', [
 			'searchModel' => $searchModel,
 			'dataProvider' => $dataProvider,
 			'columns' => $columns,
-			'view' => $view,
+			'feedback' => $feedback,
 		]);
 	}
 
 	/**
-	 * Displays a single SupportFeedbackViewHistory model.
+	 * Displays a single SupportFeedbackView model.
 	 * @param integer $id
 	 * @return mixed
 	 */
@@ -104,7 +107,7 @@ class ViewDetailController extends Controller
 	{
         $model = $this->findModel($id);
 
-		$this->view->title = Yii::t('app', 'Detail Feedback View History: {view-id}', ['view-id' => $model->view->feedback->displayname]);
+		$this->view->title = Yii::t('app', 'Detail Feedback View: {feedback-id}', ['feedback-id' => $model->feedback->displayname]);
 		$this->view->description = '';
 		$this->view->keywords = '';
 		return $this->oRender('admin_view', [
@@ -113,7 +116,7 @@ class ViewDetailController extends Controller
 	}
 
 	/**
-	 * Deletes an existing SupportFeedbackViewHistory model.
+	 * Deletes an existing SupportFeedbackView model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -121,22 +124,42 @@ class ViewDetailController extends Controller
 	public function actionDelete($id)
 	{
 		$model = $this->findModel($id);
-		$model->delete();
+		$model->publish = 2;
 
-		Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view history success deleted.'));
-		return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
+        if ($model->save(false, ['publish'])) {
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success deleted.'));
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
+		}
 	}
 
 	/**
-	 * Finds the SupportFeedbackViewHistory model based on its primary key value.
+	 * actionPublish an existing SupportFeedbackView model.
+	 * If publish is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionPublish($id)
+	{
+		$model = $this->findModel($id);
+		$replace = $model->publish == 1 ? 0 : 1;
+		$model->publish = $replace;
+
+        if ($model->save(false, ['publish'])) {
+			Yii::$app->session->setFlash('success', Yii::t('app', 'Support feedback view success updated.'));
+			return $this->redirect(Yii::$app->request->referrer ?: ['manage']);
+		}
+	}
+
+	/**
+	 * Finds the SupportFeedbackView model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return SupportFeedbackViewHistory the loaded model
+	 * @return SupportFeedbackView the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-        if (($model = SupportFeedbackViewHistory::findOne($id)) !== null) {
+        if (($model = SupportFeedbackView::findOne($id)) !== null) {
             return $model;
         }
 

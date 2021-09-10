@@ -357,7 +357,7 @@ class SupportFeedbacks extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->getViews(true);
-				return Html::a($views, ['feedback/view/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} views', ['count' => $views]), 'data-pjax' => 0]);
+				return Html::a($views, ['feedback/view/admin/manage', 'feedback' => $model->primaryKey, 'publish' => 1], ['title' => Yii::t('app', '{count} views', ['count' => $views]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],

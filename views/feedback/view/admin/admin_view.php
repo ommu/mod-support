@@ -2,7 +2,7 @@
 /**
  * Support Feedback Views (support-feedback-view)
  * @var $this app\components\View
- * @var $this ommu\support\controllers\feedback\ViewController
+ * @var $this ommu\support\controllers\feedback\view\AdminController
  * @var $model ommu\support\models\SupportFeedbackView
  *
  * @author Putra Sudaryanto <putra@ommu.id>
@@ -74,7 +74,7 @@ $attributes = [
 		'attribute' => 'views',
 		'value' => function ($model) {
 			$views = $model->views;
-			return Html::a($views, ['feedback/view-detail/manage', 'view' => $model->primaryKey], ['title' => Yii::t('app', '{count} views', ['count' => $views])]);
+			return Html::a($views, ['feedback/view/history/manage', 'view' => $model->primaryKey], ['title' => Yii::t('app', '{count} views', ['count' => $views])]);
 		},
 		'format' => 'html',
 		'visible' => !$small,

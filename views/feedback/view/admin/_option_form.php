@@ -1,16 +1,16 @@
 <?php
 /**
- * Support Feedback View Histories (support-feedback-view-history)
+ * Support Feedback Views (support-feedback-view)
  * @var $this app\components\View
- * @var $this ommu\support\controllers\feedback\ViewDetailController
- * @var $model ommu\support\models\search\SupportFeedbackViewHistory
+ * @var $this ommu\support\controllers\feedback\view\AdminController
+ * @var $model ommu\support\models\search\SupportFeedbackView
  * @var $form yii\widgets\ActiveForm
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.id)
- * @created date 25 September 2017, 14:32 WIB
- * @modified date 28 January 2019, 14:18 WIB
+ * @created date 25 September 2017, 14:11 WIB
+ * @modified date 28 January 2019, 12:21 WIB
  * @link https://github.com/ommu/mod-support
  *
  */

@@ -2,7 +2,7 @@
 /**
  * Support Feedback View Histories (support-feedback-view-history)
  * @var $this app\components\View
- * @var $this ommu\support\controllers\feedback\ViewDetailController
+ * @var $this ommu\support\controllers\feedback\view\HistoryController
  * @var $model ommu\support\models\SupportFeedbackViewHistory
  *
  * @author Putra Sudaryanto <putra@ommu.id>

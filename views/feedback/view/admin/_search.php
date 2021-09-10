@@ -2,7 +2,7 @@
 /**
  * Support Feedback Views (support-feedback-view)
  * @var $this app\components\View
- * @var $this ommu\support\controllers\feedback\ViewController
+ * @var $this ommu\support\controllers\feedback\view\AdminController
  * @var $model ommu\support\models\search\SupportFeedbackView
  * @var $form yii\widgets\ActiveForm
  *

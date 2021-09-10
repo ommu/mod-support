@@ -228,7 +228,7 @@ class SupportFeedbackView extends \app\components\ActiveRecord
 			'attribute' => 'views',
 			'value' => function($model, $key, $index, $column) {
 				$views = $model->views;
-				return Html::a($views, ['feedback/view-detail/manage', 'view' => $model->primaryKey], ['title' => Yii::t('app', '{count} views', ['count' => $views]), 'data-pjax' => 0]);
+				return Html::a($views, ['feedback/view/history/manage', 'view' => $model->primaryKey], ['title' => Yii::t('app', '{count} views', ['count' => $views]), 'data-pjax' => 0]);
 			},
 			'filter' => false,
 			'contentOptions' => ['class' => 'text-center'],

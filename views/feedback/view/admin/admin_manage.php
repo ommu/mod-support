@@ -1,16 +1,16 @@
 <?php
 /**
- * Support Feedback View Histories (support-feedback-view-history)
+ * Support Feedback Views (support-feedback-view)
  * @var $this app\components\View
- * @var $this ommu\support\controllers\feedback\ViewDetailController
- * @var $model ommu\support\models\SupportFeedbackViewHistory
- * @var $searchModel ommu\support\models\search\SupportFeedbackViewHistory
+ * @var $this ommu\support\controllers\feedback\view\AdminController
+ * @var $model ommu\support\models\SupportFeedbackView
+ * @var $searchModel ommu\support\models\search\SupportFeedbackView
  *
  * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)856-299-4114
  * @copyright Copyright (c) 2017 OMMU (www.ommu.id)
- * @created date 25 September 2017, 14:32 WIB
- * @modified date 28 January 2019, 14:18 WIB
+ * @created date 25 September 2017, 14:11 WIB
+ * @modified date 28 January 2019, 12:21 WIB
  * @link https://github.com/ommu/mod-support
  *
  */
@@ -20,7 +20,12 @@ use yii\helpers\Url;
 use app\components\grid\GridView;
 use yii\widgets\Pjax;
 
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Dashboard'), 'url' => ['/admin/dashboard/index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Feedback'), 'url' => ['/support/feedback/admin/index']];
+if ($feedback != null) {
+	$this->params['breadcrumbs'][] = ['label' => $feedback->displayname, 'url' => ['view', 'id' => $feedback->feedback_id]];
+}
+$this->params['breadcrumbs'][] = Yii::t('app', 'Views');
 
 $this->params['menu']['option'] = [
 	//['label' => Yii::t('app', 'Search'), 'url' => 'javascript:void(0);'],
@@ -28,11 +33,11 @@ $this->params['menu']['option'] = [
 ];
 ?>
 
-<div class="support-feedback-view-history-manage">
+<div class="support-feedback-view-manage">
 <?php Pjax::begin(); ?>
 
-<?php if ($view != null) {
-	echo $this->render('/feedback/view/admin_view', ['model' => $view, 'small' => true]);
+<?php if ($feedback != null) {
+	echo $this->render('/feedback/admin/admin_view', ['model' => $feedback, 'small' => true]);
 } ?>
 
 <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -70,7 +75,7 @@ array_push($columnData, [
 			]);
 		},
 	],
-	'template' => '{delete}',
+	'template' => '{view} {delete}',
 ]);
 
 echo GridView::widget([
