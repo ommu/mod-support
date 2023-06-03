@@ -64,7 +64,8 @@ class SupportFeedbackUser extends SupportFeedbackUserModel
         if (!($column && is_array($column))) {
             $query = SupportFeedbackUserModel::find()->alias('t');
         } else {
-            $query = SupportFeedbackUserModel::find()->alias('t')->select($column);
+            $query = SupportFeedbackUserModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'feedback feedback', 

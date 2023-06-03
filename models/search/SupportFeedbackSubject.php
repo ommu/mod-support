@@ -63,7 +63,8 @@ class SupportFeedbackSubject extends SupportFeedbackSubjectModel
         if (!($column && is_array($column))) {
             $query = SupportFeedbackSubjectModel::find()->alias('t');
         } else {
-            $query = SupportFeedbackSubjectModel::find()->alias('t')->select($column);
+            $query = SupportFeedbackSubjectModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'view view', 

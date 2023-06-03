@@ -64,7 +64,8 @@ class SupportFeedbackViewHistory extends SupportFeedbackViewHistoryModel
         if (!($column && is_array($column))) {
             $query = SupportFeedbackViewHistoryModel::find()->alias('t');
         } else {
-            $query = SupportFeedbackViewHistoryModel::find()->alias('t')->select($column);
+            $query = SupportFeedbackViewHistoryModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'view.feedback feedback',

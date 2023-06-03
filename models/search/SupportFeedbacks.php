@@ -65,7 +65,8 @@ class SupportFeedbacks extends SupportFeedbacksModel
         if (!($column && is_array($column))) {
             $query = SupportFeedbacksModel::find()->alias('t');
         } else {
-            $query = SupportFeedbacksModel::find()->alias('t')->select($column);
+            $query = SupportFeedbacksModel::find()->alias('t')
+                ->select($column);
         }
 		$query->joinWith([
 			'view view', 

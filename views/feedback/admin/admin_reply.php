@@ -49,7 +49,6 @@ $attributes = [
 	[
 		'attribute' => 'creation_date',
 		'value' => Yii::$app->formatter->asDatetime($model->creation_date, 'medium'),
-		'visible' => !$small,
 	],
 ];
 
