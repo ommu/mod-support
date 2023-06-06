@@ -10,7 +10,6 @@
  *
  */
 
-use Yii;
 use yii\db\Schema;
 
 class m210911_171719_support_module_create_table_feedbacks extends \yii\db\Migration
