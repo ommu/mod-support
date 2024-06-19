@@ -2,7 +2,7 @@
 /**
  * m230603_091545_support_module_addStoreProsedure_all
  *
- * @author Putra Sudaryanto <dwptr@ommu.id>
+ * @author Putra Sudaryanto <putra@ommu.id>
  * @contact (+62)811-2540-432
  * @copyright Copyright (c) 2023 OMMU (www.ommu.id)
  * @created date 3 June 2023, 09:18 WIB
